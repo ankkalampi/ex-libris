@@ -1,15 +1,7 @@
-<!DOCTYPE html>
+{% extends "layout.html" %}
 
-<html>
-    <head>
-        <title>Etusivu</title>
-    </head>
+{% block title %} Ex Libris {% endblock %}
 
-    <body>
-        <h1>Etusivu</h1>
-        <p>
-            <b>Tervetuloa!</b>
-            Sivu on ladattu {{ count }} kertaa
-        </p>
-    </body>
-</html>
+{% block content %}
+<h2> Tämä on Ex Libriksen aloitussivu</h2>
+{% endblock %}
