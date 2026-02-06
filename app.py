@@ -1,18 +1,17 @@
 from flask import Flask
 from flask import render_template
+from werkzeug.security import generate_password_hash
 import sqlite3
 import db
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-	connection = db.get_connection()
-	db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))", connection)
-	result = db.query("SELECT COUNT(*) FROM visits", connection)
+	db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
+	result = db.query("SELECT COUNT(*) FROM visits")
 	count = result[0][0]
-	connection.close()
 
-	return render_template("index.html", count=count)
+	return render_template("login.html", count=count)
 
 @app.route("/register")
 def register():
@@ -34,3 +33,22 @@ def create():
 		return "VIRHE: tunnus on jo varattu"
 
 	return "Tunnus luotu"
+
+@app.route("/login", methods=["POST"])
+def login():
+	username = request.form["username"]
+	password = request.form["password"]
+
+	sql = "SELECT password_hash FROM users WHERE username = ?"
+	password_hash = db.query(sql, [username])[0][0]
+
+	if check_password_hash(password_hash, password):
+		session["username"] = username
+		return redirect("/")
+	else:
+		return "VIRHE: väärä tunnus tai salasana"
+
+@app.route("/logout")
+def logout():
+	del session["username"]
+	return redirect("/")
