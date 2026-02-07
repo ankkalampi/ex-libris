@@ -1,40 +1,46 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, redirect, request
+from flask import session
 from werkzeug.security import generate_password_hash
 import sqlite3
 import db
 app = Flask(__name__)
+app.secret_key = 'secret key'
 
-@app.route("/")
+@app.get("/")
 def index():
-	db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
-	result = db.query("SELECT COUNT(*) FROM visits")
-	count = result[0][0]
+	
 
-	return render_template("login.html", count=count)
+	login_message = session.pop('login_message', None)
+	return render_template("login.html", login_message=login_message)
 
-@app.route("/register")
+@app.get("/register")
 def register():
-	return render_template("register.html")
+	register_message = session.pop('register_message', None)
+	return render_template("register.html", register_message=register_message)
 
-@app.route("/create", methods=["POST"])
+@app.post("/create")
 def create():
 	username = request.form["username"]
 	password1 = request.form["password1"]
 	password2 = request.form["password2"]
 	if password1 != password2:
-		return "VIRHE: salasanat eivät ole samat"
+		session["register_message"] = "VIRHE! salasanat eivät ole samat"
+		return redirect("/register")
+
 	password_hash = generate_password_hash(password1)
 
 	try:
 		sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
 		db.execute(sql, [username, password_hash])
 	except sqlite3.IntegrityError:
-		return "VIRHE: tunnus on jo varattu"
+		session["register_message"] = "VIRHE: tunnus on jo varattu"
+		return redirect("/register")
 
-	return "Tunnus luotu"
+	session["login_message"] = "Käyttäjä luotu!"
+	return redirect("/")
 
-@app.route("/login", methods=["POST"])
+@app.post("/login")
 def login():
 	username = request.form["username"]
 	password = request.form["password"]
@@ -46,9 +52,14 @@ def login():
 		session["username"] = username
 		return redirect("/")
 	else:
-		return "VIRHE: väärä tunnus tai salasana"
+		session["login_message"] = "Väärä käyttäjätunnus tai salasana"
+		return redirect("/")
 
-@app.route("/logout")
+@app.get("/logout")
 def logout():
 	del session["username"]
 	return redirect("/")
+
+@app.get("/<username>")
+def profile():
+	return render_template("profile.html")

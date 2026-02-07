@@ -2,7 +2,7 @@
 
 
 {% block main_content %}
-<form action="/create" method="post">
+<form action="/login" method="post">
     <p>
         Käyttäjänimi: <br />
         <input type="text" name="username" />
@@ -14,4 +14,8 @@
     <input type="submit" value="Kirjaudu sisään" />
     <a href="/register">Rekisteröidy</a>
 </form>
+
+{% if login_message %}
+    {{ login_message }}
+{% endif %}
 {% endblock %}

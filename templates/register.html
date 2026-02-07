@@ -1,6 +1,9 @@
 {% extends "index.html" %}
 
 {% block main_content %}
+<p>
+    Rekisteröi uusi käyttäjä!
+</p>
 <form action="/create" method="post">
     <p>
         Käyttäjänimi: <br />
@@ -16,4 +19,7 @@
     </p>
     <input type="submit" value="Luo tunnus" />
 </form>
+{% if register_message %}
+    {{ register_message }}
+{% endif %}
 {% endblock %}
