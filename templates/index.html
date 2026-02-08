@@ -1,10 +1,22 @@
 {% extends "layout.html" %}
 
-{% block title %} Ex Libris {% endblock %}
 
-{% block top_content %}
-<h2> Tämä on Ex Libriksen aloitussivu</h2>
+{% block main_content %}
+<form action="/login" method="POST">
+    <p>
+        Käyttäjänimi: <br />
+        <input type="text" name="username" />
+    </p>
+    <p>
+        Salasana: <br />
+        <input type="password" name="password" />
+    </p>
+    <input type="submit" value="Kirjaudu sisään" />
+    <a href="/register">Rekisteröidy</a>
+</form>
+
+{% if login_message %}
+    {{ login_message }}
+{% endif %}
 {% endblock %}
-
-{% block main_content %} {% endblock %}
 

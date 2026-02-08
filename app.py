@@ -12,7 +12,7 @@ def index():
 	
 
 	login_message = session.pop('login_message', None)
-	return render_template("login.html", login_message=login_message)
+	return render_template("index.html", login_message=login_message)
 
 @app.get("/register")
 def register():
@@ -42,15 +42,23 @@ def create():
 
 @app.post("/login")
 def login():
+
 	username = request.form["username"]
 	password = request.form["password"]
 
 	sql = "SELECT password_hash FROM users WHERE username = ?"
-	password_hash = db.query(sql, [username])[0][0]
+	result = db.query(sql, [username])
+
+	print("the result is: ", result)
+	if not result:
+		session["login_message"] = "Käyttäjää ei löydy"
+		return redirect("/")
+
+	password_hash = result[0][0]
 
 	if check_password_hash(password_hash, password):
 		session["username"] = username
-		return redirect("/")
+		return redirect("/<<username>")
 	else:
 		session["login_message"] = "Väärä käyttäjätunnus tai salasana"
 		return redirect("/")
