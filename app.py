@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, redirect, request
-from flask import session
-from werkzeug.security import generate_password_hash
+from flask import session, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import db
 app = Flask(__name__)
@@ -58,7 +58,7 @@ def login():
 
 	if check_password_hash(password_hash, password):
 		session["username"] = username
-		return redirect("/<<username>")
+		return redirect(url_for("profile", username=username))
 	else:
 		session["login_message"] = "Väärä käyttäjätunnus tai salasana"
 		return redirect("/")
@@ -69,5 +69,6 @@ def logout():
 	return redirect("/")
 
 @app.get("/<username>")
-def profile():
-	return render_template("profile.html")
+def profile(username):
+
+	return render_template("profile.html", username=username)
