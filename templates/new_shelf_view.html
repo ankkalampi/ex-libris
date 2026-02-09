@@ -1,0 +1,27 @@
+{% extends "user_layout.html" %}
+
+{% block user_content %}
+<div class="new-shelf-form">
+    <p>
+        Uusi kirjahylly
+    </p>
+
+    <form action="/create_shelf" method="post">
+        <p>
+            Hyllyn nimi: <br />
+            <input type="text" name="name" />
+        </p>
+        <p>
+            Hyllyn kuvaus: <br />
+            <input type="text" name="description" />
+        </p>
+        <input type="submit" value="Luo kirjahylly" />
+    </form>
+    <p>
+        <a href="/{{ session.username }}/hyllyt">
+            Takaisin
+        </a>
+    </p>
+</div>
+
+{% endblock %}

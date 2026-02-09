@@ -9,18 +9,19 @@ app.secret_key = 'secret key'
 
 @app.get("/")
 def index():
-	
-
+	"""renders view for front page"""
 	login_message = session.pop('login_message', None)
 	return render_template("index.html", login_message=login_message)
 
 @app.get("/register")
 def register():
+	"""renders view for register new user"""
 	register_message = session.pop('register_message', None)
 	return render_template("register.html", register_message=register_message)
 
 @app.post("/create")
 def create():
+	"""creates new user"""
 	username = request.form["username"]
 	password1 = request.form["password1"]
 	password2 = request.form["password2"]
@@ -42,14 +43,13 @@ def create():
 
 @app.post("/login")
 def login():
-
+	"""attempts to log in user"""
 	username = request.form["username"]
 	password = request.form["password"]
 
 	sql = "SELECT password_hash FROM users WHERE username = ?"
 	result = db.query(sql, [username])
 
-	print("the result is: ", result)
 	if not result:
 		session["login_message"] = "Käyttäjää ei löydy"
 		return redirect("/")
@@ -65,10 +65,69 @@ def login():
 
 @app.get("/logout")
 def logout():
+	"""logs in user"""
 	del session["username"]
 	return redirect("/")
 
 @app.get("/<username>")
 def profile(username):
+	"""renders view for user profile"""
 
 	return render_template("profile.html", username=username)
+
+@app.get("/<username>/hyllyt")
+def shelves(username):
+	"""renders view for a user's bookshelves"""
+
+	
+
+	try:
+		sql = "SELECT id FROM users WHERE username = ?"
+		result = db.query(sql, [username])
+		user_id = result[0][0]
+	except:
+		print(f"Database error in finding user id user_id: {user_id}")
+		return redirect("/")
+
+	try:
+		sql = "SELECT name, number_of_books, description FROM shelves WHERE user_id = ?"
+		shelves = db.query(sql, [user_id])
+	except:
+		print(f"Database error in selecting shelves, user_id: {user_id}")
+		return redirect("/")
+
+
+	return render_template("shelves.html", shelves=shelves)
+
+@app.post("/create_shelf")
+def create_shelf():
+	"""creates new bookshelf"""
+	username = session["username"]
+
+	try:
+		sql = "SELECT id FROM users WHERE username = ?"
+		result = db.query(sql, [username])
+		user_id = result[0][0]
+	except:
+		print(f"Database error in finding user id, user_id: {user_id} ")
+		return redirect("/")
+
+	name = request.form["name"]
+	description = request.form["description"]
+
+	try:
+		sql = "INSERT INTO shelves (user_id, name, number_of_books, description) VALUES (?, ?, ?, ?)"
+		db.execute(sql, [user_id, name, 0, description])
+	except:
+		print("Database error in creating new shelf")
+		return redirect ("/")
+
+	return redirect(f"/{username}/hyllyt")
+
+@app.get("/<username>/uusi-hylly")
+def new_shelf_view(username):
+	"""renders view for creation of new shelf"""
+
+	return render_template("new_shelf_view.html")
+
+

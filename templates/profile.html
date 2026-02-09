@@ -1,14 +1,12 @@
-{% extends "layout.html" %}
+{% extends "user_layout.html" %}
 
-{% block main_content %}
+{% block user_content %}
 
 <div name="profile_content">
     <p>
         Tervetuloa, {{ username }}
     </p>
-    <p>
-        <a href="/logout">Kirjaudu ulos</a>
-    </p>
+   
 </div>
 
 {% endblock %}

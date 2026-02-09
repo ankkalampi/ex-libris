@@ -1,0 +1,29 @@
+{% extends "user_layout.html" %}
+
+{% block user_content %}
+<div class="new-shelf-button">
+    <a href="/{{ session.username }}/uusi-hylly" title="luo uusi kirjahylly" id="new_shelf_button">
+        Uusi Kirjahylly
+    </a>
+</div>
+
+<div class="shelf-list" id="shelf_list">
+
+    {% for shelf in shelves %}
+    <div class="shelf-entry">
+        <p>
+        {{ shelf[0] }}
+        </p>
+        <p>
+            kirjojen lukumäärä: {{ shelf[1] }}
+        </p>
+        <p>
+            kuvaus: {{ shelf[2] }}
+        </p>
+    </div>
+    {% endfor %}
+    
+
+</div>
+
+{% endblock %}

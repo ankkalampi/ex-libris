@@ -4,3 +4,11 @@ body {
   font-family: sans-serif;
   background-color: lightblue;
 }
+
+.inline-flex-parent {
+  display: inline-flex;
+}
+
+.user-menu-button {
+  padding: 5px;
+}
