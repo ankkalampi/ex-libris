@@ -4,6 +4,7 @@ from flask import session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import db
+import shelf
 app = Flask(__name__)
 app.secret_key = 'secret key'
 
@@ -81,20 +82,7 @@ def shelves(username):
 
 	
 
-	try:
-		sql = "SELECT id FROM users WHERE username = ?"
-		result = db.query(sql, [username])
-		user_id = result[0][0]
-	except:
-		print(f"Database error in finding user id user_id: {user_id}")
-		return redirect("/")
-
-	try:
-		sql = "SELECT name, number_of_books, description FROM shelves WHERE user_id = ?"
-		shelves = db.query(sql, [user_id])
-	except:
-		print(f"Database error in selecting shelves, user_id: {user_id}")
-		return redirect("/")
+	shelves = shelf.get_shelves(username)
 
 
 	return render_template("shelves.html", shelves=shelves)
@@ -104,23 +92,11 @@ def create_shelf():
 	"""creates new bookshelf"""
 	username = session["username"]
 
-	try:
-		sql = "SELECT id FROM users WHERE username = ?"
-		result = db.query(sql, [username])
-		user_id = result[0][0]
-	except:
-		print(f"Database error in finding user id, user_id: {user_id} ")
-		return redirect("/")
 
 	name = request.form["name"]
 	description = request.form["description"]
 
-	try:
-		sql = "INSERT INTO shelves (user_id, name, number_of_books, description) VALUES (?, ?, ?, ?)"
-		db.execute(sql, [user_id, name, 0, description])
-	except:
-		print("Database error in creating new shelf")
-		return redirect ("/")
+	shelf.create_self(username, name, description)
 
 	return redirect(f"/{username}/hyllyt")
 
