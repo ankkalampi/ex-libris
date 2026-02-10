@@ -8,7 +8,7 @@ def get_shelves(username):
     user_id = user.get_user_id(username)
 
     try:
-	    sql = "SELECT name, number_of_books, description FROM shelves WHERE user_id = ?"
+	    sql = "SELECT name, number_of_books, description, id FROM shelves WHERE user_id = ?"
 	    shelves = db.query(sql, [user_id])
     except:
 	    print(f"Database error in selecting shelves, user_id: {user_id}")
@@ -26,6 +26,15 @@ def create_self(username, name, description):
     except:
 	    print("Database error in creating new shelf")
 	    return redirect ("/")
+
+def delete_shelf(shelf_id):
+
+    try:
+        sql = "DELETE FROM shelves WHERE id = ?"
+        db.execute(sql, [shelf_id])
+    except:
+        print("Database error in deleting shelf")
+        return redirect ("/")
 
 
 

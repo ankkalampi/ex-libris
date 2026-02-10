@@ -20,6 +20,9 @@
         <p>
             kuvaus: {{ shelf[2] }}
         </p>
+        <a href="/remove_shelf/{{ session.username }}/{{ shelf[3] }}" title="poista hylly" id="remove-shelf-button">
+            Poista hylly
+        </a>
     </div>
     {% endfor %}
     

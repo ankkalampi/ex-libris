@@ -91,4 +91,9 @@ def new_shelf_view(username):
 
 	return render_template("new_shelf_view.html")
 
+@app.get("/remove_shelf/<username>/<shelf_id>")
+def remove_shelf(username, shelf_id):
+	shelf.delete_shelf(shelf_id)
+	return redirect(f"/{username}/hyllyt")
+
 
