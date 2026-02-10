@@ -2,8 +2,9 @@
 
 
 {% block main_content %}
-
-    {% include "user_menu.html" %}
+    {% with username = session.username %}
+        {% include "user_menu.html" %}
+    {% endwith %}
 
     {% block user_content %}
     {% endblock %}

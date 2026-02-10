@@ -4,6 +4,7 @@ from flask import redirect, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_user_id(username):
+    """gets user db id based on username"""
     try:
 	    sql = "SELECT id FROM users WHERE username = ?"
 	    result = db.query(sql, [username])
@@ -15,6 +16,7 @@ def get_user_id(username):
     return user_id
 
 def login(username, password):
+    """attempts to login user"""
     sql = "SELECT password_hash FROM users WHERE username = ?"
     result = db.query(sql, [username])
 
@@ -32,6 +34,7 @@ def login(username, password):
         return False
 
 def create_user(username, password1, password2):
+    """attempts to register new user"""
     
 
     password_hash = generate_password_hash(password1)

@@ -4,6 +4,7 @@ import user
 from flask import redirect
 
 def get_shelves(username):
+    """returns all bookshelves of a user"""
     
     user_id = user.get_user_id(username)
 
@@ -16,8 +17,21 @@ def get_shelves(username):
 
     return shelves
 
+def get_shelf(shelf_id):
+    """returns a shelf based on db id"""
+
+    try:
+        sql = "SELECT name, number_of_books, description FROM shelves WHERE id = ?"
+        shelf = db.query(sql, [shelf_id])
+    except:
+        print("Database error in fetching shelf")
+        return redirect("/")
+
+    return shelf
+
 
 def create_self(username, name, description):
+    """creates new bookshelf"""
     user_id = user.get_user_id(username)
 
     try:
@@ -28,6 +42,7 @@ def create_self(username, name, description):
 	    return redirect ("/")
 
 def delete_shelf(shelf_id):
+    """deletes a bookshelf based on db id"""
 
     try:
         sql = "DELETE FROM shelves WHERE id = ?"

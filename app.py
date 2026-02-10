@@ -93,7 +93,16 @@ def new_shelf_view(username):
 
 @app.get("/remove_shelf/<username>/<shelf_id>")
 def remove_shelf(username, shelf_id):
+	"""removes bookshelf"""
 	shelf.delete_shelf(shelf_id)
 	return redirect(f"/{username}/hyllyt")
 
+@app.get("/<username>/hyllyt/<shelf_id>")
+def shelf_view(username, shelf_id):
+	"""renders view for a single shelf"""
+
+	shelf_entry = shelf.get_shelf(shelf_id)
+	print(f"shelf name: {shelf_entry[0]}")
+
+	return render_template("shelf_view.html", shelf=shelf_entry)
 
