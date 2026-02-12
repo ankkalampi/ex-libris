@@ -7,9 +7,10 @@ import db
 import shelf
 import user
 import book
+import config
 
 app = Flask(__name__)
-app.secret_key = 'secret key'
+app.secret_key = config.secret_key
 
 @app.get("/")
 def index():
@@ -123,8 +124,6 @@ def create_book(username, shelf_name):
 	pages = request.form["pages"]
 	synopsis = request.form["synopsis"]
 
-	
-
 	if (synopsis == ""):
 		synopsis = None
 
@@ -139,7 +138,6 @@ def create_book(username, shelf_name):
 		book.create_book(username, shelf_name, name, author, pages, synopsis)
 	except:
 		session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
-		print(f"INTEGRITY ERROR!!!!!")
 		return redirect(f"/{username}/{shelf_name}/uusi-kirja")
 
 	session["add_book_message"] = "Kirja lisätty!"
