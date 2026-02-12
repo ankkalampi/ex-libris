@@ -1,7 +1,18 @@
 import sqlite3
 import db
-from flask import redirect, session, url_for
+from flask import redirect, session, url_for, g, request
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('index', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 def get_user_id(username):
     """gets user db id based on username"""

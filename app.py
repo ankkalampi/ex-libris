@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template, redirect, request
-from flask import session, url_for
+from flask import session, url_for, g
+from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import db
@@ -8,9 +9,19 @@ import shelf
 import user
 import book
 import config
+from user import login_required
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+@app.before_request
+def load_logged_in_user():
+    username = session.get("username")
+    if username is None:
+        g.user = None
+    else:
+        g.user = username
+
 
 @app.get("/")
 def index():
@@ -53,18 +64,21 @@ def login():
 
 
 @app.get("/logout")
+@login_required
 def logout():
 	"""logs in user"""
 	del session["username"]
 	return redirect("/")
 
 @app.get("/<username>")
+@login_required
 def profile(username):
 	"""renders view for user profile"""
 
 	return render_template("profile.html", username=username)
 
 @app.get("/<username>/hyllyt")
+@login_required
 def shelves(username):
 	"""renders view for a user's bookshelves"""
 
@@ -76,6 +90,7 @@ def shelves(username):
 	return render_template("shelves.html", shelves=shelves)
 
 @app.post("/create_shelf")
+@login_required
 def create_shelf():
 	"""creates new bookshelf"""
 	username = session["username"]
@@ -89,18 +104,21 @@ def create_shelf():
 	return redirect(f"/{username}/hyllyt")
 
 @app.get("/<username>/uusi-hylly")
+@login_required
 def new_shelf_view(username):
 	"""renders view for creation of new shelf"""
 
 	return render_template("new_shelf_view.html")
 
 @app.get("/remove_shelf/<username>/<shelf_id>")
+@login_required
 def remove_shelf(username, shelf_id):
 	"""removes bookshelf"""
 	shelf.delete_shelf(shelf_id)
 	return redirect(f"/{username}/hyllyt")
 
 @app.get("/<username>/hyllyt/<shelf_name>")
+@login_required
 def shelf_view(username, shelf_name):
 	"""renders view for a single shelf"""
 
@@ -110,12 +128,14 @@ def shelf_view(username, shelf_name):
 	return render_template("shelf_view.html", shelf=shelf_entry)
 
 @app.get("/<username>/<shelf_name>/uusi-kirja")
+@login_required
 def new_book_view(username, shelf_name):
 	"""renders view for adding a book to a shelf"""
 	add_book_message = session.pop("add_book_message", None)
 	return render_template("new_book_view.html", username=username, shelf_name=shelf_name, add_book_message=add_book_message)
 
 @app.post("/create_book/<username>/<shelf_name>")
+@login_required
 def create_book(username, shelf_name):
 	"""creates a new book"""
 
