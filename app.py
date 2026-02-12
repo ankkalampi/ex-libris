@@ -133,12 +133,15 @@ def create_book(username, shelf_name):
 
 	if (name == "" or author == ""):
 		session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
-		print("KIRJAN NIMI TAI KIRJAILIJAN NIMI OLI TYHJÄ")
 		return redirect(f"/{username}/{shelf_name}/uusi-kirja")
 
-	shelf_id = shelf.get_shelf_id(shelf_name)
+	try:
+		book.create_book(username, shelf_name, name, author, pages, synopsis)
+	except:
+		session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
+		print(f"INTEGRITY ERROR!!!!!")
+		return redirect(f"/{username}/{shelf_name}/uusi-kirja")
 
-	book.create_book(username, shelf_id, name, author, pages, synopsis)
 	session["add_book_message"] = "Kirja lisätty!"
 	return redirect(f"/{username}/{shelf_name}/uusi-kirja")
 

@@ -2,11 +2,13 @@ import sqlite3
 import db
 import user
 from flask import redirect, g, session
+import shelf
 
 
-def create_book(username, shelf_id, name, author, pages, synopsis): 
+def create_book(username, shelf_name, name, author, pages, synopsis): 
     """creates a book onto db"""
     user_id = user.get_user_id(username)
+    shelf_id = shelf.get_shelf_id(shelf_name)
 
     connection = db.get_connection()
 
@@ -59,8 +61,7 @@ def create_book(username, shelf_id, name, author, pages, synopsis):
         
 
     except sqlite3.IntegrityError:
-        session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
-        return redirect(f"/{username}/{shelf_id}/uusi-kirja")
+        raise
 
     finally:
         connection.close()
