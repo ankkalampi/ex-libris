@@ -6,6 +6,8 @@ import sqlite3
 import db
 import shelf
 import user
+import book
+
 app = Flask(__name__)
 app.secret_key = 'secret key'
 
@@ -97,12 +99,47 @@ def remove_shelf(username, shelf_id):
 	shelf.delete_shelf(shelf_id)
 	return redirect(f"/{username}/hyllyt")
 
-@app.get("/<username>/hyllyt/<shelf_id>")
-def shelf_view(username, shelf_id):
+@app.get("/<username>/hyllyt/<shelf_name>")
+def shelf_view(username, shelf_name):
 	"""renders view for a single shelf"""
 
-	shelf_entry = shelf.get_shelf(shelf_id)
+	shelf_entry = shelf.get_shelf(shelf_name)
 	print(f"shelf name: {shelf_entry[0]}")
 
 	return render_template("shelf_view.html", shelf=shelf_entry)
+
+@app.get("/<username>/<shelf_name>/uusi-kirja")
+def new_book_view(username, shelf_name):
+	"""renders view for adding a book to a shelf"""
+	add_book_message = session.pop("add_book_message", None)
+	return render_template("new_book_view.html", username=username, shelf_name=shelf_name, add_book_message=add_book_message)
+
+@app.post("/create_book/<username>/<shelf_name>")
+def create_book(username, shelf_name):
+	"""creates a new book"""
+
+	name = request.form["name"]
+	author = request.form["author"]
+	pages = request.form["pages"]
+	synopsis = request.form["synopsis"]
+
+	
+
+	if (synopsis == ""):
+		synopsis = None
+
+	if (pages == 0):
+		pages = None
+
+	if (name == "" or author == ""):
+		session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
+		print("KIRJAN NIMI TAI KIRJAILIJAN NIMI OLI TYHJÄ")
+		return redirect(f"/{username}/{shelf_name}/uusi-kirja")
+
+	shelf_id = shelf.get_shelf_id(shelf_name)
+
+	book.create_book(username, shelf_id, name, author, pages, synopsis)
+	session["add_book_message"] = "Kirja lisätty!"
+	return redirect(f"/{username}/{shelf_name}/uusi-kirja")
+
 

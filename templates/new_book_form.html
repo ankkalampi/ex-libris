@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<div class="new-book-form">
+    <p>
+        Uusi kirja
+    </p>
+
+    <form action="/create_book/{{ username }}/{{ shelf_name }}" method="post">
+        <p>
+            Kirjan nimi: <br />
+            <input type="text" name="name"/>
+        </p>
+        <p>
+            Kirjoittajan nimi: <br />
+            <input type="text" name="author"/>
+        </p>
+        <p>
+            Sivumäärä(voi jättää tyhjäksi): <br />
+            <input type="number" name="pages"/>
+        </p>
+        <p>
+            Synopsis(voi jättää tyhjäksi): <br />
+            <input type="text" name="synopsis"/>
+        </p>
+        <input type="submit" value="Lisää kirja" />
+    </form>
+    <p>
+        {% if add_book_message %}
+        {{ add_book_message }}
+        {% endif %}
+    </p>
+    <p>
+        <a href="/{{ username }}/{{ shelf_id }}">
+            Takaisin
+        </a>
+    </p>
+</div>

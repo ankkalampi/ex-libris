@@ -17,17 +17,31 @@ def get_shelves(username):
 
     return shelves
 
-def get_shelf(shelf_id):
+def get_shelf(shelf_name):
     """returns a shelf based on db id"""
 
     try:
-        sql = "SELECT name, number_of_books, description FROM shelves WHERE id = ?"
-        shelf = db.query(sql, [shelf_id])
+        sql = "SELECT name, number_of_books, description FROM shelves WHERE name = ?"
+        shelf = db.query(sql, [shelf_name])
     except:
         print("Database error in fetching shelf")
         return redirect("/")
 
     return shelf
+
+def get_shelf_id(shelf_name):
+    """"returns shelf id basd on name"""
+    try:
+        sql = "SELECT id FROM shelves WHERE name = ?"
+        shelf = db.query(sql, [shelf_name])
+    except:
+        print("Database error in fetching shelf name")
+        return redirect("/")
+
+    shelf_id = shelf[0][0]
+
+    return shelf_id
+
 
 
 def create_self(username, name, description):
@@ -55,12 +69,4 @@ def delete_shelf(shelf_id):
 
 
 
-def get_books(shelf):
-    pass
-
-def add_book(book, shelf):
-    pass
-
-def remove_book(book, shelf):
-    pass
 

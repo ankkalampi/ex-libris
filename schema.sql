@@ -6,11 +6,13 @@ CREATE TABLE users (
 
 CREATE TABLE books (
 	id INTEGER PRIMARY KEY,
-	name TEXT UNIQUE,
+	name TEXT,
 	author TEXT,
 	pages INTEGER,
 	synopsis TEXT,
-	stars INTEGER
+	user_id INTEGER,
+	UNIQUE (name, author, user_id)
+
 );
 
 CREATE TABLE tags (
