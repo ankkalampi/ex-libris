@@ -35,12 +35,26 @@ def get_shelf_id(shelf_name):
         sql = "SELECT id FROM shelves WHERE name = ?"
         shelf = db.query(sql, [shelf_name])
     except:
-        print("Database error in fetching shelf name")
+        print("Database error in fetching shelf id")
         return redirect("/")
 
     shelf_id = shelf[0][0]
 
     return shelf_id
+
+def get_shelf_name(shelf_id):
+    """returns shelf name based on id"""
+
+    try:
+        sql = "SELECT name FROM shelves WHERE id = ?"
+        shelf = db.query(sql, [shelf_id])
+    except:
+        print("Database error in fetching shelf name")
+        return redirect("/")
+
+    shelf_name = shelf[0][0]
+
+    return shelf_name
 
 
 

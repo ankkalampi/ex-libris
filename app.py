@@ -125,7 +125,11 @@ def shelf_view(username, shelf_name):
 	shelf_entry = shelf.get_shelf(shelf_name)
 	print(f"shelf name: {shelf_entry[0]}")
 
-	return render_template("shelf_view.html", shelf=shelf_entry)
+	shelf_id = shelf.get_shelf_id(shelf_name)
+
+	books = book.get_books(shelf_id)
+
+	return render_template("shelf_view.html", shelf=shelf_entry, books=books)
 
 @app.get("/<username>/<shelf_name>/uusi-kirja")
 @login_required

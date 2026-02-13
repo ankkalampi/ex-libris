@@ -9,6 +9,8 @@
         {% set description = shelf[0][2] %}
         {% set username = session.username %}
         {% include "shelf_info.html" %}
+        {% set books = books %}
+        {% include "book_list.html" %}
 
    
 

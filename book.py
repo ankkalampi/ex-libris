@@ -72,7 +72,24 @@ def create_book(username, shelf_name, name, author, pages, synopsis):
 def get_books(shelf_id):
     """returns all books in a shelf"""
 
-def check_if_book_exists(name, author, username):
-    """checks if a user has already added a book. Returns """
+    print(f"SHELF ID: {shelf_id}")
+    try:
+        sql = """
+        SELECT id, name, author, pages, synopsis 
+        FROM books
+        JOIN shelf_books ON books.id = shelf_books.book_id
+        WHERE shelf_books.shelf_id = ?
+        """
+        books = db.query(sql, [shelf_id])
+        
+    except Exception as e:
+        print(e)
+        shelf_name = shelf.get_shelf_name(shelf_id)
+        print(f"SHELF NAME: {shelf_name}")
+        return redirect(f"/")
+
+    return books
+    
+
     
 
