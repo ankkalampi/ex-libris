@@ -89,6 +89,9 @@ def get_books(shelf_id):
         return redirect(f"/")
 
     return books
+
+def search(name, author, public):
+    pass
     
 
     

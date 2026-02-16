@@ -171,3 +171,14 @@ def create_book(username, shelf_name):
 	return redirect(url_for("new_book_view", username=username, shelf_name=shelf_name))
 
 
+
+
+
+@app.get("/<username>/haku")
+def search(username):
+	name = request.args.get("name")
+	author = request.args.get("author")
+	public = 1 if request.form.get("search-from-everyone-choice") else 0
+
+	results = book.search(name, author, public) if name else []
+	return render_template("search_view.html", name=name, author=author, results=results, username=username)
