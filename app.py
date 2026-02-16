@@ -10,6 +10,7 @@ import user
 import book
 import config
 from user import login_required
+from markupsafe import escape
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -44,12 +45,12 @@ def create():
 
 	if password1 != password2:
 		session["register_message"] = "VIRHE! salasanat eivät ole samat"
-		return redirect("/register")
+		return redirect(url_for("register"))
 	
 	user.create_user(username, password1, password2)
 
 	session["login_message"] = "Käyttäjä luotu!"
-	return redirect("/")
+	return redirect(url_for("index"))
 
 @app.post("/login")
 def login():
@@ -60,7 +61,7 @@ def login():
 	if user.login(username, password):
 		return redirect(url_for("profile", username=username))
 	else:
-		return redirect("/")
+		return redirect(url_for("index"))
 
 
 @app.get("/logout")
@@ -68,7 +69,7 @@ def login():
 def logout():
 	"""logs in user"""
 	del session["username"]
-	return redirect("/")
+	return redirect(url_for("index"))
 
 @app.get("/<username>")
 @login_required
@@ -98,10 +99,11 @@ def create_shelf():
 
 	name = request.form["name"]
 	description = request.form["description"]
+	public = 1 if request.form.get("public-choice") else 0
 
-	shelf.create_self(username, name, description)
+	shelf.create_self(username, name, description, public)
 
-	return redirect(f"/{username}/hyllyt")
+	return redirect(url_for("shelves", username=username))
 
 @app.get("/<username>/uusi-hylly")
 @login_required
@@ -115,7 +117,7 @@ def new_shelf_view(username):
 def remove_shelf(username, shelf_id):
 	"""removes bookshelf"""
 	shelf.delete_shelf(shelf_id)
-	return redirect(f"/{username}/hyllyt")
+	return redirect(url_for("shelves", username=username))
 
 @app.get("/<username>/hyllyt/<shelf_name>")
 @login_required
@@ -156,15 +158,16 @@ def create_book(username, shelf_name):
 
 	if (name == "" or author == ""):
 		session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
-		return redirect(f"/{username}/{shelf_name}/uusi-kirja")
+		return redirect(url_for("new_book_view", username=username, shelf_name=shelf_name))
+		
 
 	try:
 		book.create_book(username, shelf_name, name, author, pages, synopsis)
 	except:
 		session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
-		return redirect(f"/{username}/{shelf_name}/uusi-kirja")
+		return redirect(url_for("new_book_view", username=username, shelf_name=shelf_name))
 
 	session["add_book_message"] = "Kirja lisätty!"
-	return redirect(f"/{username}/{shelf_name}/uusi-kirja")
+	return redirect(url_for("new_book_view", username=username, shelf_name=shelf_name))
 
 

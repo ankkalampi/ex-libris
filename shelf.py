@@ -58,13 +58,13 @@ def get_shelf_name(shelf_id):
 
 
 
-def create_self(username, name, description):
+def create_self(username, name, description, public):
     """creates new bookshelf"""
     user_id = user.get_user_id(username)
 
     try:
-	    sql = "INSERT INTO shelves (user_id, name, number_of_books, description) VALUES (?, ?, ?, ?)"
-	    db.execute(sql, [user_id, name, 0, description])
+	    sql = "INSERT INTO shelves (user_id, name, number_of_books, description, public) VALUES (?, ?, ?, ?, ?)"
+	    db.execute(sql, [user_id, name, 0, description, public])
     except:
 	    print("Database error in creating new shelf")
 	    return redirect ("/")
