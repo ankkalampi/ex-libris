@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 
 <div class="book-search-list">
-    {% for entry in result %}
+    {% for book in result %}
     <div class="book-entry">
         <p>
             ---------------------------------
         </p>
         <p>
-            <b>{{ book[1] }}</b>
+            <b>{{ book[0] }}</b>
         </p>
         <p>
-            Kirjoittaja: {{ book[2] }}
+            Kirjoittaja: {{ book[1] }}
         </p>
         <p>
             sivumäärä: 
+            {% if book[2] %}
+            {{ book[2] }}
+            {% endif %}
+        </p>
+        <p>
+            synopsis:
             {% if book[3] %}
             {{ book[3] }}
             {% endif %}
         </p>
         <p>
-            synopsis:
-            {% if book[4] %}
-            {{ book[4] }}
-            {% endif %}
+            Käyttäjä: {{ book[4] }}
         </p>
         <p>
-            <a href="/remove_book/{{ book[0] }}">
-                Poista kirja
-            </a>
+            Kirjahylly: {{ book[5] }}
         </p>
-        <p>
-            <a href="/{{ username }}/{{ name }}/uusi-kirja">
-                Lisää uusi kirja
-            </a>
-        </p>
+        
     </div>
     {%  endfor %}
 </div>

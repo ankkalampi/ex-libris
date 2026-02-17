@@ -17,25 +17,32 @@ def get_shelves(username):
 
     return shelves
 
-def get_shelf(shelf_name):
+def get_shelf(shelf_name, username):
     """returns a shelf based on db id"""
 
     try:
-        sql = "SELECT name, number_of_books, description FROM shelves WHERE name = ?"
-        shelf = db.query(sql, [shelf_name])
-    except:
+        sql = """
+        SELECT name, number_of_books, description 
+        FROM shelves
+        JOIN users ON users.id = shelves.user_id
+        WHERE name = ? AND users.username = ?
+        """
+        shelf = db.query(sql, [shelf_name, username])
+    except Exception as e:
         print("Database error in fetching shelf")
+        print(e)
         return redirect("/")
 
     return shelf
 
 def get_shelf_id(shelf_name):
-    """"returns shelf id basd on name"""
+    """"returns shelf id based on name"""
     try:
         sql = "SELECT id FROM shelves WHERE name = ?"
         shelf = db.query(sql, [shelf_name])
-    except:
+    except Exception as e:
         print("Database error in fetching shelf id")
+        print(e)
         return redirect("/")
 
     shelf_id = shelf[0][0]
@@ -58,7 +65,7 @@ def get_shelf_name(shelf_id):
 
 
 
-def create_self(username, name, description, public):
+def create_shelf(username, name, description, public):
     """creates new bookshelf"""
     user_id = user.get_user_id(username)
 

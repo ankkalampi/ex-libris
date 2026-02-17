@@ -101,7 +101,7 @@ def create_shelf():
 	description = request.form["description"]
 	public = 1 if request.form.get("public-choice") else 0
 
-	shelf.create_self(username, name, description, public)
+	shelf.create_shelf(username, name, description, public)
 
 	return redirect(url_for("shelves", username=username))
 
@@ -124,12 +124,10 @@ def remove_shelf(username, shelf_id):
 def shelf_view(username, shelf_name):
 	"""renders view for a single shelf"""
 
-	shelf_entry = shelf.get_shelf(shelf_name)
-	print(f"shelf name: {shelf_entry[0]}")
+	shelf_entry = shelf.get_shelf(shelf_name, username)
 
-	shelf_id = shelf.get_shelf_id(shelf_name)
 
-	books = book.get_books(shelf_id)
+	books = book.get_books(shelf_name, username)
 
 	return render_template("shelf_view.html", shelf=shelf_entry, books=books)
 
@@ -178,7 +176,6 @@ def create_book(username, shelf_name):
 def search(username):
 	name = request.args.get("name")
 	author = request.args.get("author")
-	public = 1 if request.form.get("search-from-everyone-choice") else 0
-
-	results = book.search(name, author, public, username) if name else []
-	return render_template("search_view.html", name=name, author=author, results=results, username=username)
+	public = 1 if request.args.get("search-from-everyone-choice") else 0
+	result = book.search(name, author, public, username) if name else []
+	return render_template("search_view.html", name=name, author=author, result=result, username=username)

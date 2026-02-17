@@ -25,7 +25,7 @@
             </p>
             <p>
                 Haetaan myös toisten käyttäjien hyllyistä: 
-                <input type="checkbox" id="search-from-other-users-checkbox" name="search-from-everyone-choice" />
+                <input type="checkbox" id="search-from-other-users-checkbox" name="search-from-everyone-choice" value="1"/>
             </p>
             <input type="submit" value="Hae" />
 
@@ -33,10 +33,7 @@
         <p>
             Hakutulokset:
         </p>
-        {% if results %}
-            {% for result in results %}
-            {% endfor %}
-
-        {% endif %}
+        {% set  result = result %}
+        {% include "book_search_list.html" %}
     </div>
 {% endblock %}

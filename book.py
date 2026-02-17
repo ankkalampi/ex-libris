@@ -1,7 +1,7 @@
 import sqlite3
 import db
 import user
-from flask import redirect, g, session
+from flask import redirect, g, session, url_for
 import shelf
 
 
@@ -69,24 +69,26 @@ def create_book(username, shelf_name, name, author, pages, synopsis):
 
 
 
-def get_books(shelf_id):
-    """returns all books in a shelf"""
+def get_books(shelf_name, username):
+    """returns all books in a shelf belonging to a user"""
 
     
     try:
         sql = """
-        SELECT id, name, author, pages, synopsis 
+        SELECT books.id, books.name, books.author, books.pages, books.synopsis 
         FROM books
         JOIN shelf_books ON books.id = shelf_books.book_id
-        WHERE shelf_books.shelf_id = ?
+        JOIN shelves ON shelf_books.shelf_id = shelves.id
+        JOIN users ON shelves.user_id = users.id
+        WHERE shelves.name = ? AND users.username = ?
         """
-        books = db.query(sql, [shelf_id])
+        books = db.query(sql, [shelf_name, username])
 
     
         
     except Exception as e:
         print(e)
-        return redirect(url_for("shelf_view"))
+        return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
     
     
 
@@ -95,6 +97,7 @@ def get_books(shelf_id):
 def search(name, author, public, username):
     try:
         if (public == 1):
+            print("SEARCHING FROM ALL SHELVES!!!")
             sql = """
             SELECT b.name, b.author, b.pages, b.synopsis, u.username, s.name
             FROM books b
@@ -103,7 +106,7 @@ def search(name, author, public, username):
             JOIN shelf_books sb ON b.id = sb.book_id
             JOIN shelves s ON sb.shelf_id = s.id
             WHERE (u.username = ? OR s.public = 1)
-            AND (b.name = ? AND b.author = ?)
+            AND (b.name LIKE ? AND b.author LIKE ?)
             """
             result = db.query(sql, [username, "%"+name+"%", "%"+author+"%"])
 
@@ -116,7 +119,7 @@ def search(name, author, public, username):
             JOIN shelf_books sb ON b.id = sb.book_id
             JOIN shelves s ON sb.shelf_id = s.id
             WHERE u.username = ?
-            AND (b.name = ? AND b.author = ?)
+            AND (b.name LIKE ? AND b.author LIKE ?)
             """
             result = db.query(sql, [username, "%"+name+"%", "%"+author+"%"])
 
