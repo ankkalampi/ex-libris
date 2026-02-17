@@ -30,5 +30,13 @@
             <input type="submit" value="Hae" />
 
         </form>
+        <p>
+            Hakutulokset:
+        </p>
+        {% if results %}
+            {% for result in results %}
+            {% endfor %}
+
+        {% endif %}
     </div>
 {% endblock %}

@@ -180,5 +180,5 @@ def search(username):
 	author = request.args.get("author")
 	public = 1 if request.form.get("search-from-everyone-choice") else 0
 
-	results = book.search(name, author, public) if name else []
+	results = book.search(name, author, public, username) if name else []
 	return render_template("search_view.html", name=name, author=author, results=results, username=username)

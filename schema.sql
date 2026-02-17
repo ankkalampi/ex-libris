@@ -54,3 +54,9 @@ CREATE TABLE shelf_books (
 	FOREIGN KEY (shelf_id) REFERENCES shelves(id),
 	FOREIGN KEY (book_id) REFERENCES books(id)
 );
+
+CREATE INDEX idx_user_books_book_id ON user_books(user_id);
+CREATE INDEX idx_shelf_books_book_id ON shelf_books(book_id);
+CREATE INDEX idx_shelf_id ON shelves(id);
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_shelves_public ON shelves(id) WHERE public = 1;

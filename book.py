@@ -72,7 +72,7 @@ def create_book(username, shelf_name, name, author, pages, synopsis):
 def get_books(shelf_id):
     """returns all books in a shelf"""
 
-    print(f"SHELF ID: {shelf_id}")
+    
     try:
         sql = """
         SELECT id, name, author, pages, synopsis 
@@ -81,17 +81,50 @@ def get_books(shelf_id):
         WHERE shelf_books.shelf_id = ?
         """
         books = db.query(sql, [shelf_id])
+
+    
         
     except Exception as e:
         print(e)
-        shelf_name = shelf.get_shelf_name(shelf_id)
-        print(f"SHELF NAME: {shelf_name}")
-        return redirect(f"/")
+        return redirect(url_for("shelf_view"))
+    
+    
 
     return books
 
-def search(name, author, public):
-    pass
+def search(name, author, public, username):
+    try:
+        if (public == 1):
+            sql = """
+            SELECT b.name, b.author, b.pages, b.synopsis, u.username, s.name
+            FROM books b
+            JOIN user_books ub ON b.id = ub.book_id
+            JOIN users u ON ub.user_id = u.id
+            JOIN shelf_books sb ON b.id = sb.book_id
+            JOIN shelves s ON sb.shelf_id = s.id
+            WHERE (u.username = ? OR s.public = 1)
+            AND (b.name = ? AND b.author = ?)
+            """
+            result = db.query(sql, [username, "%"+name+"%", "%"+author+"%"])
+
+        else:
+            sql = """
+            SELECT b.name, b.author, b.pages, b.synopsis, u.username, s.name
+            FROM books b
+            JOIN user_books ub ON b.id = ub.book_id
+            JOIN users u ON ub.user_id = u.id
+            JOIN shelf_books sb ON b.id = sb.book_id
+            JOIN shelves s ON sb.shelf_id = s.id
+            WHERE u.username = ?
+            AND (b.name = ? AND b.author = ?)
+            """
+            result = db.query(sql, [username, "%"+name+"%", "%"+author+"%"])
+
+    except Exception as e:
+        print(e)
+        return redirect(url_for("search"))
+
+    return result
     
 
     
