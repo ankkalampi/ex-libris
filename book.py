@@ -97,7 +97,6 @@ def get_books(shelf_name, username):
 def search(name, author, public, username):
     try:
         if (public == 1):
-            print("SEARCHING FROM ALL SHELVES!!!")
             sql = """
             SELECT b.name, b.author, b.pages, b.synopsis, u.username, s.name
             FROM books b
