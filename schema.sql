@@ -24,7 +24,6 @@ CREATE TABLE shelves (
 	id INTEGER PRIMARY KEY,
 	user_id INTEGER NOT NULL,
 	name TEXT NOT NULL,
-	number_of_books INTEGER NOT NULL,
 	description TEXTNOT NULL,
 	public INTEGER NOT NULL CHECK (public IN (0,1)),
 	FOREIGN KEY (user_id) REFERENCES users(id)

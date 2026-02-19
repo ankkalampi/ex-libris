@@ -1,9 +1,20 @@
 import sqlite3
 import db
-from flask import redirect, session, url_for, g, request
+from flask import redirect, session, url_for, g, request, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
+
+def csrf_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+       
+        if request.form["csrf_token"] != session["csrf_token"]:
+            abort(403)
+        
+
+        return f(*args, **kwargs)
+    return decorated_function
 
 def login_required(f):
     @wraps(f)
@@ -12,6 +23,7 @@ def login_required(f):
             return redirect(url_for('index', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
 
 
 def get_user_id(username):

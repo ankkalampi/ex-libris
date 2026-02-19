@@ -20,6 +20,7 @@
             <input type="checkbox" id="public-shelf-checkbox" name="public-choice" />
         </p>
         <input type="submit" value="Luo kirjahylly" />
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     </form>
     <p>
         <a href="/{{ session.username }}/hyllyt">

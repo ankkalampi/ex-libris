@@ -9,8 +9,9 @@ import shelf
 import user
 import book
 import config
-from user import login_required
+from user import login_required, csrf_required
 from markupsafe import escape
+import secrets
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -58,6 +59,8 @@ def login():
 	username = request.form["username"]
 	password = request.form["password"]
 
+	session["csrf_token"] = secrets.token_hex(16)
+
 	if user.login(username, password):
 		return redirect(url_for("profile", username=username))
 	else:
@@ -92,6 +95,7 @@ def shelves(username):
 
 @app.post("/create_shelf")
 @login_required
+@csrf_required
 def create_shelf():
 	"""creates new bookshelf"""
 	username = session["username"]
@@ -140,6 +144,7 @@ def new_book_view(username, shelf_name):
 
 @app.post("/create_book/<username>/<shelf_name>")
 @login_required
+@csrf_required
 def create_book(username, shelf_name):
 	"""creates a new book"""
 
@@ -173,6 +178,7 @@ def create_book(username, shelf_name):
 
 
 @app.get("/<username>/haku")
+@csrf_required
 def search(username):
 	name = request.args.get("name")
 	author = request.args.get("author")

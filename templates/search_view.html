@@ -26,6 +26,7 @@
             <p>
                 Haetaan myös toisten käyttäjien hyllyistä: 
                 <input type="checkbox" id="search-from-other-users-checkbox" name="search-from-everyone-choice" value="1"/>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
             </p>
             <input type="submit" value="Hae" />
 

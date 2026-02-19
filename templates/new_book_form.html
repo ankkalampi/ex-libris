@@ -23,6 +23,7 @@
             <input type="text" name="synopsis"/>
         </p>
         <input type="submit" value="Lisää kirja" />
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     </form>
     <p>
         {% if add_book_message %}
