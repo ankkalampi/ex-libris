@@ -152,6 +152,8 @@ def create_book(username, shelf_name):
 	author = request.form["author"]
 	pages = request.form["pages"]
 	synopsis = request.form["synopsis"]
+	isbn = request.form["isbn"]
+	year = request.form["year"]
 
 	if (synopsis == ""):
 		synopsis = None
@@ -159,13 +161,16 @@ def create_book(username, shelf_name):
 	if (pages == 0):
 		pages = None
 
+	if (isbn == ""):
+		isbn = None
+
 	if (name == "" or author == ""):
 		session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
 		return redirect(url_for("new_book_view", username=username, shelf_name=shelf_name))
 		
 
 	try:
-		book.create_book(username, shelf_name, name, author, pages, synopsis)
+		book.create_book(username, shelf_name, name, author, pages, year, isbn, synopsis)
 	except:
 		session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
 		return redirect(url_for("new_book_view", username=username, shelf_name=shelf_name))
@@ -176,12 +181,17 @@ def create_book(username, shelf_name):
 
 
 
-
 @app.get("/<username>/haku")
-@csrf_required
+@login_required
 def search(username):
+	print("ROUTE REACHED")
 	name = request.args.get("name")
 	author = request.args.get("author")
+	year = request.args.get("year")
+	isbn = request.args.get("isbn")
 	public = 1 if request.args.get("search-from-everyone-choice") else 0
-	result = book.search(name, author, public, username) if name else []
-	return render_template("search_view.html", name=name, author=author, result=result, username=username)
+	if name or author or year or isbn:
+		result = book.search(name, author, year, isbn, public, username)
+	else:
+		result = []
+	return render_template("search_view.html", name=name, author=author, year=year, isbn=isbn, result=result, username=username)

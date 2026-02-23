@@ -19,16 +19,31 @@
             {% endif %}
         </p>
         <p>
-            synopsis:
+            julkaisuvuosi:
             {% if book[3] %}
             {{ book[3] }}
             {% endif %}
         </p>
         <p>
-            Käyttäjä: {{ book[4] }}
+            synopsis:
+            {% if book[4] %}
+            {{ book[4] }}
+            {% endif %}
         </p>
         <p>
-            Kirjahylly: {{ book[5] }}
+            ISBN:
+            {% if book[5] %}
+            {{ book[5] }}
+            {% endif %}
+        </p>
+        <P>
+
+        </P>
+        <p>
+            Käyttäjä: {{ book[6] }}
+        </p>
+        <p>
+            Kirjahylly: {{ book[7] }}
         </p>
         
     </div>

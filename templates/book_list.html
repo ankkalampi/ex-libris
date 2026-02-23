@@ -13,15 +13,28 @@
             Kirjoittaja: {{ book[2] }}
         </p>
         <p>
-            sivumäärä: 
+            julkaisuvuosi: 
             {% if book[3] %}
             {{ book[3] }}
             {% endif %}
         </p>
         <p>
-            synopsis:
+            ISBN: 
             {% if book[4] %}
             {{ book[4] }}
+            {% endif %}
+        </p>
+        <p>
+            sivumäärä: 
+            {% if book[5] %}
+            {{ book[5] }}
+            {% endif %}
+        </p>
+        
+        <p>
+            synopsis:
+            {% if book[6] %}
+            {{ book[6] }}
             {% endif %}
         </p>
         <p>
@@ -29,11 +42,7 @@
                 Poista kirja
             </a>
         </p>
-        <p>
-            <a href="/{{ username }}/{{ name }}/uusi-kirja">
-                Lisää uusi kirja
-            </a>
-        </p>
+        
     </div>
     {%  endfor %}
 </div>

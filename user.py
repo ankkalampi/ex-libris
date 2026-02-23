@@ -8,9 +8,18 @@ from functools import wraps
 def csrf_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-       
-        if request.form["csrf_token"] != session["csrf_token"]:
-            abort(403)
+        print("CSRF CHECK REACHED")
+        if request.form["csrf_token"]:
+            if request.form["csrf_token"] != session["csrf_token"]:
+                print(f"CSRF token not validated!")
+                abort(403)
+
+        elif request.args["csrf_token"]:
+            if request.args["csrf_token"] != session["csrd_token"]:
+                print(f"CSRF token not validated!")
+                abort(403)
+
+        print("CSRF validated!!!")
         
 
         return f(*args, **kwargs)

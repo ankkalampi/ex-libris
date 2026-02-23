@@ -8,10 +8,12 @@ CREATE TABLE books (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
 	author TEXT NOT NULL,
+	year INTEGER NOT NULL,
+	ISBN TEXT UNIQUE,
 	pages INTEGER,
 	synopsis TEXT,
 	user_id INTEGER,
-	UNIQUE (name, author, user_id)
+	UNIQUE (name, author, year, user_id)
 
 );
 
