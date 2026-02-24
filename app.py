@@ -146,7 +146,7 @@ def new_book_view(username, shelf_name):
 @login_required
 @csrf_required
 def create_book(username, shelf_name):
-	"""creates a new book"""
+	"""Route for creating a new book"""
 
 	name = request.form["name"]
 	author = request.form["author"]
@@ -155,14 +155,17 @@ def create_book(username, shelf_name):
 	isbn = request.form["isbn"]
 	year = request.form["year"]
 
-	if (synopsis == ""):
-		synopsis = None
+	
 
-	if (pages == 0):
-		pages = None
+	if (pages == ""):
+		pages = 0
 
 	if (isbn == ""):
 		isbn = None
+
+
+	if (year == ""):
+		year = 'tuntematon'
 
 	if (name == "" or author == ""):
 		session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"

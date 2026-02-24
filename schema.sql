@@ -8,7 +8,7 @@ CREATE TABLE books (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
 	author TEXT NOT NULL,
-	year INTEGER NOT NULL,
+	year TEXT NOT NULL,
 	ISBN TEXT UNIQUE,
 	pages INTEGER,
 	synopsis TEXT,
