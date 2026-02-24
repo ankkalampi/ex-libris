@@ -192,6 +192,7 @@ def create_book(username, shelf_name):
             year,
             isbn,
             synopsis)
+
     except BaseException:
         session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
         return redirect(
@@ -206,6 +207,12 @@ def create_book(username, shelf_name):
             "new_book_view",
             username=username,
             shelf_name=shelf_name))
+
+@app.login_required
+@app.csrf_required
+@app.post("/<username>/remove-book/<book_id>")
+def remove_book(username, book_id):
+    pass
 
 
 @app.get("/<username>/haku")
