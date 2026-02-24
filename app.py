@@ -10,7 +10,6 @@ import user
 import book
 import config
 from user import login_required, csrf_required
-from markupsafe import escape
 import secrets
 
 app = Flask(__name__)
