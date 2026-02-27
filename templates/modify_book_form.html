@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<div class="book-modification-form">
+    <form action="/modify_book/{{ session.username }}/{{ book_id }}" method="post">
+        <p>
+            Kirjan nimi: <br />
+            <input type="text" name="name" value="{{ book_name }}"/>
+        </p>
+        <p>
+            Kirjoittajan nimi: <br />
+            <input type="text" name="author" value="{{ book_author }}"/>
+        </p>
+        <p>
+            Julkaisuvuosi: <br />
+            <input type="number" name="year" value="{{ book_year }}"/>
+        </p>
+        <p>
+            ISBN: <br />
+            <input type="text" name="isbn" value="{{ book_ISBN }}"/>
+        </p>
+        <p>
+            Sivumäärä: <br />
+            <input type="number" name="pages" value="{{ book_pages }}"/>
+        </p>
+        <p>
+            Synopsis: <br />
+            <input type="text" name="synopsis" value="{{ book_synopsis }}"/>
+        </p>
+        <input type="submit" value="Muokkaa kirjaa" />
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    </form>
+    <p>
+        {% if book_modification_message %}
+        {{ book_modification_message }}
+        {% endif %}
+    </p>
+    <p>
+        <a href="/{{ session.username }}/{{ shelf_name }}">
+            Takaisin
+        </a>
+    </p>
+</div>

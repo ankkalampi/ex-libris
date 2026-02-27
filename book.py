@@ -89,7 +89,7 @@ def modify_book(username, book_id, name, author, year, synopsis, ISBN, pages, ):
         year (str): new publishing year for the book
         synopsis (str): new synopsis for the book
         ISBN (str): new ISBN for the book
-        pages: (int): new number of pages for the book 
+        pages (int): new number of pages for the book 
     """
     connection = db.get_connection()
 
@@ -212,7 +212,7 @@ def get_book(book_id):
         FROM books
         WHERE id = ? 
         """
-        book = connection.query(sql, [book_id])[0]
+        book = db.query(sql, [book_id])[0]
         
 
     except Exception as e:

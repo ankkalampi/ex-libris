@@ -42,8 +42,14 @@
                 <input type="submit" value="Poista kirja" />
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
             </form>
+
                 
             
+        </p>
+        <p>
+            <a href="/{{ username }}/{{ shelf_name }}/muokkaa_kirjaa/{{ book[0] }}">
+                Muokkaa kirjaa
+            </a>
         </p>
         
     </div>

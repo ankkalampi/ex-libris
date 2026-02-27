@@ -212,8 +212,31 @@ def create_book(username, shelf_name):
 @csrf_required
 @app.post("/modify_book/<username>/<book_id>")
 def modify_book(book_id, username):
+
+    name = request.form["name"]
+    author = request.form["author"]
+    ISBN = request.form["ISBN"]
+    year = request.form["year"]
+    synopsis = request.form["synopsis"]
+    pages = request.form["pages"]
+
+    if name == "": name = None
+    if author == "": author = None
+    if year == "": year = None
+    if ISBN == "": ISBN = None
+    if synopsis == "": synopsis = None
+    if pages == "": pages = None
+    
     try:
-        book.modify_book(book_id)
+        book.modify_book(
+            username,
+            book_id,
+            name,
+            author,
+            year,
+            synopsis,
+            ISBN,
+            pages)
     except BaseException:
         session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"
         return redirect(
@@ -224,12 +247,20 @@ def modify_book(book_id, username):
             )
         )
 
+    return redirect(
+        url_for(
+            "modify_book_view",
+            username=username,
+            shelf_name=shelf_name,
+            book_id=book_id
+        ))
+
 @login_required
-@app.get("/<username>/muokkaa_kirjaa/<book_id>")
-def modify_book_view(username, book_id):
+@app.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
+def modify_book_view(username, shelf_name, book_id):
     book_modification_message = session.pop("book_modification_message", None)
-    book = book.get_book(book_id)
-    return render_template("modify_book_view.html", book=book, book_modification_message=book_modification_message)
+    book_entry = book.get_book(book_id)
+    return render_template("modify_book_view.html", book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
 
 
 @login_required

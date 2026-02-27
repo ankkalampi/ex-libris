@@ -1,6 +1,7 @@
 {% extends "user_layout.html" %}
 
 {% block user_content %}
+    {% set shelf_name = shelf_name %}
     {% set book_modification_message = book_modification_message %}
     {% set book_id = book[0] %}
     {% set book_name = book[1] %}
