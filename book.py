@@ -79,6 +79,12 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
 
 
 def remove_book(book_id):
+    """
+    Removes a book from db based on unique id
+
+    Args:
+        book_id (int): unique id of book to be removed
+    """
 
     connection = db.get_connection()
 
