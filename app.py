@@ -208,17 +208,29 @@ def create_book(username, shelf_name):
             username=username,
             shelf_name=shelf_name))
 
-@app.login_required
-@app.csrf_required
-@app.post("/<username>/remove-book/<book_id>")
-def remove_book(username, book_id):
-    pass
+@login_required
+@csrf_required
+@app.post("/remove_book/<username>/<shelf_name>/<book_id>")
+def remove_book(book_id, username, shelf_name):
+    try:
+        book.remove_book(book_id)
+    
+    except BaseException:
+        session["book_delete_message"] = "VIRHE Kirjaa ei onnistuttu poistamaan"
+        return redirect(
+            url_for(
+                "shelf_view",
+                username=username,
+                shelf_name=shelf_name
+            )
+        )
+
+    return redirect(url_for("shelf_view", username=username, shelf_name=shelf_name))
 
 
 @app.get("/<username>/haku")
 @login_required
 def search(username):
-    print("ROUTE REACHED")
     name = request.args.get("name")
     author = request.args.get("author")
     year = request.args.get("year")

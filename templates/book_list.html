@@ -38,9 +38,12 @@
             {% endif %}
         </p>
         <p>
-            <a href="/remove_book/{{ book[0] }}">
-                Poista kirja
-            </a>
+            <form action="/remove_book/{{ username }}/{{ shelf_name }}/{{ book[0] }}" method="post">
+                <input type="submit" value="Poista kirja" />
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+            </form>
+                
+            
         </p>
         
     </div>

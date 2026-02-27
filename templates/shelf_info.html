@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <div class="shelf-view">
     <p>
-        <b>{{ name }}</b>
+        <b>{{ shelf_name }}</b>
     </p>
     <p>
         Kirjojen lukumäärä: {{ number_of_books }}
@@ -10,7 +10,7 @@
         Kuvaus: {{ description }}
     </p>
     <p>
-        <a href="/{{ username }}/{{ name }}/uusi-kirja" title="Lisää kirja" id="add-book-button">
+        <a href="/{{ username }}/{{ shelf_name }}/uusi-kirja" title="Lisää kirja" id="add-book-button">
             Lisää uusi kirja
         </a>
     </p>

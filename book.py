@@ -76,7 +76,41 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
 
     finally:
         connection.close()
-    
+
+
+def remove_book(book_id):
+
+    connection = db.get_connection()
+
+    try:
+        connection.execute("BEGIN TRANSACTION")
+
+        sql_delete_from_books = """
+        DELETE FROM books WHERE id = ?
+        """
+
+        sql_delete_from_user_books = """
+        DELETE FROM user_books WHERE book_id = ?
+        """
+
+        sql_delete_from_shelf_books = """
+        DELETE FROM shelf_books WHERE book_id = ?
+        """
+
+        connection.execute(sql_delete_from_user_books, book_id)
+        connection.execute(sql_delete_from_shelf_books, book_id)
+        connection.execute(sql_delete_from_books, book_id)
+        
+
+        connection.commit()
+
+    except Exception as e:
+        print(e)
+        raise
+
+    finally:
+        connection.close()
+
 
 
 
