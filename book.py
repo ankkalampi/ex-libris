@@ -77,6 +77,76 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
     finally:
         connection.close()
 
+def modify_book(username, book_id, name, author, year, synopsis, ISBN, pages, ):
+    """
+    Modifies book data of a single book
+
+    Args:
+        username (str): username for redirection
+        book_id (int): id of the book being modified
+        name (str): new name for the book
+        author (str): new author for the book
+        year (str): new publishing year for the book
+        synopsis (str): new synopsis for the book
+        ISBN (str): new ISBN for the book
+        pages: (int): new number of pages for the book 
+    """
+    connection = db.get_connection()
+
+
+    number_of_args = 1
+    arg_list = []
+
+    sql_final = "UPDATE books "
+
+    if (name):
+        sql_final += "SET name = ? "
+        number_of_args += 1
+        arg_list.append(name)
+    if(author):
+        sql_final += "SET author = ? "
+        number_of_args += 1
+        arg_list.append(author)
+    if(year):
+        sql_final += "SET year = ? "
+        number_of_args += 1
+        arg_list.append(year)
+    if(synopsis):
+        sql_final += "SET synopsis = ? "
+        number_of_args += 1
+        arg_list.append(synopsis)
+    if(ISBN):
+        sql_final += "SET ISBN = ? "
+        number_of_args += 1
+        arg_list.append(ISBN)
+    if(pages):
+        sql_final += "SET pages = ? "
+        number_of_args += 1
+        arg_list.append(pages)
+
+    sql_final += "WHERE id = ?"
+    arg_list.append(book_id)
+    
+    if (number_of_args == 1):
+        session["book_modification_message"] = "jokin kenttä täytettävä"
+        return redirect(url_for("modify_book_view", username=username, book_id=book_id))
+
+    try:
+        connection.execute(sql_final, arg_list)
+        connection.commit()
+
+    except Exception as e:
+        print(e)
+        raise
+
+    finally:
+        connection.close()
+
+        
+
+        
+
+        
 
 def remove_book(book_id):
     """
@@ -116,6 +186,42 @@ def remove_book(book_id):
 
     finally:
         connection.close()
+
+def get_book(book_id):
+    """
+    Get info of a single book bsed on book id
+
+    Args:
+        book_id (int): id of the book
+
+    Returns:
+        Tuple(int, str, str, str, str, int, str): Tuple of book information in the form of 
+            (book id,
+            book name,
+            book author,
+            publishing year,
+            ISBN,
+            number of pages,
+            synopsis)
+    """
+
+
+    try:
+        sql = """
+        SELECT id, name, author, year, ISBN, pages, synopsis
+        FROM books
+        WHERE id = ? 
+        """
+        book = connection.query(sql, [book_id])[0]
+        
+
+    except Exception as e:
+        print(e)
+        raise
+
+    return book
+
+
 
 
 

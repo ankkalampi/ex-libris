@@ -1,0 +1,13 @@
+{% extends "user_layout.html" %}
+
+{% block user_content %}
+    {% set book_modification_message = book_modification_message %}
+    {% set book_id = book[0] %}
+    {% set book_name = book[1] %}
+    {% set book_author = book[2] %}
+    {% set book_year = book[3] %}
+    {% set book_synopsis = book[4] %}
+    {% set book_ISBN = book[5] %}
+    {% set book_pages = book[6] %}
+    {% include "modify_book_form.html" %}
+{% endblock %}

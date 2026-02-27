@@ -210,6 +210,30 @@ def create_book(username, shelf_name):
 
 @login_required
 @csrf_required
+@app.post("/modify_book/<username>/<book_id>")
+def modify_book(book_id, username):
+    try:
+        book.modify_book(book_id)
+    except BaseException:
+        session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"
+        return redirect(
+            url_for(
+                "modify_book_view",
+                username=username,
+                book_id=book_id
+            )
+        )
+
+@login_required
+@app.get("/<username>/muokkaa_kirjaa/<book_id>")
+def modify_book_view(username, book_id):
+    book_modification_message = session.pop("book_modification_message", None)
+    book = book.get_book(book_id)
+    return render_template("modify_book_view.html", book=book, book_modification_message=book_modification_message)
+
+
+@login_required
+@csrf_required
 @app.post("/remove_book/<username>/<shelf_name>/<book_id>")
 def remove_book(book_id, username, shelf_name):
     try:
