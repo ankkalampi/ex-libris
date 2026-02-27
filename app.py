@@ -210,15 +210,18 @@ def create_book(username, shelf_name):
 
 @login_required
 @csrf_required
-@app.post("/modify_book/<username>/<book_id>")
-def modify_book(book_id, username):
+@app.post("/modify_book/<username>/<shelf_name>/<book_id>")
+def modify_book(book_id, username, shelf_name):
 
+    print("modify_book route reached")
     name = request.form["name"]
     author = request.form["author"]
-    ISBN = request.form["ISBN"]
+    ISBN = request.form["isbn"]
     year = request.form["year"]
     synopsis = request.form["synopsis"]
     pages = request.form["pages"]
+
+    print("request form queries finished")
 
     if name == "": name = None
     if author == "": author = None
@@ -226,10 +229,12 @@ def modify_book(book_id, username):
     if ISBN == "": ISBN = None
     if synopsis == "": synopsis = None
     if pages == "": pages = None
-    
+
+    print("modify_book route, starting try")
     try:
         book.modify_book(
             username,
+            shelf_name,
             book_id,
             name,
             author,
@@ -243,9 +248,12 @@ def modify_book(book_id, username):
             url_for(
                 "modify_book_view",
                 username=username,
-                book_id=book_id
+                book_id=book_id,
+                shelf_name=shelf_name
             )
         )
+
+    print("no exceptions, redirecting to modify_book_view")
 
     return redirect(
         url_for(

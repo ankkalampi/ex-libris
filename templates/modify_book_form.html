@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+
 <div class="book-modification-form">
-    <form action="/modify_book/{{ session.username }}/{{ book_id }}" method="post">
+    <form action="/modify_book/{{ session.username }}/{{ shelf_name }}/{{ book_id }}" method="post">
         <p>
             Kirjan nimi: <br />
             <input type="text" name="name" value="{{ book_name }}"/>
@@ -34,7 +34,7 @@
         {% endif %}
     </p>
     <p>
-        <a href="/{{ session.username }}/{{ shelf_name }}">
+        <a href="/{{ session.username }}/hyllyt/{{ shelf_name }}">
             Takaisin
         </a>
     </p>

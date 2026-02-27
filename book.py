@@ -77,12 +77,13 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
     finally:
         connection.close()
 
-def modify_book(username, book_id, name, author, year, synopsis, ISBN, pages, ):
+def modify_book(username, shelf_name, book_id, name, author, year, synopsis, ISBN, pages, ):
     """
     Modifies book data of a single book
 
     Args:
         username (str): username for redirection
+        shelf_name (str): shelf name for redirection
         book_id (int): id of the book being modified
         name (str): new name for the book
         author (str): new author for the book
@@ -97,39 +98,41 @@ def modify_book(username, book_id, name, author, year, synopsis, ISBN, pages, ):
     number_of_args = 1
     arg_list = []
 
-    sql_final = "UPDATE books "
+    sql_final = "UPDATE books SET "
 
     if (name):
-        sql_final += "SET name = ? "
+        sql_final += "name = ?, "
         number_of_args += 1
         arg_list.append(name)
     if(author):
-        sql_final += "SET author = ? "
+        sql_final += "author = ?, "
         number_of_args += 1
         arg_list.append(author)
     if(year):
-        sql_final += "SET year = ? "
+        sql_final += "year = ?, "
         number_of_args += 1
         arg_list.append(year)
     if(synopsis):
-        sql_final += "SET synopsis = ? "
+        sql_final += "synopsis = ?, "
         number_of_args += 1
         arg_list.append(synopsis)
     if(ISBN):
-        sql_final += "SET ISBN = ? "
+        sql_final += "ISBN = ?, "
         number_of_args += 1
         arg_list.append(ISBN)
     if(pages):
-        sql_final += "SET pages = ? "
+        sql_final += "pages = ?, "
         number_of_args += 1
         arg_list.append(pages)
 
+    sql_final = sql_final[:-2]
+    sql_final += " "
     sql_final += "WHERE id = ?"
     arg_list.append(book_id)
     
     if (number_of_args == 1):
         session["book_modification_message"] = "jokin kenttä täytettävä"
-        return redirect(url_for("modify_book_view", username=username, book_id=book_id))
+        return redirect(url_for("modify_book_view", username=username, book_id=book_id, shelf_name=shelf_name))
 
     try:
         connection.execute(sql_final, arg_list)
@@ -137,6 +140,7 @@ def modify_book(username, book_id, name, author, year, synopsis, ISBN, pages, ):
 
     except Exception as e:
         print(e)
+        print(sql_final)
         raise
 
     finally:
