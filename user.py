@@ -33,8 +33,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
-
 def get_user_id(username):
     """gets user db id based on username"""
     try:
@@ -49,7 +47,7 @@ def get_user_id(username):
 
 def login(username, password):
     """attempts to login user"""
-    sql = "SELECT password_hash FROM users WHERE username = ?"
+    sql = "SELECT password_hash, id FROM users WHERE username = ?"
     result = db.query(sql, [username])
 
     if not result:
@@ -57,9 +55,11 @@ def login(username, password):
         return False
 
     password_hash = result[0][0]
+    user_id = result[0][1]
 
     if check_password_hash(password_hash, password):
         session["username"] = username
+        session["user_id"] = user_id
         return True
     else:
         session["login_message"] = "Väärä käyttäjätunnus tai salasana"
