@@ -135,7 +135,9 @@ def shelf_view(username, shelf_name):
 
     shelf_entry = shelf.get_shelf(shelf_name, username)
 
-    books = book.get_books(shelf_name, username)
+    user_id = session["user_id"]
+
+    books = book.get_books(shelf_name, user_id, username)
 
     return render_template("shelf_view.html", shelf=shelf_entry, books=books)
 
@@ -165,6 +167,8 @@ def create_book(username, shelf_name):
     isbn = request.form["isbn"]
     year = request.form["year"]
 
+    user_id = session["user_id"]
+
     if (pages == ""):
         pages = 0
 
@@ -184,7 +188,7 @@ def create_book(username, shelf_name):
 
     try:
         book.create_book(
-            username,
+            user_id,
             shelf_name,
             name,
             author,
@@ -193,7 +197,8 @@ def create_book(username, shelf_name):
             isbn,
             synopsis)
 
-    except BaseException:
+    except BaseException as e:
+        print(e)
         session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
         return redirect(
             url_for(
@@ -221,6 +226,8 @@ def modify_book(book_id, username, shelf_name):
     synopsis = request.form["synopsis"]
     pages = request.form["pages"]
 
+    user_id = session["user_id"]
+
     print("request form queries finished")
 
     if name == "": name = None
@@ -233,7 +240,7 @@ def modify_book(book_id, username, shelf_name):
     print("modify_book route, starting try")
     try:
         book.modify_book(
-            username,
+            user_id,
             shelf_name,
             book_id,
             name,

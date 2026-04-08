@@ -5,7 +5,7 @@ from flask import redirect, g, session, url_for
 import shelf
 
 
-def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis): 
+def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis): 
     """
     Creates a book onto db
     
@@ -26,7 +26,7 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
 
         sql_insert_to_books = """
         INSERT INTO books (name, author, pages, year, ISBN, synopsis, user_id)
-        VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE username = ? ));
+        VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE id = ? ));
         """
         result = connection.execute(
             sql_insert_to_books,
@@ -37,7 +37,7 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
                 year,
                 ISBN,
                 synopsis,
-                username
+                user_id
             ]
         )
 
@@ -46,12 +46,12 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
 
         sql_insert_to_user_books = """
         INSERT INTO user_books (user_id, book_id)
-        VALUES ((SELECT id FROM users WHERE username = ? ), ?);
+        VALUES ((SELECT id FROM users WHERE id = ? ), ?);
         """
         connection.execute(
             sql_insert_to_user_books,
             [
-                username,
+                user_id,
                 book_id
             ]
         )
@@ -77,7 +77,7 @@ def create_book(username, shelf_name, name, author, pages, year, ISBN, synopsis)
     finally:
         connection.close()
 
-def modify_book(username, shelf_name, book_id, name, author, year, synopsis, ISBN, pages, ):
+def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN, pages):
     """
     Modifies book data of a single book
 
@@ -230,13 +230,13 @@ def get_book(book_id):
 
 
 
-def get_books(shelf_name, username):
+def get_books(shelf_name, user_id, username):
     """
     Returns all books in a shelf belonging to a user
     
     Args:
         shelf_name (str): Name of the shelf
-        username (str): Username of the user
+        user_id (int): id of the user
 
     Returns:
         List[Tuple(int, str, str, str, str, int, str)]: List of book information tuples in the form of 
@@ -257,9 +257,9 @@ def get_books(shelf_name, username):
         JOIN shelf_books sb ON b.id = sb.book_id
         JOIN shelves s ON sb.shelf_id = s.id
         JOIN users u ON s.user_id = u.id
-        WHERE s.name = ? AND u.username = ?
+        WHERE s.name = ? AND u.id = ?
         """
-        books = db.query(sql, [shelf_name, username])
+        books = db.query(sql, [shelf_name, user_id])
 
     
         
@@ -271,7 +271,7 @@ def get_books(shelf_name, username):
 
     return books
 
-def search(name, author, year, isbn, public, username):
+def search(name, author, year, isbn, public, user_id):
     """
     Constructs sql query for search and returns information on books searched.
 
@@ -281,7 +281,7 @@ def search(name, author, year, isbn, public, username):
         year (str): Publishing year of the searched book
         isbn (str): ISBN of the searched book
         public (int): Toggle search from all public shelves (can be 0 or 1)
-        username (str): The current user sarching
+        user_id (int): Id of the current user sarching
 
     Returns:
         List[Tuple(str, str, int, str, str, str, str, str)]: List of book information tuples in the form of 
@@ -306,11 +306,11 @@ def search(name, author, year, isbn, public, username):
 
         if (public ==1):
             sql_middle = """
-            WHERE (u.username = ? OR s.public = 1)
+            WHERE (u.id = ? OR s.public = 1)
             """
         else:
             sql_middle = """
-            WHERE u.username = ?
+            WHERE u.id = ?
             """
 
         if isbn:
@@ -318,7 +318,7 @@ def search(name, author, year, isbn, public, username):
             AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ? AND b.ISBN LIKE ?)
             """
             params = [
-                username,
+                user_id,
                 "%"+name+"%",
                 "%"+author+"%",
                 "%"+year+"%",
@@ -331,7 +331,7 @@ def search(name, author, year, isbn, public, username):
             """
 
             params = [
-                username,
+                user_id,
                 "%"+name+"%",
                 "%"+author+"%",
                 "%"+year+"%"
