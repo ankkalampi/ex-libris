@@ -273,8 +273,12 @@ def modify_book(book_id, username, shelf_name):
 @login_required
 @app.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 def modify_book_view(username, shelf_name, book_id):
+    try:
+        book_entry = book.get_book(book_id)
+    except BaseException:
+        session["book_modification_message"] = "kirjan tietojen hakemisessa tapahtui virhe"
+
     book_modification_message = session.pop("book_modification_message", None)
-    book_entry = book.get_book(book_id)
     return render_template("modify_book_view.html", book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
 
 
