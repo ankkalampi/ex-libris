@@ -4,6 +4,13 @@ import user
 from flask import redirect, g, session, url_for
 import shelf
 
+class BookModificationFieldsEmpty(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return self.message
 
 
 @db.modify_db
@@ -115,8 +122,7 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
     arg_list.append(book_id)
     
     if (number_of_args == 1):
-        session["book_modification_message"] = "jokin kenttä täytettävä"
-        return redirect(url_for("modify_book_view", username=username, book_id=book_id, shelf_name=shelf_name))
+        raise BookModificationFieldsEmpty("jokin kenttä täytettävä")
 
     g.db_execute(sql_final, arg_list)
         

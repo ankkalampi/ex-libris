@@ -11,6 +11,7 @@ import book
 import config
 from user import login_required, csrf_required
 import secrets
+from book import BookModificationFieldsEmpty
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -269,6 +270,9 @@ def modify_book(book_id, username, shelf_name):
             synopsis,
             ISBN,
             pages)
+    except BookModificationFieldsEmpty as e:
+        session["book_modification_message"] = str(e)
+        return redirect(url_for("modify_book_view", username=username, book_id=book_id, shelf_name=shelf_name))
     except Exception:
         session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"
         return redirect(
