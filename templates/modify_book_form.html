@@ -15,15 +15,15 @@
         </p>
         <p>
             ISBN: <br />
-            <input type="text" name="isbn" value="{{ book_ISBN }}"/>
+            <input type="text" name="isbn" value="{{ book_ISBN | default('') }}"/>
         </p>
         <p>
             Sivumäärä: <br />
-            <input type="number" name="pages" value="{{ book_pages }}"/>
+            <input type="number" name="pages" value="{% if book_pages is not none %}{{ book_pages }}{% else %}{% endif %}"/>
         </p>
         <p>
             Synopsis: <br />
-            <input type="text" name="synopsis" value="{{ book_synopsis }}"/>
+            <input type="text" name="synopsis" value="{% if book_synopsis is not none %}{{ book_synopsis }}{% else %}{% endif %}"/>
         </p>
         <input type="submit" value="Muokkaa kirjaa" />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

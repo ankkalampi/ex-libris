@@ -7,8 +7,10 @@
     {% set book_name = book[1] %}
     {% set book_author = book[2] %}
     {% set book_year = book[3] %}
-    {% set book_synopsis = book[4] %}
-    {% set book_ISBN = book[5] %}
-    {% set book_pages = book[6] %}
+    {% if book[4] %}
+    {% set book_ISBN = book[4] %}
+    {% endif %}
+    {% set book_pages = book[5] %}
+    {% set book_synopsis = book[6] %}
     {% include "modify_book_form.html" %}
 {% endblock %}

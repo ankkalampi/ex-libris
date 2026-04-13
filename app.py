@@ -286,6 +286,8 @@ def modify_book(book_id, username, shelf_name):
 
     print("no exceptions, redirecting to modify_book_view")
 
+    session["book_modification_message"] = "Kirja muokattu onnistuneesti!"
+
     return redirect(
         url_for(
             "modify_book_view",
