@@ -151,7 +151,7 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
         
 
         
-
+@modifies_db
 def remove_book(book_id):
     """
     Removes a book from db based on unique id
@@ -160,36 +160,24 @@ def remove_book(book_id):
         book_id (int): unique id of book to be removed
     """
 
-    connection = db.get_connection()
+    nonlocal handler
 
-    try:
-        connection.execute("BEGIN TRANSACTION")
+    sql_delete_from_books = """
+    DELETE FROM books WHERE id = ?
+    """
 
-        sql_delete_from_books = """
-        DELETE FROM books WHERE id = ?
-        """
+    sql_delete_from_user_books = """
+    DELETE FROM user_books WHERE book_id = ?
+    """
 
-        sql_delete_from_user_books = """
-        DELETE FROM user_books WHERE book_id = ?
-        """
+    sql_delete_from_shelf_books = """
+    DELETE FROM shelf_books WHERE book_id = ?
+    """
 
-        sql_delete_from_shelf_books = """
-        DELETE FROM shelf_books WHERE book_id = ?
-        """
+    handler.execute(sql_delete_from_books, book_id)
+    handler.execute(sql_delete_from_user_books, book_id)
+    handler.execute(sql_delete_from_shelf_books, book_id)    
 
-        connection.execute(sql_delete_from_user_books, book_id)
-        connection.execute(sql_delete_from_shelf_books, book_id)
-        connection.execute(sql_delete_from_books, book_id)
-        
-
-        connection.commit()
-
-    except Exception as e:
-        print(e)
-        raise
-
-    finally:
-        connection.close()
 
 def get_book(book_id):
     """

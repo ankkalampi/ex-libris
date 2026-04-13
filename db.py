@@ -1,5 +1,36 @@
 import sqlite3
 from flask import g
+from functools import wraps
+
+class DBHandler:
+    def __init__(self):
+        self.connection = get_connection()
+        self.cursor = connection.cursor
+
+    def execute(self, sql, params=[]):
+        result = self.cursor.execute(sql, params)
+        g.last_insert_id = result.lastrowid
+
+def modifies_db(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        handler = DBHandler()
+
+        try:
+            handler.connection.execute("BEGIN TRANSACTION;")
+
+            f(*args, **kwargs)
+
+            handler.connection.commit()
+
+        except Exception as e:
+            print(e)
+            raise
+
+        finally:
+            connection.close()
+
+
 
 def get_connection():
     """opens database connection"""
