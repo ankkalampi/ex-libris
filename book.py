@@ -5,6 +5,8 @@ from flask import redirect, g, session, url_for
 import shelf
 
 
+
+
 def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis): 
     """
     Creates a book onto db
@@ -151,7 +153,7 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
         
 
         
-@modifies_db
+@db.modifies_db
 def remove_book(book_id):
     """
     Removes a book from db based on unique id
@@ -160,7 +162,6 @@ def remove_book(book_id):
         book_id (int): unique id of book to be removed
     """
 
-    nonlocal handler
 
     sql_delete_from_books = """
     DELETE FROM books WHERE id = ?
@@ -174,9 +175,11 @@ def remove_book(book_id):
     DELETE FROM shelf_books WHERE book_id = ?
     """
 
-    handler.execute(sql_delete_from_books, book_id)
-    handler.execute(sql_delete_from_user_books, book_id)
-    handler.execute(sql_delete_from_shelf_books, book_id)    
+    g.db_execute(sql_delete_from_shelf_books, book_id)
+    g.db_execute(sql_delete_from_user_books, book_id)
+    g.db_execute(sql_delete_from_books, book_id)
+    
+        
 
 
 def get_book(book_id):
