@@ -33,18 +33,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def get_user_id(username):
-    """gets user db id based on username"""
-    try:
-	    sql = "SELECT id FROM users WHERE username = ?"
-	    result = db.query(sql, [username])
-	    user_id = result[0][0]
-    except:
-	    print(f"Database error in finding user id, user_id: {user_id} ")
-	    return redirect("/")
-
-    return user_id
-
 def login(username, password):
     """attempts to login user"""
     sql = "SELECT password_hash, id FROM users WHERE username = ?"

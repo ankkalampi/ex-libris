@@ -43,10 +43,9 @@ def get_shelf(shelf_name, username):
 
     return shelf
 
-def create_shelf(username, name, description, public):
+def create_shelf(user_id, name, description, public):
     """creates new bookshelf"""
-    user_id = user.get_user_id(username)
-
+    
     try:
 	    sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
 	    db.execute(sql, [user_id, name, description, public])

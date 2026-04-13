@@ -104,13 +104,14 @@ def shelves(username):
 def create_shelf():
     """creates new bookshelf"""
     username = session["username"]
+    user_id = session["user_id"]
 
     name = request.form["name"]
     description = request.form["description"]
     public = 1 if request.form.get("public-choice") else 0
 
     try:
-        shelf.create_shelf(username, name, description, public)
+        shelf.create_shelf(user_id, name, description, public)
     except Exception:
         return redirect(url_for("index"))
 
@@ -133,7 +134,7 @@ def remove_shelf(username, shelf_id):
         shelf.delete_shelf(shelf_id)
     except Exception:
         return redirect(ulr_for("index"))
-        
+
     return redirect(url_for("shelves", username=username))
 
 
