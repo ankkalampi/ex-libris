@@ -6,17 +6,11 @@ from enum import Enum
 
 def get_connection():
     """opens database connection"""
+    
     connection = sqlite3.connect("database.db")
     connection.execute("PRAGMA foreign_keys = ON")
     connection.row_factory = sqlite3.Row
     return connection
-
-
-
-
-                
-
-
 
 def modify_db(f):
     @wraps(f)
@@ -28,19 +22,15 @@ def modify_db(f):
             result = g.connection.cursor().execute(sql, params)
             g.last_insert_id = result.lastrowid
         
-        
         g.db_execute = db_execute
         
-
         try:
             g.connection.execute("BEGIN TRANSACTION;")
             f(*args, **kwargs)
             g.connection.commit()
-
         except Exception as e:
             print(e)
             raise
-
         finally:
             g.connection.close()
 
@@ -60,18 +50,13 @@ def query_db(f):
 
         try:
             return f(*args, **kwargs)
-
         except Exception as e:
             print(e)
             raise
-
         finally:
             g.connection.close()
 
     return decorated_function
-
-
-
 
 def last_insert_id():
     return g.last_insert_id
@@ -92,7 +77,6 @@ def execute(sql, params=[]):
         result = connection.execute(sql, params)
         connection.commit()
         g.last_insert_id = result.lastrowid
-        
     except Exception as e:
         print(e)
         raise

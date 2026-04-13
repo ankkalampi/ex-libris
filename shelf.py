@@ -4,7 +4,7 @@ import user
 from flask import redirect
 
 @db.query_db
-def get_shelves(username):
+def get_shelves(user_id):
     """returns all bookshelves of a user"""
     
     sql = """
@@ -12,14 +12,14 @@ def get_shelves(username):
     FROM shelves s
     JOIN users u ON u.id = s.user_id
     LEFT JOIN shelf_books sb ON s.id = sb.shelf_id
-    WHERE u.username = ?
+    WHERE u.id = ?
     GROUP BY s.name, s.description, s.id
     """
 
-    return g.db_query(sql, [username])
+    return g.db_query(sql, [user_id])
 
 @db.query_db
-def get_shelf(shelf_name, username):
+def get_shelf(shelf_name, user_id):
     """returns a shelf based on db id"""
 
     sql = """
@@ -27,10 +27,10 @@ def get_shelf(shelf_name, username):
     FROM shelves s
     JOIN users u ON u.id = s.user_id
     LEFT JOIN shelf_books sb ON s.id = sb.shelf_id 
-    WHERE s.name = ? AND u.username = ?
+    WHERE s.name = ? AND u.id = ?
     """
-    
-    return g.db_query(sql, [shelf_name, username])
+
+    return g.db_query(sql, [shelf_name, user_id])
 
 @db.modify_db
 def create_shelf(user_id, name, description, public):

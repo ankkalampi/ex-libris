@@ -91,8 +91,10 @@ def profile(username):
 def shelves(username):
     """renders view for a user's bookshelves"""
 
+    user_id = session["user_id"]
+
     try:
-        shelves = shelf.get_shelves(username)
+        shelves = shelf.get_shelves(user_id)
     except Exception:
         return redirect(url_for("index"))
     return render_template("shelves.html", shelves=shelves)
@@ -143,12 +145,13 @@ def remove_shelf(username, shelf_id):
 def shelf_view(username, shelf_name):
     """renders view for a single shelf"""
 
+    user_id = session["user_id"]
+
     try:
-        shelf_entry = shelf.get_shelf(shelf_name, username)
+        shelf_entry = shelf.get_shelf(shelf_name, user_id)
     except Exception:
         return redirect(url_for("index"))
 
-    user_id = session["user_id"]
     try:
         print("getting books")
         books = book.get_books(shelf_name, user_id)
