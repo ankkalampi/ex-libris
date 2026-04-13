@@ -265,8 +265,7 @@ def get_books(shelf_name, user_id):
         
     except Exception as e:
         print(e)
-        username = session["username"]
-        return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
+        raise  
     
     
 

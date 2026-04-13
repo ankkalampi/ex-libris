@@ -136,8 +136,11 @@ def shelf_view(username, shelf_name):
     shelf_entry = shelf.get_shelf(shelf_name, username)
 
     user_id = session["user_id"]
-
-    books = book.get_books(shelf_name, user_id)
+    try:
+        books = book.get_books(shelf_name, user_id)
+    except Exception:
+        username = session["username"]
+        return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
 
     return render_template("shelf_view.html", shelf=shelf_entry, books=books)
 
@@ -197,7 +200,7 @@ def create_book(username, shelf_name):
             isbn,
             synopsis)
 
-    except BaseException as e:
+    except Exception as e:
         print(e)
         session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
         return redirect(
@@ -249,7 +252,7 @@ def modify_book(book_id, username, shelf_name):
             synopsis,
             ISBN,
             pages)
-    except BaseException:
+    except Exception:
         session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"
         return redirect(
             url_for(
@@ -275,7 +278,7 @@ def modify_book(book_id, username, shelf_name):
 def modify_book_view(username, shelf_name, book_id):
     try:
         book_entry = book.get_book(book_id)
-    except BaseException:
+    except Exception:
         session["book_modification_message"] = "kirjan tietojen hakemisessa tapahtui virhe"
 
     book_modification_message = session.pop("book_modification_message", None)
@@ -289,7 +292,7 @@ def remove_book(book_id, username, shelf_name):
     try:
         book.remove_book(book_id)
     
-    except BaseException:
+    except Exception:
         session["book_delete_message"] = "VIRHE Kirjaa ei onnistuttu poistamaan"
         return redirect(
             url_for(
