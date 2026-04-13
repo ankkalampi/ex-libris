@@ -18,7 +18,7 @@ def get_connection():
 
 
 
-def modifies_db(f):
+def modify_db(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
@@ -33,17 +33,11 @@ def modifies_db(f):
         
 
         try:
-            print("starting trying")
             g.connection.execute("BEGIN TRANSACTION;")
-
-            print("begin transaction executed ")
             f(*args, **kwargs)
-
-            print("decorated function successfully run")
             g.connection.commit()
 
         except Exception as e:
-            print("EXCEPTION ENCOUNTERED")
             print(e)
             raise
 
@@ -52,6 +46,29 @@ def modifies_db(f):
 
     return decorated_function
 
+def query_db(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        g.connection = get_connection()
+
+        def db_query(sql, params=[]):
+            result = g.connection.execute(sql, params).fetchall()
+            return result
+
+        g.db_query = db_query
+
+        try:
+            return f(*args, **kwargs)
+
+        except Exception as e:
+            print(e)
+            raise
+
+        finally:
+            g.connection.close()
+
+    return decorated_function
 
 
 
@@ -65,5 +82,19 @@ def query(sql, params=[]):
     try:
         result = connection.execute(sql, params).fetchall()
         return result
+    finally:
+        connection.close()
+
+def execute(sql, params=[]):
+    connection = get_connection()
+
+    try:
+        result = connection.execute(sql, params)
+        connection.commit()
+        g.last_insert_id = result.lastrowid
+        
+    except Exception as e:
+        print(e)
+        raise
     finally:
         connection.close()

@@ -6,7 +6,7 @@ import shelf
 
 
 
-
+@db.modify_db
 def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis): 
     """
     Creates a book onto db
@@ -21,64 +21,48 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
         synopsis (str): synopsis 
     """
 
-    connection = db.get_connection()
+    sql_insert_to_books = """
+    INSERT INTO books (name, author, pages, year, ISBN, synopsis, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE id = ? ));
+    """
+    params_insert_to_books = [
+        name,
+        author,
+        pages,
+        year,
+        ISBN,
+        synopsis,
+        user_id
+        ]
 
-    try:
-        connection.execute("BEGIN TRANSACTION;")
+    g.db_execute(sql_insert_to_books, params_insert_to_books)
+    
+      
+    book_id = db.last_insert_id()
 
-        sql_insert_to_books = """
-        INSERT INTO books (name, author, pages, year, ISBN, synopsis, user_id)
-        VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE id = ? ));
-        """
-        result = connection.execute(
-            sql_insert_to_books,
-            [
-                name,
-                author,
-                pages,
-                year,
-                ISBN,
-                synopsis,
-                user_id
-            ]
-        )
+    sql_insert_to_user_books = """
+    INSERT INTO user_books (user_id, book_id)
+    VALUES ((SELECT id FROM users WHERE id = ? ), ?);
+    """
+    params_insert_to_user_books = [
+        user_id,
+        book_id
+        ]
 
-        g.last_insert_id = result.lastrowid        
-        book_id = g.last_insert_id
+    g.db_execute(sql_insert_to_user_books, params_insert_to_user_books)
 
-        sql_insert_to_user_books = """
-        INSERT INTO user_books (user_id, book_id)
-        VALUES ((SELECT id FROM users WHERE id = ? ), ?);
-        """
-        connection.execute(
-            sql_insert_to_user_books,
-            [
-                user_id,
-                book_id
-            ]
-        )
+    sql_insert_to_shelf_books = """
+    INSERT INTO shelf_books (shelf_id, book_id)
+    VALUES ((SELECT id FROM shelves WHERE name = ? ), ?);
+    """
+    params_insert_to_shelf_books = [
+        shelf_name,
+        book_id
+        ]
+    
+    g.db_execute(sql_insert_to_shelf_books, params_insert_to_shelf_books)
 
-        sql_insert_to_shelf_books = """
-        INSERT INTO shelf_books (shelf_id, book_id)
-        VALUES ((SELECT id FROM shelves WHERE name = ? ), ?);
-        """
-        connection.execute(
-            sql_insert_to_shelf_books,
-            [
-                shelf_name,
-                book_id
-            ]
-        )
-
-        connection.commit()
-        
-
-    except sqlite3.IntegrityError:
-        raise
-
-    finally:
-        connection.close()
-
+@db.modify_db
 def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN, pages):
     """
     Modifies book data of a single book
@@ -94,8 +78,6 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
         ISBN (str): new ISBN for the book
         pages (int): new number of pages for the book 
     """
-    connection = db.get_connection()
-
 
     number_of_args = 1
     arg_list = []
@@ -136,24 +118,9 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
         session["book_modification_message"] = "jokin kenttä täytettävä"
         return redirect(url_for("modify_book_view", username=username, book_id=book_id, shelf_name=shelf_name))
 
-    try:
-        connection.execute(sql_final, arg_list)
-        connection.commit()
-
-    except Exception as e:
-        print(e)
-        print(sql_final)
-        raise
-
-    finally:
-        connection.close()
-
+    g.db_execute(sql_final, arg_list)
         
-
-        
-
-        
-@db.modifies_db
+@db.modify_db
 def remove_book(book_id):
     """
     Removes a book from db based on unique id
@@ -161,7 +128,6 @@ def remove_book(book_id):
     Args:
         book_id (int): unique id of book to be removed
     """
-
 
     sql_delete_from_books = """
     DELETE FROM books WHERE id = ?
@@ -179,9 +145,7 @@ def remove_book(book_id):
     g.db_execute(sql_delete_from_user_books, book_id)
     g.db_execute(sql_delete_from_books, book_id)
     
-        
-
-
+@db.query_db
 def get_book(book_id):
     """
     Get info of a single book bsed on book id
@@ -200,27 +164,15 @@ def get_book(book_id):
             synopsis)
     """
 
-
-    try:
-        sql = """
-        SELECT id, name, author, year, ISBN, pages, synopsis
-        FROM books
-        WHERE id = ? 
-        """
-        book = db.query(sql, [book_id])[0]
+    sql = """
+    SELECT id, name, author, year, ISBN, pages, synopsis
+    FROM books
+    WHERE id = ? 
+    """
+    
+    return g.db_query(sql, [book_id])[0]
         
-
-    except Exception as e:
-        print(e)
-        raise
-
-    return book
-
-
-
-
-
-
+@db.query_db
 def get_books(shelf_name, user_id):
     """
     Returns all books in a shelf belonging to a user
@@ -240,28 +192,18 @@ def get_books(shelf_name, user_id):
             synopsis)
     """
 
-    
-    try:
-        sql = """
-        SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis 
-        FROM books b
-        JOIN shelf_books sb ON b.id = sb.book_id
-        JOIN shelves s ON sb.shelf_id = s.id
-        JOIN users u ON s.user_id = u.id
-        WHERE s.name = ? AND u.id = ?
-        """
-        books = db.query(sql, [shelf_name, user_id])
+    sql = """
+    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis 
+    FROM books b
+    JOIN shelf_books sb ON b.id = sb.book_id
+    JOIN shelves s ON sb.shelf_id = s.id
+    JOIN users u ON s.user_id = u.id
+    WHERE s.name = ? AND u.id = ?
+    """
 
-    
-        
-    except Exception as e:
-        print(e)
-        raise  
-    
-    
+    return g.db_query(sql, [shelf_name, user_id])
 
-    return books
-
+@db.query_db
 def search(name, author, year, isbn, public, user_id):
     """
     Constructs sql query for search and returns information on books searched.
@@ -284,60 +226,53 @@ def search(name, author, year, isbn, public, user_id):
             owner username, 
             shelf name)
     """
-    try:
+    
+    sql_begin = """
+        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name
+        FROM books b
+        JOIN user_books ub ON b.id = ub.book_id
+        JOIN users u ON ub.user_id = u.id
+        JOIN shelf_books sb ON b.id = sb.book_id
+        JOIN shelves s ON sb.shelf_id = s.id
+        """
 
-        sql_begin = """
-            SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name
-            FROM books b
-            JOIN user_books ub ON b.id = ub.book_id
-            JOIN users u ON ub.user_id = u.id
-            JOIN shelf_books sb ON b.id = sb.book_id
-            JOIN shelves s ON sb.shelf_id = s.id
-            """
+    if (public ==1):
+        sql_middle = """
+        WHERE (u.id = ? OR s.public = 1)
+        """
+    else:
+        sql_middle = """
+        WHERE u.id = ?
+        """
 
-        if (public ==1):
-            sql_middle = """
-            WHERE (u.id = ? OR s.public = 1)
-            """
-        else:
-            sql_middle = """
-            WHERE u.id = ?
-            """
+    if isbn:
+        sql = sql_begin + sql_middle + """
+        AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ? AND b.ISBN LIKE ?)
+        """
+        params = [
+            user_id,
+            "%"+name+"%",
+            "%"+author+"%",
+            "%"+year+"%",
+            "%"+isbn+"%"
+            ]
+        
+    else:
+        sql = sql_begin + sql_middle + """
+        AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ?)
+        """
 
-        if isbn:
-            sql = sql_begin + sql_middle + """
-            AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ? AND b.ISBN LIKE ?)
-            """
-            params = [
-                user_id,
-                "%"+name+"%",
-                "%"+author+"%",
-                "%"+year+"%",
-                "%"+isbn+"%"
-                ]
-            
-        else:
-            sql = sql_begin + sql_middle + """
-            AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ?)
-            """
-
-            params = [
-                user_id,
-                "%"+name+"%",
-                "%"+author+"%",
-                "%"+year+"%"
-                ]
-            
-
-        result = db.query(sql, params)
+        params = [
+            user_id,
+            "%"+name+"%",
+            "%"+author+"%",
+            "%"+year+"%"
+            ]
+        
+    return g.db_query(sql, params)
         
         
-        
-    except Exception as e:
-        print(e)
-        raise
-
-    return result
+    
     
 
     

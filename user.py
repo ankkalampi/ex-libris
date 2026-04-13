@@ -56,7 +56,6 @@ def login(username, password):
 def create_user(username, password1, password2):
     """attempts to register new user"""
     
-
     password_hash = generate_password_hash(password1)
 
     try:

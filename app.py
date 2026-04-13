@@ -150,6 +150,7 @@ def shelf_view(username, shelf_name):
 
     user_id = session["user_id"]
     try:
+        print("getting books")
         books = book.get_books(shelf_name, user_id)
     except Exception:
         username = session["username"]
