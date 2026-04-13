@@ -252,7 +252,6 @@ def search(name, author, year, isbn, public, user_id):
         """
 
     if isbn:
-        print("ISBN FOUND!")
         sql = sql_begin + sql_middle + """
         AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ? AND b.ISBN LIKE ?)
         """
@@ -276,8 +275,6 @@ def search(name, author, year, isbn, public, user_id):
             "%"+year+"%"
             ]
         
-    print(f"SQL: {sql}")
-    print(f"Params: {params}")
     return g.db_query(sql, params)
         
         
