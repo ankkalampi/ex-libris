@@ -331,6 +331,7 @@ def remove_book(book_id, username, shelf_name):
 @app.get("/<username>/haku")
 @login_required
 def search(username):
+    user_id = session["user_id"]
     name = request.args.get("name")
     author = request.args.get("author")
     year = request.args.get("year")
@@ -338,7 +339,7 @@ def search(username):
     public = 1 if request.args.get("search-from-everyone-choice") else 0
     if name or author or year or isbn:
         try:
-            result = book.search(name, author, year, isbn, public, username)
+            result = book.search(name, author, year, isbn, public, user_id)
         except Exception:
             return redirect(url_for("search"))
     else:
