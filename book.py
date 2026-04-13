@@ -230,7 +230,7 @@ def get_book(book_id):
 
 
 
-def get_books(shelf_name, user_id, username):
+def get_books(shelf_name, user_id):
     """
     Returns all books in a shelf belonging to a user
     
@@ -265,6 +265,7 @@ def get_books(shelf_name, user_id, username):
         
     except Exception as e:
         print(e)
+        username = session["username"]
         return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
     
     

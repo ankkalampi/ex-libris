@@ -137,7 +137,7 @@ def shelf_view(username, shelf_name):
 
     user_id = session["user_id"]
 
-    books = book.get_books(shelf_name, user_id, username)
+    books = book.get_books(shelf_name, user_id)
 
     return render_template("shelf_view.html", shelf=shelf_entry, books=books)
 
