@@ -20,7 +20,7 @@ def get_shelves(username):
     except Exception as e:
         print(f"Database error in selecting shelves")
         print(e)    
-        return redirect("/")
+        raise
 
     return shelves
 
@@ -39,39 +39,9 @@ def get_shelf(shelf_name, username):
     except Exception as e:
         print("Database error in fetching shelf")
         print(e)
-        return redirect("/")
+        raise
 
     return shelf
-
-def get_shelf_id(shelf_name):
-    """"returns shelf id based on name"""
-    try:
-        sql = "SELECT id FROM shelves WHERE name = ?"
-        shelf = db.query(sql, [shelf_name])
-    except Exception as e:
-        print("Database error in fetching shelf id")
-        print(e)
-        return redirect("/")
-
-    shelf_id = shelf[0][0]
-
-    return shelf_id
-
-def get_shelf_name(shelf_id):
-    """returns shelf name based on id"""
-
-    try:
-        sql = "SELECT name FROM shelves WHERE id = ?"
-        shelf = db.query(sql, [shelf_id])
-    except:
-        print("Database error in fetching shelf name")
-        return redirect("/")
-
-    shelf_name = shelf[0][0]
-
-    return shelf_name
-
-
 
 def create_shelf(username, name, description, public):
     """creates new bookshelf"""
@@ -80,9 +50,10 @@ def create_shelf(username, name, description, public):
     try:
 	    sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
 	    db.execute(sql, [user_id, name, description, public])
-    except:
-	    print("Database error in creating new shelf")
-	    return redirect ("/")
+    except Exception as e:
+        print(e)
+        print("Database error in creating new shelf")
+        raise
 
 def delete_shelf(shelf_id):
     """deletes a bookshelf based on db id"""
@@ -90,9 +61,10 @@ def delete_shelf(shelf_id):
     try:
         sql = "DELETE FROM shelves WHERE id = ?"
         db.execute(sql, [shelf_id])
-    except:
+    except Exception as e:
+        print(e)
         print("Database error in deleting shelf")
-        return redirect ("/")
+        raise
 
 
 

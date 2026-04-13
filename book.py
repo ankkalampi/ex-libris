@@ -344,7 +344,7 @@ def search(name, author, year, isbn, public, user_id):
         
     except Exception as e:
         print(e)
-        return redirect(url_for("search"))
+        raise
 
     return result
     

@@ -91,8 +91,10 @@ def profile(username):
 def shelves(username):
     """renders view for a user's bookshelves"""
 
-    shelves = shelf.get_shelves(username)
-
+    try:
+        shelves = shelf.get_shelves(username)
+    except Exception:
+        return redirect(url_for("index"))
     return render_template("shelves.html", shelves=shelves)
 
 
@@ -107,7 +109,10 @@ def create_shelf():
     description = request.form["description"]
     public = 1 if request.form.get("public-choice") else 0
 
-    shelf.create_shelf(username, name, description, public)
+    try:
+        shelf.create_shelf(username, name, description, public)
+    except Exception:
+        return redirect(url_for("index"))
 
     return redirect(url_for("shelves", username=username))
 
@@ -124,7 +129,11 @@ def new_shelf_view(username):
 @login_required
 def remove_shelf(username, shelf_id):
     """removes bookshelf"""
-    shelf.delete_shelf(shelf_id)
+    try:
+        shelf.delete_shelf(shelf_id)
+    except Exception:
+        return redirect(ulr_for("index"))
+        
     return redirect(url_for("shelves", username=username))
 
 
@@ -133,7 +142,10 @@ def remove_shelf(username, shelf_id):
 def shelf_view(username, shelf_name):
     """renders view for a single shelf"""
 
-    shelf_entry = shelf.get_shelf(shelf_name, username)
+    try:
+        shelf_entry = shelf.get_shelf(shelf_name, username)
+    except Exception:
+        return redirect(url_for("index"))
 
     user_id = session["user_id"]
     try:
@@ -314,7 +326,10 @@ def search(username):
     isbn = request.args.get("isbn")
     public = 1 if request.args.get("search-from-everyone-choice") else 0
     if name or author or year or isbn:
-        result = book.search(name, author, year, isbn, public, username)
+        try:
+            result = book.search(name, author, year, isbn, public, username)
+        except Exception:
+            return redirect(url_for("search"))
     else:
         result = []
     return render_template(
