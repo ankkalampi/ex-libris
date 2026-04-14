@@ -20,7 +20,8 @@ CREATE TABLE books (
 CREATE TABLE tags (
 	id INTEGER PRIMARY KEY,
 	FOREIGN KEY (user_id) REFERENCES users(id),
-	name TEXT NOT NULL
+	name TEXT NOT NULL,
+	UNIQUE (user_id, name)
 );
 
 
@@ -59,7 +60,29 @@ CREATE TABLE shelf_books (
 );
 
 CREATE INDEX idx_user_books_book_id ON user_books(user_id);
-CREATE INDEX idx_shelf_books_book_id ON shelf_books(book_id);
-CREATE INDEX idx_shelf_id ON shelves(id);
-CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_shelf_books_shelf_id ON shelf_books(shelf_id);
 CREATE INDEX idx_shelves_public ON shelves(id) WHERE public = 1;
+CREATE INDEX idx_user_tags_user_id ON tags(user_id);
+CREATE INDEX idx_book_tags_book_id ON book_tags(book_id);
+
+CREATE TRIGGER check_for_global_tag_before_adding_new_tags
+BEFORE INSERT ON tags
+FOR EACH ROW
+WHEN ( EXISTS (
+	SELECT 1 FROM tags
+	WHERE name = NEW.name AND user_id = NULL
+))
+BEGIN 
+	SELECT RAISE (ABORT, 'Tag already exists as global tag');
+END;
+
+CREATE TRIGGER check_for_global_tag_before_modifying_new_tags
+BEFORE UPDATE ON tags
+FOR EACH ROW
+WHEN ( EXISTS (
+	SELECT 1 FROM tags
+	WHERE name = NEW.name AND user_id = NULL
+))
+BEGIN 
+	SELECT RAISE (ABORT, 'Tag already exists as global tag');
+END;

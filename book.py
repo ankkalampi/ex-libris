@@ -11,7 +11,6 @@ class BookModificationFieldsEmpty(Exception):
     def __str__(self):
         return self.message
 
-
 @db.modify_db
 def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis): 
     """
