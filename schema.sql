@@ -14,7 +14,6 @@ CREATE TABLE books (
 	synopsis TEXT,
 	user_id INTEGER,
 	UNIQUE (name, author, year, user_id)
-
 );
 
 CREATE TABLE tags (
@@ -23,7 +22,6 @@ CREATE TABLE tags (
 	name TEXT NOT NULL,
 	UNIQUE (user_id, name)
 );
-
 
 CREATE TABLE shelves (
 	id INTEGER PRIMARY KEY,
@@ -49,7 +47,6 @@ CREATE TABLE user_books (
 	FOREIGN KEY (user_id) REFERENCES users(id),
 	FOREIGN KEY (book_id) REFERENCES books(id)
 );
-
 
 CREATE TABLE shelf_books (
 	shelf_id INTEGER NOT NULL,

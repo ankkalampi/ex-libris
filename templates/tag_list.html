@@ -1,0 +1,12 @@
+<div class="tag-list">
+    {% for tag in tags %}
+    <div class="tag-entry">
+        {{ tag[1] }}
+    </div>
+    {% endfor %}
+    <div class="tag-edit-button">
+        <a href="/edit_tags/{{ session.username }}/{{ book[0] }}" title="muokkaa tägeja" id="edit-book-tags-button">
+            Muokkaa tägejä
+        </a>
+    </div>
+</div>

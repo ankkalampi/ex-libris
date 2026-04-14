@@ -93,7 +93,6 @@ def get_global_tags():
         List[Tuple(str)]: List of tag names as single value tuples
     """
     
-    
     sql = """
     SELECT id, name
     FROM tags
