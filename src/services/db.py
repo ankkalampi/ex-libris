@@ -58,16 +58,3 @@ def query_db(f):
 
 def last_insert_id():
     return g.last_insert_id
-
-def execute(sql, params=[]):
-    connection = get_connection()
-
-    try:
-        result = connection.execute(sql, params)
-        connection.commit()
-        g.last_insert_id = result.lastrowid
-    except Exception as e:
-        print(e)
-        raise
-    finally:
-        connection.close()
