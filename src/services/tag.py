@@ -1,6 +1,6 @@
-import db
-import user
 from flask import g
+import services.db
+import services.user as user
 
 @db.modify_db
 def create_tag(user_id, name):

@@ -1,8 +1,6 @@
 import sqlite3
 from flask import g
 from functools import wraps
-from enum import Enum
-
 
 def get_connection():
     """opens database connection"""
@@ -60,15 +58,6 @@ def query_db(f):
 
 def last_insert_id():
     return g.last_insert_id
-
-def query(sql, params=[]):
-    """returns sql query result"""
-    connection = get_connection()
-    try:
-        result = connection.execute(sql, params).fetchall()
-        return result
-    finally:
-        connection.close()
 
 def execute(sql, params=[]):
     connection = get_connection()

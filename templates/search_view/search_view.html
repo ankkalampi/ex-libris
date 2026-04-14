@@ -1,4 +1,4 @@
-{% extends "user_layout.html" %}
+{% extends "layout/user_layout.html" %}
 
 {% block user_content %}
     <div class="book-search">
@@ -51,6 +51,6 @@
             Hakutulokset:
         </p>
         {% set  result = result %}
-        {% include "book_search_list.html" %}
+        {% include "search_view/book_search_list.html" %}
     </div>
 {% endblock %}

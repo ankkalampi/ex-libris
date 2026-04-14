@@ -1,7 +1,7 @@
-import db
-import user
 from flask import g
-import shelf
+import services.db as db
+import services.user as user
+import services.shelf as shelf
 
 class BookModificationFieldsEmpty(Exception):
     def __init__(self, message):

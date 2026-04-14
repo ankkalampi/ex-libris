@@ -1,4 +1,4 @@
-{% extends "user_layout.html" %}
+{% extends "layout/user_layout.html" %}
 
 
 {% block user_content %}
@@ -7,6 +7,6 @@
     {% set shelf_id = shelf_id %}
     {% set shelf_name = shelf_name %}
     {% set add_book_message = add_book_message %}
-    {% include "new_book_form.html" %}
+    {% include "shelf_view/new_book_form.html" %}
 
 {% endblock %}
