@@ -43,7 +43,7 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
     g.db_execute(sql_insert_to_books, params_insert_to_books)
     
       
-    book_id = db.last_insert_id()
+    book_id = g.last_insert_id()
 
     sql_insert_to_user_books = """
     INSERT INTO user_books (user_id, book_id)

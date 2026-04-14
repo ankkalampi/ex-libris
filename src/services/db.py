@@ -55,6 +55,3 @@ def query_db(f):
             g.connection.close()
 
     return decorated_function
-
-def last_insert_id():
-    return g.last_insert_id
