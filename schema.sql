@@ -19,8 +19,10 @@ CREATE TABLE books (
 
 CREATE TABLE tags (
 	id INTEGER PRIMARY KEY,
+	FOREIGN KEY (user_id) REFERENCES users(id),
 	name TEXT NOT NULL
 );
+
 
 CREATE TABLE shelves (
 	id INTEGER PRIMARY KEY,

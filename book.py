@@ -1,7 +1,6 @@
-import sqlite3
 import db
 import user
-from flask import redirect, g, session, url_for
+from flask import g
 import shelf
 
 class BookModificationFieldsEmpty(Exception):
