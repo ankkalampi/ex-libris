@@ -13,3 +13,35 @@
 - Käyttäjä pystyy valitsemaan kirjan lista- tai hyllynäkymästä ja siirtyä kirjanäkymään
 - Kirjanäkymässä käyttäjä voi muokata kirjan tietoja tai poistaa kirjan, mikäli kirja on käyttäjän omassa hyllyssä.
 - Käyttäjä voi etsiä kirjaa nimen, kirjailijan, ISBN:n, julkaisuvuoden tai genretägien perusteella. Haussa käyttäjä voi määrittää mistä kirjahyllyistä kirjaa etsitään (oma tietty hylly, kaikki omat hyllyt, kaikki julkiset hyllyt)
+
+## Sovelluksen käyttöönotto
+
+Kloonaa repositorio itsellesi:
+
+```
+git clone https://github.com/ankkalampi/ex-libris.git
+```
+
+Siirry kansioon, jonne kloonasit repositorion:
+
+```
+cd ex-libris
+``` 
+
+Asenna flask, jos se ei ole asennettuna:
+
+```
+pip install flask
+```
+
+Alusta tietokanta:
+
+```
+python init_db.py
+```
+
+Käynnistä sovellus:
+
+```
+python -m flask run
+```
