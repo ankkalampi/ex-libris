@@ -1,6 +1,9 @@
 import sqlite3
 
-FILE = "database.db"
+DATABASE = "database.db"
+
+
+
 
 try:
     connection = sqlite3.connect(FILE)
