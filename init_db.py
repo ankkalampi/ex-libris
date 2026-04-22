@@ -1,6 +1,6 @@
 import sqlite3
 
-DATABASE = "database.db"
+FILE = "database.db"
 
 
 
