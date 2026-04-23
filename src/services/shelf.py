@@ -1,7 +1,6 @@
-import sqlite3
-from flask import redirect, g
-import services.db as db
-import services.user as user
+from flask import g
+import src.services.db as db
+
 
 @db.query_db
 def get_shelves(user_id):

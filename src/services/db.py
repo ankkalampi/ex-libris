@@ -1,6 +1,7 @@
+from functools import wraps
 import sqlite3
 from flask import g
-from functools import wraps
+
 
 def get_connection():
     """opens database connection"""

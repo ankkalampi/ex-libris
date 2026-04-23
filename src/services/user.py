@@ -2,7 +2,7 @@ import sqlite3
 from flask import redirect, session, url_for, g, request, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-import services.db as db
+import src.services.db as db
 
 def csrf_required(f):
     @wraps(f)
@@ -10,12 +10,12 @@ def csrf_required(f):
         print("CSRF CHECK REACHED")
         if request.form["csrf_token"]:
             if request.form["csrf_token"] != session["csrf_token"]:
-                print(f"CSRF token not validated!")
+                print("CSRF token not validated!")
                 abort(403)
 
         elif request.args["csrf_token"]:
             if request.args["csrf_token"] != session["csrd_token"]:
-                print(f"CSRF token not validated!")
+                print("CSRF token not validated!")
                 abort(403)
 
         print("CSRF validated!!!")
@@ -60,8 +60,8 @@ def create_user(username, password1, password2):
 
     try:
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db_execute(sql, [username, password_hash])
-    except sqlite3.IntegrityError as e:
+        g.db_execute(sql, [username, password_hash])
+    except sqlite3.IntegrityError:
         session["register_message"] = "VIRHE: tunnus on jo varattu"
         raise
         

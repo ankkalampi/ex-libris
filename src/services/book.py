@@ -1,7 +1,5 @@
 from flask import g
-import services.db as db
-import services.user as user
-import services.shelf as shelf
+import src.services.db as db
 
 class BookModificationFieldsEmpty(Exception):
     def __init__(self, message):

@@ -1,6 +1,5 @@
 from flask import g
-import services.db
-import services.user as user
+import src.services.db as db
 
 @db.modify_db
 def create_tag(user_id, name):
@@ -35,7 +34,7 @@ def create_global_tag(name):
     VALUES (?, ?)
     """
 
-    params = [name, NULL]
+    params = [name, None]
 
     g.db_execute(sql, params)
 
@@ -59,7 +58,7 @@ def remove_tag(tag_id):
     params = [tag_id]
 
     g.db_execute(sql_delete_from_book_tags, params)
-    g.db_execute(sql_delete_fromtags, params)
+    g.db_execute(sql_delete_from_tags, params)
     
 
 @db.query_db
@@ -99,7 +98,7 @@ def get_global_tags():
     WHERE iser_id = ?
     """
 
-    params = [NULL]
+    params = [None]
 
     return g.db_query(sql, params)
 
