@@ -124,3 +124,11 @@ body {
 .user-menu-button:hover {
   background-color: #789beb;
 }
+
+.book-entry {
+  background-color: #adc6ff;
+  border-radius: 25px;
+  padding: 10px;
+  margin-top: 10px;
+  width:fit-content;
+}

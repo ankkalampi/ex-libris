@@ -47,10 +47,14 @@
             <input type="submit" value="Hae" />
 
         </form>
-        <p>
-            Hakutulokset:
-        </p>
+        </div>
+        
+        {% if result %}
         {% set  result = result %}
         {% include "search_view/book_search_list.html" %}
-    </div>
+        {% endif %}
+
+
+
+    
 {% endblock %}

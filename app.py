@@ -1,8 +1,8 @@
+import sys
+from pathlib import Path
 from flask import Flask
 from flask import session, g
 import config
-import sys
-from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent / "src"))
 
@@ -20,32 +20,11 @@ app.register_blueprint(shelf_bp)
 
 @app.before_request
 def load_logged_in_user():
+    """
+    Sets the user variable for g object before a request is made
+    """
     username = session.get("username")
     if username is None:
         g.user = None
     else:
         g.user = username
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
