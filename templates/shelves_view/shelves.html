@@ -1,7 +1,7 @@
 {% extends "layout/user_layout.html" %}
 
 {% block user_content %}
-<div class="new-shelf-button">
+<div class="normal-button">
     <a href="/{{ session.username }}/uusi-hylly" title="luo uusi kirjahylly" id="new_shelf_button">
         Uusi Kirjahylly
     </a>
@@ -11,8 +11,9 @@
 
     {% for shelf in shelves %}
     <div class="shelf-entry">
-        <p>
+        <p><b>
         {{ shelf[0] }}
+        </b>
         </p>
         <p>
             kirjojen lukumäärä: {{ shelf[1] }}
@@ -20,15 +21,20 @@
         <p>
             kuvaus: {{ shelf[2] }}
         </p>
-        <p>
+        <p> <div class="normal-button">
             <a href="/remove_shelf/{{ session.username }}/{{ shelf[3] }}" title="poista hylly" id="remove-shelf-button">
             Poista hylly
             </a>
+        </div>
+            
         </p>
         <p>
-            <a href="/{{ session.username}}/hyllyt/{{ shelf[0] }}" title="avaa hylly" id="open-shelf-button">
+            <div class="normal-button">
+                <a href="/{{ session.username}}/hyllyt/{{ shelf[0] }}" title="avaa hylly" id="open-shelf-button">
                 Avaa hylly
             </a>
+            </div>
+            
         </p>
         
         

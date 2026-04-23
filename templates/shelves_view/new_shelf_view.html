@@ -23,9 +23,12 @@
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     </form>
     <p>
-        <a href="/{{ session.username }}/hyllyt">
+        <div class="normal-button">
+            <a href="/{{ session.username }}/hyllyt">
             Takaisin
         </a>
+        </div>
+        
     </p>
 </div>
 

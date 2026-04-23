@@ -13,7 +13,9 @@
     </p>
     <input type="submit" value="Kirjaudu sisään" />
     <input type="hidden" value="{{ request.args.get('next', '') }}"/>
-    <a href="/register">Rekisteröidy</a>
+    <div class="normal-button">
+        <a href="/register">Rekisteröidy</a>
+    </div>
 </form>
 
 {% if login_message %}

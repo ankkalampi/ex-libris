@@ -2,7 +2,10 @@ body {
   margin: auto;
   max-width: 50em;
   font-family: sans-serif;
-  background-color: lightblue;
+  background-color: #bac8e8;
+  padding: 20px;
+
+ 
 }
 
 .inline-flex-parent {
@@ -11,4 +14,113 @@ body {
 
 .user-menu-button {
   padding: 5px;
+}
+
+.top-content {
+  height: 100px;
+  width: 100%;
+  background-color: #5076d1;
+  text-align: center;
+  top: 50%;
+  border-radius: 25px;
+  padding: 20px;
+  box-shadow: 5px 5px;
+  
+
+}
+
+.title {
+  text-align: center;
+  position: relative;
+  font-size: 5em;
+  top:10%;
+  text-shadow: 7px 7px blue;
+}
+
+.main-content {
+  position: relative;
+  background-color: #98a8e5;
+  border-radius: 25px;
+  padding: 20px;
+  width: 100%;
+  margin-top: 20px;
+  flex-direction: column;
+  box-shadow: 5px 5px;
+}
+
+.user-menu {
+  background-color: #6682c7;
+  height: 30px;
+  padding: 10px;
+  margin: -20px -20px 0 -20px;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.book-search {
+  background-color: #a1b5e3;
+  border-radius: 25px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.shelf-entry {
+  background-color: #a1b5e3;
+  border-radius: 25px;
+  padding: 10px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.user-menu-button {
+  display: inline-block;
+  position: relative;
+  background-color: #9ba7c4;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 5px;
+  font-weight: bold;
+  color: black;
+  
+}
+
+.normal-button {
+  display: inline-block;
+  position: relative;
+  background-color: #9ba7c4;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 5px;
+  font-weight: bold;
+  width:fit-content;
+  border:3px solid #789beb;
+  box-shadow: 2px 2px;
+  color: black;
+}
+
+.normal-button a {
+  
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.normal-button:hover {
+  background-color: #789beb;
+}
+
+
+.user-menu-button a {
+  
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.user-menu-button:hover {
+  background-color: #789beb;
 }
