@@ -6,10 +6,10 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from routes.view_routes import view_bp
-from routes.user_routes import user_bp
-from routes.book_routes import book_bp
-from routes.shelf_routes import shelf_bp
+from src.routes.view_routes import view_bp
+from src.routes.user_routes import user_bp
+from src.routes.book_routes import book_bp
+from src.routes.shelf_routes import shelf_bp
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
