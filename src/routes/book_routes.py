@@ -1,6 +1,6 @@
 from flask import Blueprint, session, url_for, redirect, request
-import services.book as book
-from services.user import login_required, csrf_required
+import src.services.book as book
+from src.services.user import login_required, csrf_required
 
 book_bp = Blueprint('book', __name__)
 

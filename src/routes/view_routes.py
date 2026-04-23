@@ -1,7 +1,7 @@
-from flask import Blueprint, session, url_for, render_template, request
-import services.shelf as shelf
-import services.book as book
-from services.user import login_required
+from flask import Blueprint, session, url_for, render_template, request, redirect
+import src.services.shelf as shelf
+import src.services.book as book
+from src.services.user import login_required
 
 view_bp = Blueprint('view', __name__)
 
@@ -22,7 +22,13 @@ def register():
 def profile(username):
     """renders view for user profile"""
 
-    return render_template("profile_view/profile.html", username=username)
+    try:
+        number_of_books = book.get_number_of_all_books(session["user_id"])
+        number_of_shelves = shelf.get_number_of_all_shelves(session["user_id"])
+    except Exception:
+        return redirect(url_for("index"))
+
+    return render_template("profile_view/profile.html", username=username, number_of_books=number_of_books, number_of_shelves=number_of_shelves)
 
 @view_bp.get("/<username>/hyllyt")
 @login_required

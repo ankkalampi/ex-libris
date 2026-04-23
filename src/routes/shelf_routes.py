@@ -1,6 +1,6 @@
 from flask import Blueprint, session, url_for, redirect, request
-import services.shelf as shelf
-from services.user import login_required, csrf_required
+import src.services.shelf as shelf
+from src.services.user import login_required, csrf_required
 
 shelf_bp = Blueprint('shelf', __name__)
 
@@ -30,6 +30,6 @@ def remove_shelf(username, shelf_id):
     try:
         shelf.delete_shelf(shelf_id)
     except Exception:
-        return redirect(ulr_for("view.index"))
+        return redirect(url_for("view.index"))
 
     return redirect(url_for("view.shelves", username=username))

@@ -31,6 +31,28 @@ def get_shelf(shelf_name, user_id):
 
     return g.db_query(sql, [shelf_name, user_id])
 
+@db.query_db
+def get_number_of_all_shelves(user_id):
+    """
+    Returns number of all shelves that a user has
+
+    Args:
+        user_id (int): Id of the user
+
+    Returns:
+        int
+    """
+
+    sql = """
+    SELECT COUNT(id)
+    FROM shelves
+    WHERE user_id = ?
+    """
+
+    result = g.db_query(sql, [user_id])[0][0]
+
+    return result
+
 @db.modify_db
 def create_shelf(user_id, name, description, public):
     """creates new bookshelf"""

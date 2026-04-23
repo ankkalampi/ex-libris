@@ -1,7 +1,7 @@
 from flask import Blueprint, session, url_for, redirect, request
 import secrets
-import services.user as user
-from services.user import login_required
+import src.services.user as user
+from src.services.user import login_required
 
 user_bp = Blueprint('user', __name__)
 

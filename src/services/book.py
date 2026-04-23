@@ -10,7 +10,7 @@ class BookModificationFieldsEmpty(Exception):
         return self.message
 
 @db.modify_db
-def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis): 
+def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
     """
     Creates a book onto db
     
@@ -41,7 +41,7 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
     g.db_execute(sql_insert_to_books, params_insert_to_books)
     
       
-    book_id = g.last_insert_id()
+    book_id = g.last_insert_id
 
     sql_insert_to_user_books = """
     INSERT INTO user_books (user_id, book_id)
@@ -87,27 +87,27 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
 
     sql_final = "UPDATE books SET "
 
-    if (name):
+    if name:
         sql_final += "name = ?, "
         number_of_args += 1
         arg_list.append(name)
-    if(author):
+    if author:
         sql_final += "author = ?, "
         number_of_args += 1
         arg_list.append(author)
-    if(year):
+    if year:
         sql_final += "year = ?, "
         number_of_args += 1
         arg_list.append(year)
-    if(synopsis):
+    if synopsis:
         sql_final += "synopsis = ?, "
         number_of_args += 1
         arg_list.append(synopsis)
-    if(ISBN):
+    if ISBN:
         sql_final += "ISBN = ?, "
         number_of_args += 1
         arg_list.append(ISBN)
-    if(pages):
+    if pages:
         sql_final += "pages = ?, "
         number_of_args += 1
         arg_list.append(pages)
@@ -116,12 +116,12 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
     sql_final += " "
     sql_final += "WHERE id = ?"
     arg_list.append(book_id)
-    
-    if (number_of_args == 1):
+
+    if number_of_args == 1:
         raise BookModificationFieldsEmpty("jokin kenttä täytettävä")
 
     g.db_execute(sql_final, arg_list)
-        
+
 @db.modify_db
 def remove_book(book_id):
     """
@@ -204,6 +204,28 @@ def get_books(shelf_name, user_id):
     """
 
     return g.db_query(sql, [shelf_name, user_id])
+
+@db.query_db
+def get_number_of_all_books(user_id):
+    """
+    Returns number of books that a user has
+
+    Args:
+        user_id (int): Id of user
+
+    Returns:
+        int
+    """
+
+    sql = """
+    SELECT COUNT(*)
+    FROM books
+    WHERE user_id = ?
+    """
+
+    result = g.db_query(sql, [user_id])[0][0]
+
+    return result
 
 @db.query_db
 def search(name, author, year, isbn, public, user_id):
