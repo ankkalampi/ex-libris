@@ -1,6 +1,7 @@
 from flask import g
 import src.services.db as db
 
+
 class BookModificationFieldsEmpty(Exception):
     def __init__(self, message):
         self.message = message
@@ -9,11 +10,12 @@ class BookModificationFieldsEmpty(Exception):
     def __str__(self):
         return self.message
 
+
 @db.modify_db
 def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
     """
     Creates a book onto db
-    
+
     Args:
         username (str): Username of the user creating the book
         name (str): Name of the book 
@@ -36,11 +38,10 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
         ISBN,
         synopsis,
         user_id
-        ]
+    ]
 
     g.db_execute(sql_insert_to_books, params_insert_to_books)
-    
-      
+
     book_id = g.last_insert_id
 
     sql_insert_to_user_books = """
@@ -50,7 +51,7 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
     params_insert_to_user_books = [
         user_id,
         book_id
-        ]
+    ]
 
     g.db_execute(sql_insert_to_user_books, params_insert_to_user_books)
 
@@ -61,9 +62,10 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
     params_insert_to_shelf_books = [
         shelf_name,
         book_id
-        ]
-    
+    ]
+
     g.db_execute(sql_insert_to_shelf_books, params_insert_to_shelf_books)
+
 
 @db.modify_db
 def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN, pages):
@@ -122,6 +124,7 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
 
     g.db_execute(sql_final, arg_list)
 
+
 @db.modify_db
 def remove_book(book_id):
     """
@@ -146,7 +149,8 @@ def remove_book(book_id):
     g.db_execute(sql_delete_from_shelf_books, book_id)
     g.db_execute(sql_delete_from_user_books, book_id)
     g.db_execute(sql_delete_from_books, book_id)
-    
+
+
 @db.query_db
 def get_book(book_id):
     """
@@ -171,14 +175,15 @@ def get_book(book_id):
     FROM books
     WHERE id = ? 
     """
-    
+
     return g.db_query(sql, [book_id])[0]
-        
+
+
 @db.query_db
 def get_books(shelf_name, user_id):
     """
     Returns all books in a shelf belonging to a user
-    
+
     Args:
         shelf_name (str): Name of the shelf
         user_id (int): id of the user
@@ -205,6 +210,7 @@ def get_books(shelf_name, user_id):
 
     return g.db_query(sql, [shelf_name, user_id])
 
+
 @db.query_db
 def get_number_of_all_books(user_id):
     """
@@ -226,6 +232,7 @@ def get_number_of_all_books(user_id):
     result = g.db_query(sql, [user_id])[0][0]
 
     return result
+
 
 @db.query_db
 def search(name, author, year, isbn, public, user_id):
@@ -250,7 +257,7 @@ def search(name, author, year, isbn, public, user_id):
             owner username, 
             shelf name)
     """
-    
+
     sql_begin = """
         SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name
         FROM books b
@@ -260,7 +267,7 @@ def search(name, author, year, isbn, public, user_id):
         JOIN shelves s ON sb.shelf_id = s.id
         """
 
-    if (public ==1):
+    if (public == 1):
         sql_middle = """
         WHERE (u.id = ? OR s.public = 1)
         """
@@ -279,8 +286,8 @@ def search(name, author, year, isbn, public, user_id):
             "%"+author+"%",
             "%"+year+"%",
             "%"+isbn+"%"
-            ]
-        
+        ]
+
     else:
         sql = sql_begin + sql_middle + """
         AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ?)
@@ -291,13 +298,6 @@ def search(name, author, year, isbn, public, user_id):
             "%"+name+"%",
             "%"+author+"%",
             "%"+year+"%"
-            ]
-        
+        ]
+
     return g.db_query(sql, params)
-        
-        
-    
-    
-
-    
-

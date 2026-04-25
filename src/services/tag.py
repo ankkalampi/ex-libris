@@ -1,6 +1,7 @@
 from flask import g
 import src.services.db as db
 
+
 @db.modify_db
 def create_tag(user_id, name):
     """
@@ -20,6 +21,7 @@ def create_tag(user_id, name):
 
     g.db_execute(sql, params)
 
+
 @db.modify_db
 def create_global_tag(name):
     """
@@ -28,7 +30,7 @@ def create_global_tag(name):
     Args:
         name (str): Tag name
     """
-    
+
     sql = """
     INSERT INTO tags (name, user_id)
     VALUES (?, ?)
@@ -38,6 +40,7 @@ def create_global_tag(name):
 
     g.db_execute(sql, params)
 
+
 @db.modify_db
 def remove_tag(tag_id):
     """
@@ -46,7 +49,7 @@ def remove_tag(tag_id):
     Args:
         tag_id (int): Id of the tag
     """
-    
+
     sql_delete_from_tags = """
     DELETE FROM tags WHERE id = ?
     """
@@ -59,7 +62,7 @@ def remove_tag(tag_id):
 
     g.db_execute(sql_delete_from_book_tags, params)
     g.db_execute(sql_delete_from_tags, params)
-    
+
 
 @db.query_db
 def get_user_tags(user_id):
@@ -72,7 +75,7 @@ def get_user_tags(user_id):
     Returns:
         List[Tuple(str)]: List of tag names as single value tuples
     """
-    
+
     sql = """
     SELECT id, name
     FROM tags
@@ -83,6 +86,7 @@ def get_user_tags(user_id):
 
     return g.db_query(sql, params)
 
+
 @db.query_db
 def get_global_tags():
     """
@@ -91,7 +95,7 @@ def get_global_tags():
     Returns:
         List[Tuple(str)]: List of tag names as single value tuples
     """
-    
+
     sql = """
     SELECT id, name
     FROM tags
@@ -102,6 +106,7 @@ def get_global_tags():
 
     return g.db_query(sql, params)
 
+
 @db.modify_db
 def attach_tag(tag_id, book_id):
     """
@@ -111,7 +116,7 @@ def attach_tag(tag_id, book_id):
         tag_id (int): Id of the tag
         book_id (int): Id of the book
     """
-    
+
     sql = """
     INSERT INTO book_tags (tag_id, book_id)
     VALUES (?, ?)
@@ -120,6 +125,7 @@ def attach_tag(tag_id, book_id):
     params = [tag_id, book_id]
 
     g.db_execute(sql, params)
+
 
 @db.modify_db
 def deattach_tag(tag_id, book_id):
@@ -130,7 +136,7 @@ def deattach_tag(tag_id, book_id):
         tag_id (int): Id of the tag
         book_id (int): Id of the book
     """
-    
+
     sql = """
     DELETE FROM book_tags
     WHERE tag_id = ? AND book_id = ?
@@ -140,6 +146,7 @@ def deattach_tag(tag_id, book_id):
 
     g.db_execute(sql, params)
 
+
 @db.modify_db
 def remove_all_user_tags(user_id):
     """
@@ -148,7 +155,7 @@ def remove_all_user_tags(user_id):
     Args:
         user_id (int): Id of the user
     """
-    
+
     sql_delete_from_tags = """
     DELETE FROM tags
     WHERE user_id = ?
@@ -167,6 +174,7 @@ def remove_all_user_tags(user_id):
     g.db_execute(sql_delete_from_book_tags, params)
     g.db_execute(sql_delete_from_tags, params)
 
+
 @db.modify_db
 def rename_tag(tag_id, new_name):
     """
@@ -176,7 +184,7 @@ def rename_tag(tag_id, new_name):
         tag_id (int): Id of the tag
         new_name (str): new name for the tag
     """
-    
+
     sql = """
     UPDATE tags
     SET name = ?

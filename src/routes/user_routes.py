@@ -5,6 +5,7 @@ from src.services.user import login_required
 
 user_bp = Blueprint('user', __name__)
 
+
 @user_bp.post("/create")
 def create():
     """creates new user"""
@@ -24,6 +25,7 @@ def create():
     session["login_message"] = "Käyttäjä luotu!"
     return redirect(url_for("view.index"))
 
+
 @user_bp.post("/login")
 def login():
     """attempts to log in user"""
@@ -36,6 +38,7 @@ def login():
         return redirect(url_for("view.profile", username=username))
     else:
         return redirect(url_for("view.index"))
+
 
 @user_bp.get("/logout")
 @login_required

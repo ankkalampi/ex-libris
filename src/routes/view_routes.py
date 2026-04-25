@@ -5,17 +5,20 @@ from src.services.user import login_required
 
 view_bp = Blueprint('view', __name__)
 
+
 @view_bp.get("/")
 def index():
     """renders view for front page"""
     login_message = session.pop('login_message', None)
     return render_template("index_view/index.html", login_message=login_message)
 
+
 @view_bp.get("/register")
 def register():
     """renders view for register new user"""
     register_message = session.pop('register_message', None)
     return render_template("index_view/register.html", register_message=register_message)
+
 
 @view_bp.get("/<username>")
 @login_required
@@ -30,6 +33,7 @@ def profile(username):
 
     return render_template("profile_view/profile.html", username=username, number_of_books=number_of_books, number_of_shelves=number_of_shelves)
 
+
 @view_bp.get("/<username>/hyllyt")
 @login_required
 def shelves(username):
@@ -43,12 +47,14 @@ def shelves(username):
         return redirect(url_for("index"))
     return render_template("shelves_view/shelves.html", shelves=shelves)
 
+
 @view_bp.get("/<username>/uusi-hylly")
 @login_required
 def new_shelf_view(username):
     """renders view for creation of new shelf"""
 
     return render_template("shelves_view/new_shelf_view.html")
+
 
 @view_bp.get("/<username>/hyllyt/<shelf_name>")
 @login_required
@@ -70,6 +76,7 @@ def shelf_view(username, shelf_name):
 
     return render_template("shelf_view/shelf_view.html", shelf=shelf_entry, books=books)
 
+
 @view_bp.get("/<username>/<shelf_name>/uusi-kirja")
 @login_required
 def new_book_view(username, shelf_name):
@@ -81,6 +88,7 @@ def new_book_view(username, shelf_name):
         shelf_name=shelf_name,
         add_book_message=add_book_message)
 
+
 @login_required
 @view_bp.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 def modify_book_view(username, shelf_name, book_id):
@@ -91,6 +99,7 @@ def modify_book_view(username, shelf_name, book_id):
 
     book_modification_message = session.pop("book_modification_message", None)
     return render_template("modify_book_view/modify_book_view.html", book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
+
 
 @view_bp.get("/<username>/haku")
 @login_required

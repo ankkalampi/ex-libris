@@ -4,24 +4,21 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import src.services.db as db
 
+
 def csrf_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print("CSRF CHECK REACHED")
         if request.form["csrf_token"]:
             if request.form["csrf_token"] != session["csrf_token"]:
-                print("CSRF token not validated!")
                 abort(403)
 
         elif request.args["csrf_token"]:
             if request.args["csrf_token"] != session["csrd_token"]:
-                print("CSRF token not validated!")
                 abort(403)
 
-        print("CSRF validated!!!")
-        
         return f(*args, **kwargs)
     return decorated_function
+
 
 def login_required(f):
     @wraps(f)
@@ -30,6 +27,7 @@ def login_required(f):
             return redirect(url_for('view.index', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
 
 @db.query_db
 def login(username, password):
@@ -52,10 +50,11 @@ def login(username, password):
         session["login_message"] = "Väärä käyttäjätunnus tai salasana"
         return False
 
+
 @db.modify_db
 def create_user(username, password1, password2):
     """attempts to register new user"""
-    
+
     password_hash = generate_password_hash(password1)
 
     try:
@@ -64,4 +63,3 @@ def create_user(username, password1, password2):
     except sqlite3.IntegrityError:
         session["register_message"] = "VIRHE: tunnus on jo varattu"
         raise
-        

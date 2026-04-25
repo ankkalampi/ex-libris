@@ -4,6 +4,7 @@ from src.services.user import login_required, csrf_required
 
 book_bp = Blueprint('book', __name__)
 
+
 @book_bp.post("/create_book/<username>/<shelf_name>")
 @login_required
 @csrf_required
@@ -63,6 +64,7 @@ def create_book(username, shelf_name):
             username=username,
             shelf_name=shelf_name))
 
+
 @login_required
 @csrf_required
 @book_bp.post("/modify_book/<username>/<shelf_name>/<book_id>")
@@ -80,12 +82,18 @@ def modify_book(book_id, username, shelf_name):
 
     print("request form queries finished")
 
-    if name == "": name = None
-    if author == "": author = None
-    if year == "": year = None
-    if ISBN == "": ISBN = None
-    if synopsis == "": synopsis = None
-    if pages == "": pages = None
+    if name == "":
+        name = None
+    if author == "":
+        author = None
+    if year == "":
+        year = None
+    if ISBN == "":
+        ISBN = None
+    if synopsis == "":
+        synopsis = None
+    if pages == "":
+        pages = None
 
     print("modify_book route, starting try")
     try:
@@ -125,13 +133,14 @@ def modify_book(book_id, username, shelf_name):
             book_id=book_id
         ))
 
+
 @login_required
 @csrf_required
 @book_bp.post("/remove_book/<username>/<shelf_name>/<book_id>")
 def remove_book(book_id, username, shelf_name):
     try:
         book.remove_book(book_id)
-    
+
     except Exception:
         session["book_delete_message"] = "VIRHE Kirjaa ei onnistuttu poistamaan"
         return redirect(
@@ -143,4 +152,3 @@ def remove_book(book_id, username, shelf_name):
         )
 
     return redirect(url_for("view.shelf_view", username=username, shelf_name=shelf_name))
-

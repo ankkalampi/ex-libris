@@ -5,7 +5,7 @@ import src.services.db as db
 @db.query_db
 def get_shelves(user_id):
     """returns all bookshelves of a user"""
-    
+
     sql = """
     SELECT s.name, COUNT(sb.book_id), s.description, s.id 
     FROM shelves s
@@ -16,6 +16,7 @@ def get_shelves(user_id):
     """
 
     return g.db_query(sql, [user_id])
+
 
 @db.query_db
 def get_shelf(shelf_name, user_id):
@@ -30,6 +31,7 @@ def get_shelf(shelf_name, user_id):
     """
 
     return g.db_query(sql, [shelf_name, user_id])
+
 
 @db.query_db
 def get_number_of_all_shelves(user_id):
@@ -53,23 +55,17 @@ def get_number_of_all_shelves(user_id):
 
     return result
 
+
 @db.modify_db
 def create_shelf(user_id, name, description, public):
     """creates new bookshelf"""
-    
+
     sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
     g.db_execute(sql, [user_id, name, description, public])
-    
+
+
 @db.modify_db
 def delete_shelf(shelf_id):
     """deletes a bookshelf based on db id"""
 
-    sql = "DELETE FROM shelves WHERE id = ?"
-    g.db_execute(sql, [shelf_id])
-    
-
-
-
-
-
-
+    sql_delete_shelf = "DELETE FROM shelves WHERE id = ?"
