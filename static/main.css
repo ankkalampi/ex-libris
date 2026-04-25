@@ -8,6 +8,8 @@ body {
  
 }
 
+
+
 .inline-flex-parent {
   display: inline-flex;
 }
@@ -24,6 +26,8 @@ body {
   top: 30%;
   border-radius: 25px;
   padding-bottom: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
   box-shadow: 5px 5px;
   
 
