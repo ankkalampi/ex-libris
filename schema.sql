@@ -67,4 +67,3 @@ CREATE INDEX idx_shelves_user_id ON shelves(user_id);
 CREATE INDEX idx_user_books_book_id ON user_books(user_id);
 CREATE INDEX idx_shelf_books_shelf_id ON shelf_books(shelf_id);
 CREATE INDEX idx_shelves_public ON shelves(id) WHERE public = 1;
-

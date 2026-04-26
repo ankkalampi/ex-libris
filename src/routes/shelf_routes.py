@@ -47,9 +47,19 @@ def remove_shelf(username, shelf_id):
         username (str): username of the current user
         shelf_id (int): Id of the shelf
     """
+
+    user_id = session["user_id"]
+    page_size = 10
+    shelf_count = shelf.get_number_of_all_shelves(user_id)
+    page_count = math.ceil(shelf_count / page_size)
+    page_count = max(page_count, 1)
+
     try:
         shelf.delete_shelf(shelf_id)
     except Exception:
         return redirect(url_for("view.index"))
 
-    return redirect(url_for("view.shelves", username=username))
+    return redirect(url_for("view.shelves",
+                            username=username,
+                            page_count=page_count,
+                            page=1))
