@@ -70,6 +70,10 @@ def create_shelf(user_id, name, description, public):
 def delete_shelf(shelf_id):
     """deletes a bookshelf based on db id"""
 
-    sql_delete_shelf = "DELETE FROM shelves WHERE id = ?"
+    sql = "DELETE FROM shelves WHERE id = ?"
+
+    g.db_execute(sql, [shelf_id])
+
+
 
    

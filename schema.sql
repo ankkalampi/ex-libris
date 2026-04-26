@@ -5,9 +5,6 @@ DROP TABLE IF EXISTS shelves;
 DROP TABLE IF EXISTS user_books;
 DROP TABLE IF EXISTS shelf_books;
 
-PRAGMA foreign_keys = ON;
-
-
 CREATE TABLE users (
 	id INTEGER PRIMARY KEY,
 	username TEXT UNIQUE NOT NULL,
@@ -26,7 +23,7 @@ CREATE TABLE books (
 	shelf_id INTEGER NOT NULL,
 	tag_id INTEGER NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE, 
-	FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (tag_id) REFERENCES tags(id),
 	FOREIGN KEY (shelf_id) REFERENCES shelves(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	UNIQUE (name, author, year, user_id, shelf_id)
 );
@@ -50,15 +47,15 @@ CREATE TABLE user_books (
 	user_id INTEGER NOT NULL,
 	book_id INTEGER NOT NULL,
 	PRIMARY KEY (user_id, book_id),
-	FOREIGN KEY (user_id) REFERENCES users(id),
-	FOREIGN KEY (book_id) REFERENCES books(id)
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE shelf_books (
 	shelf_id INTEGER NOT NULL,
 	book_id INTEGER NOT NULL,
 	PRIMARY KEY (shelf_id, book_id),
-	FOREIGN KEY (shelf_id) REFERENCES shelves(id),
+	FOREIGN KEY (shelf_id) REFERENCES shelves(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (book_id) REFERENCES books(id)
 );
 
