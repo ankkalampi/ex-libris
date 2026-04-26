@@ -60,7 +60,7 @@ Perustellaan, miksi näitä huomioita ei ole korjattu sovelluksessa:
 
 Ylitykset näissä eivät ole suuria, ja argumenttien sekä muuttujien määrät ovat perusteltuja.
 
-## Argument doesn't conform to snake_case naming style
+## Argument/variable name doesn't conform to snake_case naming style
 
 Nämä ovat pääosin poikkeuskäsittelyn ja dekoraattorien apumuuttujia, joiden lyhyet nimet ovat perusteltuja. ISBN-muuttujan kohdalla on tehty päätös isojen kirjaimien käyttämisestä, koska ISBN kirjoitetaan isoilla kirjaimilla.
 
