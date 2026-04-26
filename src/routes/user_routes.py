@@ -7,7 +7,8 @@ user_bp = Blueprint('user', __name__)
 
 @user_bp.post("/create")
 def create():
-    """creates new user"""
+    """Route for creating a new user"""
+
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
@@ -26,7 +27,8 @@ def create():
 
 @user_bp.post("/login")
 def login():
-    """attempts to log in user"""
+    """Route for logging in user"""
+
     username = request.form["username"]
     password = request.form["password"]
 
@@ -40,6 +42,7 @@ def login():
 @user_bp.get("/logout")
 @login_required
 def logout():
-    """logs in user"""
+    """Route for logging out user"""
+    
     del session["username"]
     return redirect(url_for("view.index"))

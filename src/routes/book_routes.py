@@ -8,7 +8,13 @@ book_bp = Blueprint('book', __name__)
 @login_required
 @csrf_required
 def create_book(username, shelf_name):
-    """Route for creating a new book"""
+    """
+    Route for creating a new book
+
+        Args:
+            username (str): current user username
+            shelf_name (str): shelf name
+    """
 
     name = request.form["name"]
     author = request.form["author"]
@@ -68,6 +74,14 @@ def create_book(username, shelf_name):
 @csrf_required
 @book_bp.post("/modify_book/<username>/<shelf_name>/<book_id>")
 def modify_book(book_id, username, shelf_name):
+    """
+    Route for modifying book
+
+    Args:
+        book_id (int): Id of the book
+        username (str): username of the current user (for redirecting)
+        shelf_name (str): name of the shelf
+    """
 
     name = request.form["name"]
     author = request.form["author"]
@@ -130,6 +144,14 @@ def modify_book(book_id, username, shelf_name):
 @csrf_required
 @book_bp.post("/remove_book/<username>/<shelf_name>/<book_id>")
 def remove_book(book_id, username, shelf_name):
+    """
+    Route for removing a book
+
+    Args:
+        book_id (int): Id of the book
+        username (str): username of the current user
+        shelf_name (str): name of the shelf
+    """
     try:
         book.remove_book(book_id)
 

@@ -5,6 +5,7 @@ from functools import wraps
 import src.services.db as db
 
 def csrf_required(f):
+    """Decorator function to check for CSRF token"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if request.form["csrf_token"]:
@@ -19,6 +20,7 @@ def csrf_required(f):
     return decorated_function
 
 def login_required(f):
+    """Decorator function to check for login status"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
@@ -28,7 +30,14 @@ def login_required(f):
 
 @db.query_db
 def login(username, password):
-    """attempts to login user"""
+    """
+    Attempts to login user
+    
+    Args:
+        username (str): username
+        password (str): password
+    """
+
     sql = "SELECT password_hash, id FROM users WHERE username = ?"
     result = g.db_query(sql, [username])
 
@@ -49,7 +58,14 @@ def login(username, password):
 
 @db.modify_db
 def create_user(username, password1, password2):
-    """attempts to register new user"""
+    """
+    Attempts to register new user
+    
+    Args:
+        username (str): username given
+        password1 (str): password given
+        password2 (str): password given again
+    """
 
     password_hash = generate_password_hash(password1)
 

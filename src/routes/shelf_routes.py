@@ -9,7 +9,7 @@ shelf_bp = Blueprint('shelf', __name__)
 @login_required
 @csrf_required
 def create_shelf():
-    """creates new bookshelf"""
+    """Route for creating a new bookshelf"""
     username = session["username"]
     user_id = session["user_id"]
 
@@ -32,7 +32,13 @@ def create_shelf():
 @shelf_bp.get("/remove_shelf/<username>/<shelf_id>")
 @login_required
 def remove_shelf(username, shelf_id):
-    """removes bookshelf"""
+    """
+    Route for removing a bookshelf
+    
+    Args:
+        username (str): username of the current user
+        shelf_id (int): Id of the shelf
+    """
     try:
         shelf.delete_shelf(shelf_id)
     except Exception:

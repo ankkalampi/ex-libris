@@ -9,20 +9,22 @@ view_bp = Blueprint('view', __name__)
 
 @view_bp.get("/")
 def index():
-    """renders view for front page"""
+    """Route for front page view"""
+
     login_message = session.pop('login_message', None)
     return render_template("index_view/index.html", login_message=login_message)
 
 @view_bp.get("/register")
 def register():
-    """renders view for register new user"""
+    """Route for register view"""
+
     register_message = session.pop('register_message', None)
     return render_template("index_view/register.html", register_message=register_message)
 
 @view_bp.get("/<username>")
 @login_required
 def profile(username):
-    """renders view for user profile"""
+    """Route for user profile view"""
 
     try:
         number_of_books = book.get_number_of_all_books(session["user_id"])
@@ -35,7 +37,7 @@ def profile(username):
 @view_bp.get("/<username>/hyllyt/<int:page>")
 @login_required
 def shelves(username, page=1):
-    """renders view for a user's bookshelves"""
+    """Route for user bookshelves view"""
 
     user_id = session["user_id"]
 
@@ -59,14 +61,25 @@ def shelves(username, page=1):
 @view_bp.get("/<username>/uusi-hylly")
 @login_required
 def new_shelf_view(username):
-    """renders view for creation of new shelf"""
+    """
+    Route for new shelf creation view
+    
+    Args:
+        username (str): username of the current user
+    """
 
     return render_template("shelves_view/new_shelf_view.html")
 
 @view_bp.get("/<username>/hyllyt/<shelf_name>")
 @login_required
 def shelf_view(username, shelf_name):
-    """renders view for a single shelf"""
+    """
+    Route for inside of a single shelf view
+    
+    Args:
+        username (str): username of the current user
+        shelf_name (str): name of the shelf
+    """
 
     user_id = session["user_id"]
 
@@ -86,7 +99,14 @@ def shelf_view(username, shelf_name):
 @view_bp.get("/<username>/<shelf_name>/uusi-kirja")
 @login_required
 def new_book_view(username, shelf_name):
-    """renders view for adding a book to a shelf"""
+    """
+    Route for creating a new book view
+    
+    Args:
+        username (str): username of the current user
+        shelf_name (str): name of the shelf
+    """
+
     add_book_message = session.pop("add_book_message", None)
     tags = tag.get_all_tags()
     return render_template(
@@ -99,6 +119,15 @@ def new_book_view(username, shelf_name):
 @login_required
 @view_bp.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 def modify_book_view(username, shelf_name, book_id):
+    """
+    Route for modifying a book view
+    
+    Args:
+        username (str): username of the current user
+        shelf_name (str): name of the shelf
+        book_id (int): Id of the book
+    """
+
     tags = tag.get_all_tags()
     try:
         book_entry = book.get_book(book_id)
@@ -110,7 +139,13 @@ def modify_book_view(username, shelf_name, book_id):
 
 @view_bp.get("/<username>/haku/<int:page>")
 @login_required
-def search(username, page=1):
+def search(username):
+    """
+    Route for searching books
+    
+    Args:
+        username (str): username of the current user
+    """
     tags = tag.get_all_tags()
     user_id = session["user_id"]
     name = request.args.get("name")

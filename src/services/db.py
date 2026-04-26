@@ -11,6 +11,10 @@ def get_connection():
     return connection
 
 def modify_db(f):
+    """"
+    Decorator function for database modification calls.
+    Uses g object to pass execution function to decorated function.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
@@ -35,6 +39,10 @@ def modify_db(f):
     return decorated_function
 
 def query_db(f):
+    """"
+    Decorator function for database query calls.
+    Uses g object to pass execution function to decorated function.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
