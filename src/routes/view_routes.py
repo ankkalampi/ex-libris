@@ -3,6 +3,7 @@ import src.services.shelf as shelf
 import src.services.book as book
 from src.services.user import login_required
 import src.services.tag as tag 
+import math
 
 view_bp = Blueprint('view', __name__)
 
@@ -35,18 +36,29 @@ def profile(username):
     return render_template("profile_view/profile.html", username=username, number_of_books=number_of_books, number_of_shelves=number_of_shelves)
 
 
-@view_bp.get("/<username>/hyllyt")
+@view_bp.get("/<username>/hyllyt/<int:page>")
 @login_required
-def shelves(username):
+def shelves(username, page=1):
     """renders view for a user's bookshelves"""
 
     user_id = session["user_id"]
 
+    page_size = 10
+    shelf_count = shelf.get_number_of_all_shelves(user_id)
+    page_count = math.ceil(shelf_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/"+username+"/"+str(1))
+    if page > page_count:
+        return redirect("/"+username+"/"+str(page_count))
+    
+
     try:
-        shelves = shelf.get_shelves(user_id)
+        shelves = shelf.get_shelves(user_id, page, page_size)
     except Exception:
         return redirect(url_for("index"))
-    return render_template("shelves_view/shelves.html", shelves=shelves)
+    return render_template("shelves_view/shelves.html", shelves=shelves, page=page, page_count=page_count)
 
 
 @view_bp.get("/<username>/uusi-hylly")
@@ -105,9 +117,9 @@ def modify_book_view(username, shelf_name, book_id):
     return render_template("modify_book_view/modify_book_view.html", tags = tags, book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
 
 
-@view_bp.get("/<username>/haku")
+@view_bp.get("/<username>/haku/<int:page>")
 @login_required
-def search(username):
+def search(username, page=1):
     tags = tag.get_all_tags()
     user_id = session["user_id"]
     name = request.args.get("name")
@@ -127,6 +139,7 @@ def search(username):
             return redirect(url_for("search"))
     else:
         result = []
+
     return render_template(
         "search_view/search_view.html",
         name=name,

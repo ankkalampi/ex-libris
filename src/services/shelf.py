@@ -3,7 +3,7 @@ import src.services.db as db
 
 
 @db.query_db
-def get_shelves(user_id):
+def get_shelves(user_id, page, page_size):
     """returns all bookshelves of a user"""
 
     sql = """
@@ -13,9 +13,13 @@ def get_shelves(user_id):
     LEFT JOIN shelf_books sb ON s.id = sb.shelf_id
     WHERE u.id = ?
     GROUP BY s.name, s.description, s.id
+    LIMIT ? OFFSET ?
     """
 
-    return g.db_query(sql, [user_id])
+    limit = page_size
+    offset = page_size * (page-1)
+
+    return g.db_query(sql, [user_id, limit, offset])
 
 
 
