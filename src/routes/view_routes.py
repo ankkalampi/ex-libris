@@ -108,15 +108,21 @@ def modify_book_view(username, shelf_name, book_id):
 @view_bp.get("/<username>/haku")
 @login_required
 def search(username):
+    tags = tag.get_all_tags()
     user_id = session["user_id"]
     name = request.args.get("name")
     author = request.args.get("author")
     year = request.args.get("year")
     isbn = request.args.get("isbn")
+    if request.args.get("search-with-tag"):
+        tag_id = request.args.get("tag_list")
+    else:
+        tag_id = None
+
     public = 1 if request.args.get("search-from-everyone-choice") else 0
     if name or author or year or isbn:
         try:
-            result = book.search(name, author, year, isbn, public, user_id)
+            result = book.search(name, author, year, isbn, public, user_id, tag_id)
         except Exception:
             return redirect(url_for("search"))
     else:
@@ -128,4 +134,6 @@ def search(username):
         year=year,
         isbn=isbn,
         result=result,
-        username=username)
+        username=username,
+        tag_id=tag_id,
+        tags=tags)

@@ -1,5 +1,7 @@
 {% extends "layout/user_layout.html" %}
 
+{% set tags = tags %}
+
 {% block user_content %}
     <div class="book-search">
         <p>
@@ -39,6 +41,20 @@
                 <input type="text" name="isbn" />
                 {% endif %}
             </p>
+            <p>
+                Hae tägillä:
+                <input type="checkbox" id="search-with-tag-checkbox" name="search-with-tag" value="1"/>
+            </p>
+            <p>
+            <label for="Valitse tägi"></label>
+            <select name="tag_list" id="tag-list">
+                {% for tag in tags %}
+                    <option value="{{ loop.index }}" >
+                        {{ tag[0] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </p>
             <p>
                 Haetaan myös toisten käyttäjien hyllyistä: 
                 <input type="checkbox" id="search-from-other-users-checkbox" name="search-from-everyone-choice" value="1"/>

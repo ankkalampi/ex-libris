@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS shelves;
 DROP TABLE IF EXISTS user_books;
 DROP TABLE IF EXISTS shelf_books;
 
+PRAGMA foreign_keys = ON;
+
 
 CREATE TABLE users (
 	id INTEGER PRIMARY KEY,
@@ -23,8 +25,9 @@ CREATE TABLE books (
 	user_id INTEGER,
 	shelf_id INTEGER NOT NULL,
 	tag_id INTEGER NOT NULL,
-	FOREIGN KEY (tag_id) REFERENCES tags(id),
-	FOREIGN KEY (shelf_id) REFERENCES shelves(id)
+	FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE, 
+	FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (shelf_id) REFERENCES shelves(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	UNIQUE (name, author, year, user_id, shelf_id)
 );
 
@@ -39,7 +42,7 @@ CREATE TABLE shelves (
 	name TEXT NOT NULL,
 	description TEXT NOT NULL,
 	public INTEGER NOT NULL CHECK (public IN (0,1)),
-	FOREIGN KEY (user_id) REFERENCES users(id)
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -58,6 +61,11 @@ CREATE TABLE shelf_books (
 	FOREIGN KEY (shelf_id) REFERENCES shelves(id),
 	FOREIGN KEY (book_id) REFERENCES books(id)
 );
+
+CREATE INDEX idx_books_user_id ON books(user_id);
+CREATE INDEX idx_books_shelf_id ON books(shelf_id);
+CREATE INDEX idx_books_tag_id ON books(tag_id);
+CREATE INDEX idx_shelves_user_id ON shelves(user_id);
 
 CREATE INDEX idx_user_books_book_id ON user_books(user_id);
 CREATE INDEX idx_shelf_books_shelf_id ON shelf_books(shelf_id);

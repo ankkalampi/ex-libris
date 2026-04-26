@@ -271,12 +271,13 @@ def search(name, author, year, isbn, public, user_id, tag_id):
     """
 
     sql_begin = """
-        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name, tag_id
+        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name, t.name
         FROM books b
         JOIN user_books ub ON b.id = ub.book_id
         JOIN users u ON ub.user_id = u.id
         JOIN shelf_books sb ON b.id = sb.book_id
         JOIN shelves s ON sb.shelf_id = s.id
+        JOIN tags t ON b.tag_id = t.id
         """
 
     if (public == 1):
@@ -288,28 +289,25 @@ def search(name, author, year, isbn, public, user_id, tag_id):
         WHERE u.id = ?
         """
 
+    sql_end = """
+    AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ?
+    """
+
+    params = [
+        user_id,
+        "%"+name+"%",
+        "%"+author+"%",
+        "%"+year+"%"
+    ]
+
+    if tag_id:
+        sql_end = sql_end + " AND b.tag_id = ? "
+        params.append(tag_id)
+
     if isbn:
-        sql = sql_begin + sql_middle + """
-        AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ? AND b.ISBN LIKE ?)
-        """
-        params = [
-            user_id,
-            "%"+name+"%",
-            "%"+author+"%",
-            "%"+year+"%",
-            "%"+isbn+"%"
-        ]
+        sql_end = sql_end + " AND b.ISBN LIKE ? "
+        params.append("%"+isbn+"%")
 
-    else:
-        sql = sql_begin + sql_middle + """
-        AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ?)
-        """
-
-        params = [
-            user_id,
-            "%"+name+"%",
-            "%"+author+"%",
-            "%"+year+"%"
-        ]
+    sql = sql_begin + sql_middle + sql_end + " )"
 
     return g.db_query(sql, params)
