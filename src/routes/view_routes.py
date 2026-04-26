@@ -84,7 +84,7 @@ def new_shelf_view(username):
 def shelf_view(username, shelf_name):
     """
     Route for inside of a single shelf view
-    
+
     Args:
         username (str): username of the current user
         shelf_name (str): name of the shelf
@@ -114,7 +114,7 @@ def shelf_view(username, shelf_name):
 def new_book_view(username, shelf_name):
     """
     Route for creating a new book view
-    
+
     Args:
         username (str): username of the current user
         shelf_name (str): name of the shelf
@@ -134,7 +134,7 @@ def new_book_view(username, shelf_name):
 def modify_book_view(username, shelf_name, book_id):
     """
     Route for modifying a book view
-    
+
     Args:
         username (str): username of the current user
         shelf_name (str): name of the shelf
@@ -159,7 +159,7 @@ def modify_book_view(username, shelf_name, book_id):
 def search(username):
     """
     Route for searching books
-    
+
     Args:
         username (str): username of the current user
     """

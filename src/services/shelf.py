@@ -17,7 +17,7 @@ def get_shelves(user_id, page, page_size):
     """
 
     sql = """
-    SELECT s.name, COUNT(sb.book_id), s.description, s.id 
+    SELECT s.name, COUNT(sb.book_id), s.description, s.id
     FROM shelves s
     JOIN users u ON u.id = s.user_id
     LEFT JOIN shelf_books sb ON s.id = sb.shelf_id
@@ -45,7 +45,7 @@ def get_shelf(shelf_name, user_id):
     SELECT s.name, COUNT (sb.book_id), s.description, s.id
     FROM shelves s
     JOIN users u ON u.id = s.user_id
-    LEFT JOIN shelf_books sb ON s.id = sb.shelf_id 
+    LEFT JOIN shelf_books sb ON s.id = sb.shelf_id
     WHERE s.name = ? AND u.id = ?
     """
 

@@ -41,7 +41,7 @@ def create_shelf():
 def remove_shelf(username, shelf_id):
     """
     Route for removing a bookshelf
-    
+
     Args:
         username (str): username of the current user
         shelf_id (int): Id of the shelf

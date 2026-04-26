@@ -22,13 +22,13 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis, 
     Args:
         username (str): Username of the user creating the book
         shelf_id (name): name of the shelf where the book is being added
-        name (str): Name of the book 
-        author (str): Name of the author 
+        name (str): Name of the book
+        author (str): Name of the author
         pages (int): Number of pages
         year (str): Publishing year
         ISBN (str): ISBN code
         synopsis (str): synopsis
-        tag_id (int): id of the tag that the book has 
+        tag_id (int): id of the tag that the book has
     """
 
     sql_insert_to_books = """
@@ -86,7 +86,7 @@ def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
         year (str): new publishing year for the book
         synopsis (str): new synopsis for the book
         ISBN (str): new ISBN for the book
-        pages (int): new number of pages for the book 
+        pages (int): new number of pages for the book
         tag_id (int): new tag for the book
     """
 
@@ -167,7 +167,7 @@ def get_book(book_id):
         book_id (int): id of the book
 
     Returns:
-        Tuple(int, str, str, str, str, int, str): Tuple of book information in the form of 
+        Tuple(int, str, str, str, str, int, str): Tuple of book information in the form of
             (book id,
             book name,
             book author,
@@ -181,7 +181,7 @@ def get_book(book_id):
     sql = """
     SELECT id, name, author, year, ISBN, pages, synopsis, tag_id
     FROM books
-    WHERE id = ? 
+    WHERE id = ?
     """
 
     return g.db_query(sql, [book_id])[0]
@@ -196,7 +196,7 @@ def get_books(shelf_name, user_id):
         user_id (int): id of the user
 
     Returns:
-        List[Tuple(int, str, str, str, str, int, str)]: List of book information tuples in the form of 
+        List[Tuple(int, str, str, str, str, int, str)]: List of book information tuples in the form of
             (book id,
             book name,
             book author,
@@ -208,7 +208,7 @@ def get_books(shelf_name, user_id):
     """
 
     sql = """
-    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis, t.name 
+    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis, t.name
     FROM books b
     JOIN shelf_books sb ON b.id = sb.book_id
     JOIN tags t ON b.tag_id = t.id
@@ -256,14 +256,14 @@ def search(name, author, year, isbn, public, user_id, tag_id):
         tag_id (int): Id of the tag of the searched book
 
     Returns:
-        List[Tuple(str, str, int, str, str, str, str, str, int)]: 
-            List of book information tuples in the form of 
-            (book name, 
+        List[Tuple(str, str, int, str, str, str, str, str, int)]:
+            List of book information tuples in the form of
+            (book name,
             book author,
-            number of pages, 
-            publishing year, 
-            synopsis, ISBN, 
-            owner username, 
+            number of pages,
+            publishing year,
+            synopsis, ISBN,
+            owner username,
             shelf name,
             tag id)
     """

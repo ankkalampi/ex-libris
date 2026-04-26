@@ -56,9 +56,9 @@ def login(username, password):
         session["username"] = username
         session["user_id"] = user_id
         return True
-    else:
-        session["login_message"] = "Väärä käyttäjätunnus tai salasana"
-        return False
+
+    session["login_message"] = "Väärä käyttäjätunnus tai salasana"
+    return False
 
 @db.modify_db
 def create_user(username, password):
