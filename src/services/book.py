@@ -208,9 +208,10 @@ def get_books(shelf_name, user_id):
     """
 
     sql = """
-    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis, b.tag_id 
+    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis, t.name 
     FROM books b
     JOIN shelf_books sb ON b.id = sb.book_id
+    JOIN tags t ON b.tag_id = t.id
     JOIN shelves s ON sb.shelf_id = s.id
     JOIN users u ON s.user_id = u.id
     WHERE s.name = ? AND u.id = ?
