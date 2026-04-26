@@ -12,31 +12,36 @@ class BookModificationFieldsEmpty(Exception):
 
 
 @db.modify_db
-def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
+def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis, tag_id):
     """
     Creates a book onto db
 
     Args:
         username (str): Username of the user creating the book
+        shelf_id (name): name of the shelf where the book is being added
         name (str): Name of the book 
         author (str): Name of the author 
         pages (int): Number of pages
         year (str): Publishing year
         ISBN (str): ISBN code
-        synopsis (str): synopsis 
+        synopsis (str): synopsis
+        tag_id (int): id of the tag that the book has 
     """
 
     sql_insert_to_books = """
-    INSERT INTO books (name, author, pages, year, ISBN, synopsis, user_id)
-    VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE id = ? ));
+    INSERT INTO books (name, shelf_id, author, pages, year, ISBN, synopsis, tag_id, user_id)
+    VALUES (?, (SELECT id FROM shelves WHERE name = ? AND user_id = ?), ?, ?, ?, ?, ?, ?, ?);
     """
     params_insert_to_books = [
         name,
+        shelf_name,
+        user_id,
         author,
         pages,
         year,
         ISBN,
         synopsis,
+        tag_id,
         user_id
     ]
 
@@ -68,13 +73,11 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis):
 
 
 @db.modify_db
-def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN, pages):
+def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
     """
     Modifies book data of a single book
 
     Args:
-        username (str): username for redirection
-        shelf_name (str): shelf name for redirection
         book_id (int): id of the book being modified
         name (str): new name for the book
         author (str): new author for the book
@@ -82,6 +85,7 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
         synopsis (str): new synopsis for the book
         ISBN (str): new ISBN for the book
         pages (int): new number of pages for the book 
+        tag_id (int): new tag for the book
     """
 
     number_of_args = 1
@@ -113,6 +117,8 @@ def modify_book(user_id, shelf_name, book_id, name, author, year, synopsis, ISBN
         sql_final += "pages = ?, "
         number_of_args += 1
         arg_list.append(pages)
+    if tag_id:
+        sql_final += "tag_id = ?, "
 
     sql_final = sql_final[:-2]
     sql_final += " "
@@ -154,7 +160,7 @@ def remove_book(book_id):
 @db.query_db
 def get_book(book_id):
     """
-    Get info of a single book bsed on book id
+    Get info of a single book based on book id
 
     Args:
         book_id (int): id of the book
@@ -167,11 +173,12 @@ def get_book(book_id):
             publishing year,
             ISBN,
             number of pages,
-            synopsis)
+            synopsis,
+            tag_id)
     """
 
     sql = """
-    SELECT id, name, author, year, ISBN, pages, synopsis
+    SELECT id, name, author, year, ISBN, pages, synopsis, tag_id
     FROM books
     WHERE id = ? 
     """
@@ -196,11 +203,12 @@ def get_books(shelf_name, user_id):
             publishing year,
             ISBN,
             number of pages,
-            synopsis)
+            synopsis,
+            tag_id)
     """
 
     sql = """
-    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis 
+    SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis, b.tag_id 
     FROM books b
     JOIN shelf_books sb ON b.id = sb.book_id
     JOIN shelves s ON sb.shelf_id = s.id
@@ -235,7 +243,7 @@ def get_number_of_all_books(user_id):
 
 
 @db.query_db
-def search(name, author, year, isbn, public, user_id):
+def search(name, author, year, isbn, public, user_id, tag_id):
     """
     Constructs sql query for search and returns information on books searched.
 
@@ -246,20 +254,22 @@ def search(name, author, year, isbn, public, user_id):
         isbn (str): ISBN of the searched book
         public (int): Toggle search from all public shelves (can be 0 or 1)
         user_id (int): Id of the current user sarching
+        tag_id (int): Id of the tag of the searched book
 
     Returns:
-        List[Tuple(str, str, int, str, str, str, str, str)]: List of book information tuples in the form of 
+        List[Tuple(str, str, int, str, str, str, str, str, int)]: List of book information tuples in the form of 
             (book name, 
             book author,
             number of pages, 
             publishing year, 
             synopsis, ISBN, 
             owner username, 
-            shelf name)
+            shelf name,
+            tag id)
     """
 
     sql_begin = """
-        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name
+        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name, tag_id
         FROM books b
         JOIN user_books ub ON b.id = ub.book_id
         JOIN users u ON ub.user_id = u.id

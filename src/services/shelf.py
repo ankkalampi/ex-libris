@@ -18,12 +18,14 @@ def get_shelves(user_id):
     return g.db_query(sql, [user_id])
 
 
+
+
 @db.query_db
 def get_shelf(shelf_name, user_id):
     """returns a shelf based on db id"""
 
     sql = """
-    SELECT s.name, COUNT (sb.book_id), s.description
+    SELECT s.name, COUNT (sb.book_id), s.description, s.id
     FROM shelves s
     JOIN users u ON u.id = s.user_id
     LEFT JOIN shelf_books sb ON s.id = sb.shelf_id 
@@ -69,3 +71,5 @@ def delete_shelf(shelf_id):
     """deletes a bookshelf based on db id"""
 
     sql_delete_shelf = "DELETE FROM shelves WHERE id = ?"
+
+   

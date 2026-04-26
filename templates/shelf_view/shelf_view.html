@@ -5,6 +5,7 @@
 {% block user_content %}
 
         {% set shelf_name = shelf[0][0] %}
+        {% set shelf_id = shelf[0][3] %}
         {% set number_of_books = shelf[0][1] %}
         {% set description = shelf[0][2] %}
         {% set username = session.username %}

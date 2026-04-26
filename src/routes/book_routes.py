@@ -17,7 +17,7 @@ def create_book(username, shelf_name):
     synopsis = request.form["synopsis"]
     isbn = request.form["isbn"]
     year = request.form["year"]
-
+    tag_id = request.form["tag_list"]
     user_id = session["user_id"]
 
     if (pages == ""):
@@ -46,10 +46,21 @@ def create_book(username, shelf_name):
             pages,
             year,
             isbn,
-            synopsis)
+            synopsis,
+            tag_id)
 
     except Exception as e:
         print(e)
+        print("CREATING BOOK WITH: ")
+        print(f"user_id: {user_id}")
+        print(f"shelf_name: {shelf_name}")
+        print(f"name: {name}")
+        print(f"author: {author}")
+        print(f"pages: {pages}")
+        print(f"year: {year}")
+        print(f"isbn: {isbn}")
+        print(f"synopsis: {synopsis}")
+        print(f"tag_id: {tag_id}")
         session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
         return redirect(
             url_for(

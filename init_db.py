@@ -14,4 +14,11 @@ with open('schema.sql') as schema:
 cursor.executescript(schema_sql)
 
 connection.commit()
+
+with open('init.sql') as init:
+    init_sql = init.read()
+
+cursor.executescript(init_sql)
+
+connection.commit()
 connection.close()

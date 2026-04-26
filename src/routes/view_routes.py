@@ -2,6 +2,7 @@ from flask import Blueprint, session, url_for, render_template, request, redirec
 import src.services.shelf as shelf
 import src.services.book as book
 from src.services.user import login_required
+import src.services.tag as tag 
 
 view_bp = Blueprint('view', __name__)
 
@@ -82,10 +83,12 @@ def shelf_view(username, shelf_name):
 def new_book_view(username, shelf_name):
     """renders view for adding a book to a shelf"""
     add_book_message = session.pop("add_book_message", None)
+    tags = tag.get_all_tags()
     return render_template(
         "shelf_view/new_book_view.html",
         username=username,
         shelf_name=shelf_name,
+        tags = tags,
         add_book_message=add_book_message)
 
 

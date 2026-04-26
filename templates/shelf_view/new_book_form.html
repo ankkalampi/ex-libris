@@ -28,6 +28,14 @@
             Synopsis(voi jättää tyhjäksi): <br />
             <input type="text" name="synopsis"/>
         </p>
+        <p>
+            <label for="Valitse tägi"></label>
+            <select name="tag_list" id="tag-list">
+                {% for tag in tags %}
+                    <option value="{{ loop.index }}">{{ tag[0] }}</option>
+                {% endfor %}
+            </select>
+        </p>
         <input type="submit" value="Lisää kirja" />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     </form>
