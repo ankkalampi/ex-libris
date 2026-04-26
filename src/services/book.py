@@ -154,9 +154,10 @@ def remove_book(book_id):
     DELETE FROM shelf_books WHERE book_id = ?
     """
 
-    g.db_execute(sql_delete_from_shelf_books, book_id)
-    g.db_execute(sql_delete_from_user_books, book_id)
-    g.db_execute(sql_delete_from_books, book_id)
+    book_id = int(book_id)
+    g.db_execute(sql_delete_from_shelf_books, [book_id])
+    g.db_execute(sql_delete_from_user_books, [book_id])
+    g.db_execute(sql_delete_from_books, [book_id])
 
 @db.query_db
 def get_book(book_id):
