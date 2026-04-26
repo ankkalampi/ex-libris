@@ -1,5 +1,6 @@
 """
-This module contains all routes that handle creation, modification and removal of books in the database.
+This module contains all routes that handle creation,
+modification and removal of books in the database.
 """
 
 from flask import Blueprint, session, url_for, redirect, request
@@ -94,7 +95,6 @@ def modify_book(book_id, username, shelf_name):
     synopsis = request.form["synopsis"]
     pages = request.form["pages"]
     tag_id  = request.form["tag_list"]
-    user_id = session["user_id"]
 
     if name == "":
         name = None

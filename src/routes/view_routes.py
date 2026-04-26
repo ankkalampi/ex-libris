@@ -60,11 +60,11 @@ def shelves(username, page=1):
 
 
     try:
-        shelves = shelf.get_shelves(user_id, page, page_size)
+        user_shelves = shelf.get_shelves(user_id, page, page_size)
     except Exception:
         return redirect(url_for("index"))
     return render_template("shelves_view/shelves.html",
-                           shelves=shelves, page=page,
+                           shelves=user_shelves, page=page,
                            page_count=page_count)
 
 @view_bp.get("/<username>/uusi-hylly")

@@ -1,5 +1,6 @@
 """
-This module contains all routes that handle creation, modification and removal of shelves in the database.
+This module contains all routes that handle creation,
+modification and removal of shelves in the database.
 """
 
 import math

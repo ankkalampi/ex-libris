@@ -196,7 +196,8 @@ def get_books(shelf_name, user_id):
         user_id (int): id of the user
 
     Returns:
-        List[Tuple(int, str, str, str, str, int, str)]: List of book information tuples in the form of
+        List[Tuple(int, str, str, str, str, int, str)]:
+        List of book information tuples in the form of
             (book id,
             book name,
             book author,
