@@ -12,7 +12,7 @@ src/services/book.py:18:0: R0913: Too many arguments (9/5) (too-many-arguments)
 src/services/book.py:18:0: R0914: Too many local variables (16/15) (too-many-locals)
 src/services/book.py:78:55: C0103: Argument name "ISBN" doesn't conform to snake_case naming style (invalid-name)
 src/services/book.py:78:0: R0913: Too many arguments (8/5) (too-many-arguments)
-src/services/book.py:246:0: R0913: Too many arguments (7/5) (too-many-arguments)
+src/services/book.py:247:0: R0913: Too many arguments (7/5) (too-many-arguments)
 ************* Module src.services.db
 src/services/db.py:17:14: C0103: Argument name "f" doesn't conform to snake_case naming style (invalid-name)
 src/services/db.py:25:8: E0237: Assigning to attribute 'connection' not defined in class slots (assigning-non-slot)
@@ -46,11 +46,11 @@ src/routes/book_routes.py:122:4: C0103: Variable name "e" doesn't conform to sna
 src/routes/book_routes.py:128:4: C0103: Variable name "e" doesn't conform to snake_case naming style (invalid-name)
 src/routes/book_routes.py:165:11: W0703: Catching too general exception Exception (broad-except)
 ************* Module src.routes.shelf_routes
-src/routes/shelf_routes.py:32:11: W0703: Catching too general exception Exception (broad-except)
-src/routes/shelf_routes.py:52:11: W0703: Catching too general exception Exception (broad-except)
+src/routes/shelf_routes.py:47:11: W0703: Catching too general exception Exception (broad-except)
+src/routes/shelf_routes.py:70:11: W0703: Catching too general exception Exception (broad-except)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.57/10 (previous run: 8.55/10, +0.02)
+Your code has been rated at 8.59/10 (previous run: 8.57/10, +0.02)
 
 ```
 

@@ -10,6 +10,24 @@ from src.services.user import login_required, csrf_required
 
 shelf_bp = Blueprint('shelf', __name__)
 
+def get_page_count(page_size):
+    """"
+    Get page count for paging
+
+    Args:
+        page_size (int): desired page size
+
+    Returns:
+        (int)
+    """
+
+    user_id = session["user_id"]
+    shelf_count = shelf.get_number_of_all_shelves(user_id)
+    page_count = math.ceil(shelf_count / page_size)
+    page_count = max(page_count, 1)
+
+    return page_count
+
 @shelf_bp.post("/create_shelf")
 @login_required
 @csrf_required
@@ -22,10 +40,7 @@ def create_shelf():
     description = request.form["description"]
     public = 1 if request.form.get("public-choice") else 0
 
-    page_size = 10
-    shelf_count = shelf.get_number_of_all_shelves(user_id)
-    page_count = math.ceil(shelf_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = get_page_count(10)
 
     try:
         shelf.create_shelf(user_id, name, description, public)
@@ -48,11 +63,7 @@ def remove_shelf(username, shelf_id):
         shelf_id (int): Id of the shelf
     """
 
-    user_id = session["user_id"]
-    page_size = 10
-    shelf_count = shelf.get_number_of_all_shelves(user_id)
-    page_count = math.ceil(shelf_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = get_page_count(10)
 
     try:
         shelf.delete_shelf(shelf_id)
