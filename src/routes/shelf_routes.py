@@ -5,7 +5,6 @@ import math
 
 shelf_bp = Blueprint('shelf', __name__)
 
-
 @shelf_bp.post("/create_shelf")
 @login_required
 @csrf_required
@@ -29,7 +28,6 @@ def create_shelf():
         return redirect(url_for("view.index"))
 
     return redirect(url_for("view.shelves", username=username, page_count=page_count, page=1))
-
 
 @shelf_bp.get("/remove_shelf/<username>/<shelf_id>")
 @login_required

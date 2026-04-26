@@ -1,7 +1,6 @@
 from flask import g
 import src.services.db as db
 
-
 @db.query_db
 def get_tag(tag_id):
     """
@@ -16,7 +15,6 @@ def get_tag(tag_id):
     FROM tags
     WHERE tag_id = ?
     """
-
 
     params = [tag_id]
 
@@ -37,9 +35,3 @@ def get_all_tags():
     """
 
     return g.db_query(sql, [])
-
-    
-
-
-
-

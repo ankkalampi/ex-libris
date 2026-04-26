@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import src.services.db as db
 
-
 def csrf_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -19,7 +18,6 @@ def csrf_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -27,7 +25,6 @@ def login_required(f):
             return redirect(url_for('view.index', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
-
 
 @db.query_db
 def login(username, password):
@@ -49,7 +46,6 @@ def login(username, password):
     else:
         session["login_message"] = "Väärä käyttäjätunnus tai salasana"
         return False
-
 
 @db.modify_db
 def create_user(username, password1, password2):

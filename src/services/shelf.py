@@ -1,7 +1,6 @@
 from flask import g
 import src.services.db as db
 
-
 @db.query_db
 def get_shelves(user_id, page, page_size):
     """returns all bookshelves of a user"""
@@ -21,9 +20,6 @@ def get_shelves(user_id, page, page_size):
 
     return g.db_query(sql, [user_id, limit, offset])
 
-
-
-
 @db.query_db
 def get_shelf(shelf_name, user_id):
     """returns a shelf based on db id"""
@@ -37,7 +33,6 @@ def get_shelf(shelf_name, user_id):
     """
 
     return g.db_query(sql, [shelf_name, user_id])
-
 
 @db.query_db
 def get_number_of_all_shelves(user_id):
@@ -61,14 +56,12 @@ def get_number_of_all_shelves(user_id):
 
     return result
 
-
 @db.modify_db
 def create_shelf(user_id, name, description, public):
     """creates new bookshelf"""
 
     sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
     g.db_execute(sql, [user_id, name, description, public])
-
 
 @db.modify_db
 def delete_shelf(shelf_id):
@@ -77,7 +70,3 @@ def delete_shelf(shelf_id):
     sql = "DELETE FROM shelves WHERE id = ?"
 
     g.db_execute(sql, [shelf_id])
-
-
-
-   

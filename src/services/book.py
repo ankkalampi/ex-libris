@@ -1,7 +1,6 @@
 from flask import g
 import src.services.db as db
 
-
 class BookModificationFieldsEmpty(Exception):
     def __init__(self, message):
         self.message = message
@@ -9,7 +8,6 @@ class BookModificationFieldsEmpty(Exception):
 
     def __str__(self):
         return self.message
-
 
 @db.modify_db
 def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis, tag_id):
@@ -71,7 +69,6 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis, 
 
     g.db_execute(sql_insert_to_shelf_books, params_insert_to_shelf_books)
 
-
 @db.modify_db
 def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
     """
@@ -131,7 +128,6 @@ def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
 
     g.db_execute(sql_final, arg_list)
 
-
 @db.modify_db
 def remove_book(book_id):
     """
@@ -156,7 +152,6 @@ def remove_book(book_id):
     g.db_execute(sql_delete_from_shelf_books, book_id)
     g.db_execute(sql_delete_from_user_books, book_id)
     g.db_execute(sql_delete_from_books, book_id)
-
 
 @db.query_db
 def get_book(book_id):
@@ -185,7 +180,6 @@ def get_book(book_id):
     """
 
     return g.db_query(sql, [book_id])[0]
-
 
 @db.query_db
 def get_books(shelf_name, user_id):
@@ -220,7 +214,6 @@ def get_books(shelf_name, user_id):
 
     return g.db_query(sql, [shelf_name, user_id])
 
-
 @db.query_db
 def get_number_of_all_books(user_id):
     """
@@ -242,7 +235,6 @@ def get_number_of_all_books(user_id):
     result = g.db_query(sql, [user_id])[0][0]
 
     return result
-
 
 @db.query_db
 def search(name, author, year, isbn, public, user_id, tag_id):

@@ -31,4 +31,3 @@ for i in range(1, book_count + 1):
                [shelf_id, i])
 db.commit()
 db.close()
-

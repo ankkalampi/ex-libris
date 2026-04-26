@@ -4,7 +4,6 @@ from src.services.user import login_required, csrf_required
 
 book_bp = Blueprint('book', __name__)
 
-
 @book_bp.post("/create_book/<username>/<shelf_name>")
 @login_required
 @csrf_required
@@ -65,7 +64,6 @@ def create_book(username, shelf_name):
             username=username,
             shelf_name=shelf_name))
 
-
 @login_required
 @csrf_required
 @book_bp.post("/modify_book/<username>/<shelf_name>/<book_id>")
@@ -79,17 +77,6 @@ def modify_book(book_id, username, shelf_name):
     pages = request.form["pages"]
     tag_id  = request.form["tag_list"]
     user_id = session["user_id"]
-
-    print("REQUEST:")
-    print(f"name: {name}")
-    print(f"author: {author}")
-    print(f"ISBN: {ISBN}")
-    print(f"year: {year}")
-    print(f"synopsis: {synopsis}")
-    print(f"pages: {pages}")
-    print(f"tag_id: {tag_id}")
-    print(f"user_id: {user_id}")
-
 
     if name == "":
         name = None
@@ -129,8 +116,6 @@ def modify_book(book_id, username, shelf_name):
             )
         )
 
-    print("no exceptions, redirecting to modify_book_view")
-
     session["book_modification_message"] = "Kirja muokattu onnistuneesti!"
 
     return redirect(
@@ -140,7 +125,6 @@ def modify_book(book_id, username, shelf_name):
             shelf_name=shelf_name,
             book_id=book_id
         ))
-
 
 @login_required
 @csrf_required
