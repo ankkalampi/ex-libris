@@ -1,7 +1,12 @@
+"""
+This module handles database operations for books.
+"""
+
 from flask import g
-import src.services.db as db
+from src.services import db
 
 class BookModificationFieldsEmpty(Exception):
+    """Exception class for empty book modification fields"""
     def __init__(self, message):
         self.message = message
         super().__init__(self.message)
@@ -251,7 +256,8 @@ def search(name, author, year, isbn, public, user_id, tag_id):
         tag_id (int): Id of the tag of the searched book
 
     Returns:
-        List[Tuple(str, str, int, str, str, str, str, str, int)]: List of book information tuples in the form of 
+        List[Tuple(str, str, int, str, str, str, str, str, int)]: 
+            List of book information tuples in the form of 
             (book name, 
             book author,
             number of pages, 
@@ -272,7 +278,7 @@ def search(name, author, year, isbn, public, user_id, tag_id):
         JOIN tags t ON b.tag_id = t.id
         """
 
-    if (public == 1):
+    if public == 1:
         sql_middle = """
         WHERE (u.id = ? OR s.public = 1)
         """

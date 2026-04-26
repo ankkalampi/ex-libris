@@ -18,10 +18,16 @@
     </p>
     <p>
         <div class="normal-button">
-            <a href="/{{ username }}/hyllyt" title="takaisin" id="back-to-shelves-view-button">
+            <a href="/{{ username }}/hyllyt/1" title="takaisin" id="back-to-shelves-view-button">
             Takaisin
         </a>
         </div>
-        
+    </p>
+    
+    
+    <p>
+        {% if add_book_message %}
+        {{ add_book_message }}
+        {% endif %}
     </p>
 </div>

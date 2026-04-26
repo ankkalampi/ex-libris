@@ -1,9 +1,13 @@
-from flask import Blueprint, session, url_for, render_template, request, redirect
-import src.services.shelf as shelf
-import src.services.book as book
-from src.services.user import login_required
-import src.services.tag as tag 
+"""
+This module contains all routes that handle rendering views.
+"""
+
 import math
+from flask import Blueprint, session, url_for, render_template, request, redirect
+from src.services import shelf
+from src.services import book
+from src.services.user import login_required
+from src.services import tag
 
 view_bp = Blueprint('view', __name__)
 
@@ -32,7 +36,10 @@ def profile(username):
     except Exception:
         return redirect(url_for("index"))
 
-    return render_template("profile_view/profile.html", username=username, number_of_books=number_of_books, number_of_shelves=number_of_shelves)
+    return render_template("profile_view/profile.html",
+                           username=username,
+                           number_of_books=number_of_books,
+                           number_of_shelves=number_of_shelves)
 
 @view_bp.get("/<username>/hyllyt/<int:page>")
 @login_required
@@ -50,20 +57,22 @@ def shelves(username, page=1):
         return redirect("/"+username+"/"+str(1))
     if page > page_count:
         return redirect("/"+username+"/"+str(page_count))
-    
+
 
     try:
         shelves = shelf.get_shelves(user_id, page, page_size)
     except Exception:
         return redirect(url_for("index"))
-    return render_template("shelves_view/shelves.html", shelves=shelves, page=page, page_count=page_count)
+    return render_template("shelves_view/shelves.html",
+                           shelves=shelves, page=page,
+                           page_count=page_count)
 
 @view_bp.get("/<username>/uusi-hylly")
 @login_required
 def new_shelf_view(username):
     """
     Route for new shelf creation view
-    
+
     Args:
         username (str): username of the current user
     """
@@ -82,6 +91,7 @@ def shelf_view(username, shelf_name):
     """
 
     user_id = session["user_id"]
+    add_book_message = session.pop('add_book_message', None)
 
     try:
         shelf_entry = shelf.get_shelf(shelf_name, user_id)
@@ -94,7 +104,10 @@ def shelf_view(username, shelf_name):
         username = session["username"]
         return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
 
-    return render_template("shelf_view/shelf_view.html", shelf=shelf_entry, books=books)
+    return render_template("shelf_view/shelf_view.html",
+                           shelf=shelf_entry,
+                           books=books,
+                           add_book_message=add_book_message)
 
 @view_bp.get("/<username>/<shelf_name>/uusi-kirja")
 @login_required
@@ -135,9 +148,13 @@ def modify_book_view(username, shelf_name, book_id):
         session["book_modification_message"] = "kirjan tietojen hakemisessa tapahtui virhe"
 
     book_modification_message = session.pop("book_modification_message", None)
-    return render_template("modify_book_view/modify_book_view.html", tags = tags, book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
+    return render_template("modify_book_view/modify_book_view.html",
+                           tags = tags,
+                           book=book_entry,
+                           book_modification_message=book_modification_message,
+                           shelf_name=shelf_name)
 
-@view_bp.get("/<username>/haku/<int:page>")
+@view_bp.get("/<username>/haku")
 @login_required
 def search(username):
     """

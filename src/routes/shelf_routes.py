@@ -1,7 +1,11 @@
-from flask import Blueprint, session, url_for, redirect, request
-import src.services.shelf as shelf
-from src.services.user import login_required, csrf_required
+"""
+This module contains all routes that handle creation, modification and removal of shelves in the database.
+"""
+
 import math
+from flask import Blueprint, session, url_for, redirect, request
+from src.services import shelf
+from src.services.user import login_required, csrf_required
 
 shelf_bp = Blueprint('shelf', __name__)
 
@@ -27,7 +31,10 @@ def create_shelf():
     except Exception:
         return redirect(url_for("view.index"))
 
-    return redirect(url_for("view.shelves", username=username, page_count=page_count, page=1))
+    return redirect(url_for("view.shelves",
+                            username=username,
+                            page_count=page_count,
+                            page=1))
 
 @shelf_bp.get("/remove_shelf/<username>/<shelf_id>")
 @login_required

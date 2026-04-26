@@ -1,3 +1,7 @@
+"""
+This module provides functions to access the database.
+"""
+
 from functools import wraps
 import sqlite3
 from flask import g

@@ -1,5 +1,9 @@
+"""
+This module handles database operations for tags.
+"""
+
 from flask import g
-import src.services.db as db
+from src.services import db
 
 @db.query_db
 def get_tag(tag_id):
@@ -24,7 +28,7 @@ def get_tag(tag_id):
 def get_all_tags():
     """
     Returns all tag names as a list
-    
+
     Returns:
         List[str]: List of tag names
     """

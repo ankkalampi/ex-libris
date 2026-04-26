@@ -1,6 +1,10 @@
+"""
+This module contains all routes that handle creation of, and logging in/out users.
+"""
+
 from flask import Blueprint, session, url_for, redirect, request
 import secrets
-import src.services.user as user
+from src.services import user
 from src.services.user import login_required
 
 user_bp = Blueprint('user', __name__)
@@ -18,7 +22,7 @@ def create():
         return redirect(url_for("view.register"))
 
     try:
-        user.create_user(username, password1, password2)
+        user.create_user(username, password1)
     except Exception:
         return redirect(url_for("view.register"))
 
@@ -43,6 +47,6 @@ def login():
 @login_required
 def logout():
     """Route for logging out user"""
-    
+
     del session["username"]
     return redirect(url_for("view.index"))

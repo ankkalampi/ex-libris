@@ -1,11 +1,15 @@
+"""
+This module handles database operations for shelves.
+"""
+
 from flask import g
-import src.services.db as db
+from src.services import db
 
 @db.query_db
 def get_shelves(user_id, page, page_size):
     """
     Returns all bookshelves of a user
-    
+
     Args:
         user_id (int): Id of the user
         page (int): variable for paging
@@ -31,7 +35,7 @@ def get_shelves(user_id, page, page_size):
 def get_shelf(shelf_name, user_id):
     """
     Returns a shelf based on id
-    
+
     Args:
         shelf_name (str): name of the shelf
         user_id (int): Id of the current users
@@ -79,7 +83,7 @@ def create_shelf(user_id, name, description, public):
         name (str): name of the shelf
         description (str): description of the shelf
         public (int): indicates if the shelf is public. Must be either 1 or 0
-    
+
     """
 
     sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
@@ -89,7 +93,7 @@ def create_shelf(user_id, name, description, public):
 def delete_shelf(shelf_id):
     """
     Deletes a bookshelf
-    
+
     Args:
         shelf_id (int): Id of the shelf
     """

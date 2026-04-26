@@ -1,5 +1,9 @@
+"""
+This module contains all routes that handle creation, modification and removal of books in the database.
+"""
+
 from flask import Blueprint, session, url_for, redirect, request
-import src.services.book as book
+from src.services import book
 from src.services.user import login_required, csrf_required
 
 book_bp = Blueprint('book', __name__)
@@ -25,16 +29,16 @@ def create_book(username, shelf_name):
     tag_id = request.form["tag_list"]
     user_id = session["user_id"]
 
-    if (pages == ""):
+    if pages == "":
         pages = 0
 
-    if (isbn == ""):
+    if isbn == "":
         isbn = None
 
-    if (year == ""):
+    if year == "":
         year = 'tuntematon'
 
-    if (name == "" or author == ""):
+    if name == "" or author == "":
         session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
         return redirect(
             url_for(
@@ -66,7 +70,7 @@ def create_book(username, shelf_name):
     session["add_book_message"] = "Kirja lisätty!"
     return redirect(
         url_for(
-            "view.new_book_view",
+            "view.shelf_view",
             username=username,
             shelf_name=shelf_name))
 
@@ -117,7 +121,10 @@ def modify_book(book_id, username, shelf_name):
             tag_id)
     except book.BookModificationFieldsEmpty as e:
         session["book_modification_message"] = str(e)
-        return redirect(url_for("view.modify_book_view", username=username, book_id=book_id, shelf_name=shelf_name))
+        return redirect(url_for("view.modify_book_view",
+                                username=username,
+                                book_id=book_id,
+                                shelf_name=shelf_name))
     except Exception as e:
         print(e)
         session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"

@@ -1,8 +1,12 @@
+"""
+This module handles database operations for users.
+"""
+
 import sqlite3
+from functools import wraps
 from flask import redirect, session, url_for, g, request, abort
 from werkzeug.security import generate_password_hash, check_password_hash
-from functools import wraps
-import src.services.db as db
+from src.services import db
 
 def csrf_required(f):
     """Decorator function to check for CSRF token"""
@@ -32,7 +36,7 @@ def login_required(f):
 def login(username, password):
     """
     Attempts to login user
-    
+
     Args:
         username (str): username
         password (str): password
@@ -57,17 +61,16 @@ def login(username, password):
         return False
 
 @db.modify_db
-def create_user(username, password1, password2):
+def create_user(username, password):
     """
     Attempts to register new user
-    
+
     Args:
         username (str): username given
-        password1 (str): password given
-        password2 (str): password given again
+        password (str): password given
     """
 
-    password_hash = generate_password_hash(password1)
+    password_hash = generate_password_hash(password)
 
     try:
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
