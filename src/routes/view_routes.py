@@ -95,13 +95,14 @@ def new_book_view(username, shelf_name):
 @login_required
 @view_bp.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 def modify_book_view(username, shelf_name, book_id):
+    tags = tag.get_all_tags()
     try:
         book_entry = book.get_book(book_id)
     except Exception:
         session["book_modification_message"] = "kirjan tietojen hakemisessa tapahtui virhe"
 
     book_modification_message = session.pop("book_modification_message", None)
-    return render_template("modify_book_view/modify_book_view.html", book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
+    return render_template("modify_book_view/modify_book_view.html", tags = tags, book=book_entry, book_modification_message=book_modification_message, shelf_name=shelf_name)
 
 
 @view_bp.get("/<username>/haku")

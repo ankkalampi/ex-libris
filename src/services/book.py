@@ -119,6 +119,7 @@ def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
         arg_list.append(pages)
     if tag_id:
         sql_final += "tag_id = ?, "
+        arg_list.append(tag_id)
 
     sql_final = sql_final[:-2]
     sql_final += " "

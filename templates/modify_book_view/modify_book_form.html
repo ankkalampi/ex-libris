@@ -24,6 +24,16 @@
             Synopsis: <br />
             <input type="text" name="synopsis" value="{% if book_synopsis is not none %}{{ book_synopsis }}{% else %}{% endif %}"/>
         </p>
+        <p>
+            <label for="Valitse tägi"></label>
+            <select name="tag_list" id="tag-list">
+                {% for tag in tags %}
+                    <option value="{{ loop.index }}" {% if loop.index == tag_id %}selected{% endif %}>
+                        {{ tag[0] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </p>
         <input type="submit" value="Muokkaa kirjaa" />
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     </form>

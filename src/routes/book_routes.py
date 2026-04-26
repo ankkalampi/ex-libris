@@ -71,17 +71,25 @@ def create_book(username, shelf_name):
 @book_bp.post("/modify_book/<username>/<shelf_name>/<book_id>")
 def modify_book(book_id, username, shelf_name):
 
-    print("modify_book route reached")
     name = request.form["name"]
     author = request.form["author"]
     ISBN = request.form["isbn"]
     year = request.form["year"]
     synopsis = request.form["synopsis"]
     pages = request.form["pages"]
-
+    tag_id  = request.form["tag_list"]
     user_id = session["user_id"]
 
-    print("request form queries finished")
+    print("REQUEST:")
+    print(f"name: {name}")
+    print(f"author: {author}")
+    print(f"ISBN: {ISBN}")
+    print(f"year: {year}")
+    print(f"synopsis: {synopsis}")
+    print(f"pages: {pages}")
+    print(f"tag_id: {tag_id}")
+    print(f"user_id: {user_id}")
+
 
     if name == "":
         name = None
@@ -96,22 +104,21 @@ def modify_book(book_id, username, shelf_name):
     if pages == "":
         pages = None
 
-    print("modify_book route, starting try")
     try:
         book.modify_book(
-            user_id,
-            shelf_name,
             book_id,
             name,
             author,
             year,
             synopsis,
             ISBN,
-            pages)
+            pages,
+            tag_id)
     except book.BookModificationFieldsEmpty as e:
         session["book_modification_message"] = str(e)
         return redirect(url_for("view.modify_book_view", username=username, book_id=book_id, shelf_name=shelf_name))
-    except Exception:
+    except Exception as e:
+        print(e)
         session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"
         return redirect(
             url_for(
