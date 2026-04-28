@@ -6,7 +6,7 @@
 - Käyttäjä pystyy lisäämään uuden kirjahyllyn. Kirjahyllyn voi määritellä julkiseksi tai yksityiseksi, ja sille voi määritellä sekä nimen että lyhyen kuvauksen.
 - Käyttäjä voi tarkastella kirjahyllyjään listana ja valita listalta hyllyn tarkasteltavaksi.
 	
-- Käyttäjä pystyy lisäämään uuden kirjan tiedot (nimi, kirjoittaja, sivumäärä, ISBN(vapaahetoinen), julkaisuvuosi(vapaaehtoinen), genretägi(vapaaehtoinen)).
+- Käyttäjä pystyy lisäämään uuden kirjan tiedot (nimi, kirjoittaja, sivumäärä, ISBN(vapaaehtoinen), julkaisuvuosi(vapaaehtoinen), genretägi(vapaaehtoinen)).
 - Käyttäjä voi tarkastella kirjahyllyään listana.
 - Käyttäjä pystyy valitsemaan kirjan hyllynäkymästä ja siirtymään kirjanäkymään.
 - Kirjanäkymässä käyttäjä voi muokata kirjan tietoja tai poistaa kirjan.
