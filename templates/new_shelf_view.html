@@ -8,15 +8,15 @@
 
     <form action="/create_shelf" method="post">
         <p>
-            Hyllyn nimi: <br />
+            <label for="name">Hyllyn nimi: </label> <br />
             <input type="text" name="name" />
         </p>
         <p>
-            Hyllyn kuvaus: <br />
+            <label for="description">Hyllyn kuvaus:</label> <br />
             <input type="text" name="description" />
         </p>
         <p>
-            Onko tämä kirjahylly julkinen?
+            <label for="public-choice">Onko tämä kirjahylly julkinen? </label>
             <input type="checkbox" id="public-shelf-checkbox" name="public-choice" />
         </p>
         <input type="submit" value="Luo kirjahylly" />

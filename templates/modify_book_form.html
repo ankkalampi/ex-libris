@@ -1,31 +1,31 @@
 <div class="book-modification-form">
     <form action="/modify_book/{{ session.username }}/{{ shelf_name }}/{{ book_id }}" method="post">
         <p>
-            Kirjan nimi: <br />
+            <label for="name">Kirjan nimi:</label> <br />
             <input type="text" name="name" value="{{ book_name }}"/>
         </p>
         <p>
-            Kirjoittajan nimi: <br />
+            <label for="author">Kirjoittajan nimi:</label> <br />
             <input type="text" name="author" value="{{ book_author }}"/>
         </p>
         <p>
-            Julkaisuvuosi: <br />
+            <label for="year">Julkaisuvuosi:</label> <br />
             <input type="number" name="year" value="{{ book_year }}"/>
         </p>
         <p>
-            ISBN: <br />
+            <label for="isbn">ISBN:</label> <br />
             <input type="text" name="isbn" value="{{ book_ISBN | default('') }}"/>
         </p>
         <p>
-            Sivumäärä: <br />
+            <label for="pages">Sivumäärä: </label> <br />
             <input type="number" name="pages" value="{% if book_pages is not none %}{{ book_pages }}{% else %}{% endif %}"/>
         </p>
         <p>
-            Synopsis: <br />
+            <label for="synopsis">Synopsis: </label> <br />
             <input type="text" name="synopsis" value="{% if book_synopsis is not none %}{{ book_synopsis }}{% else %}{% endif %}"/>
         </p>
         <p>
-            <label for="Valitse tägi"></label>
+            <label for="Valitse tägi">Valitse tägi: </label>
             <select name="tag_list" id="tag-list">
                 {% for tag in tags %}
                     <option value="{{ loop.index }}" {% if loop.index == tag_id %}selected{% endif %}>

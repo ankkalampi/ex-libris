@@ -5,31 +5,31 @@
 
     <form action="/create_book/{{ username }}/{{ shelf_name }}" method="post">
         <p>
-            Kirjan nimi: <br />
+            <label for="name">Kirjan nimi: </label> <br />
             <input type="text" name="name"/>
         </p>
         <p>
-            Kirjoittajan nimi: <br />
+            <label for="author">Kirjoittajan nimi: </label> <br />
             <input type="text" name="author"/>
         </p>
         <p>
-            Julkaisuvuosi: <br />
+            <label for="year">Julkaisuvuosi: </label> <br />
             <input type="number" name="year" />
         </p>
         <p>
-            ISBN(voi jättää tyhjäksi): <br />
+            <label for="isbn">ISBN(voi jättää tyhjäksi): </label> <br />
             <input type="text" name="isbn" />
         </p>
         <p>
-            Sivumäärä(voi jättää tyhjäksi): <br />
+            <label for="pages">Sivumäärä(voi jättää tyhjäksi):</label> <br />
             <input type="number" name="pages"/>
         </p>
         <p>
-            Synopsis(voi jättää tyhjäksi): <br />
+            <label for="synopsis">Synopsis(voi jättää tyhjäksi): </label> <br />
             <input type="text" name="synopsis"/>
         </p>
         <p>
-            <label for="Valitse tägi"></label>
+            <label for="Valitse tägi">Valitse tägi: </label>
             <select name="tag_list" id="tag-list">
                 {% for tag in tags %}
                     <option value="{{ loop.index }}">{{ tag[0] }}</option>

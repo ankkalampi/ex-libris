@@ -10,7 +10,7 @@
 
         <form action="/{{username}}/haku/1" method="get">
             <p>
-                Kirjan nimi: <br />
+                <label for="name">Kirjan nimi: </label> <br />
                 {% if name %}
                 <input type="text" name="name" value="{{ name }}"/>
                 {% else %}
@@ -18,7 +18,7 @@
                 {% endif %}
             </p>
             <p>
-                Kirjoittajan nimi: <br />
+                <label for="author">Kirjoittajan nimi: </label> <br />
                 {% if author %}
                 <input type="text" name="author" value="{{ author }}"/>
                 {% else %}
@@ -26,7 +26,7 @@
                 {% endif %}
             </p>
             <p>
-                Julkaisuvuosi: <br />
+                <label for="year">Julkaisuvuosi: </label> <br />
                 {% if year %}
                 <input type="number" name="year" value="{{ year }}" />
                 {% else %}
@@ -34,7 +34,7 @@
                 {% endif %}
             </p>
             <p>
-                ISBN: <br />
+                <label for="isbn">ISBN: </label> <br />
                 {% if isbn %}
                 <input type="text" name="isbn" value="{{ isbn }}" />
                 {% else %}
@@ -42,11 +42,11 @@
                 {% endif %}
             </p>
             <p>
-                Hae tägillä:
+                <label for="search-with-tag">Hae tägillä: </label>
                 <input type="checkbox" id="search-with-tag-checkbox" name="search-with-tag" value="1"/>
             </p>
             <p>
-            <label for="Valitse tägi"></label>
+            <label for="Valitse tägi">Valitse tägi: </label>
             <select name="tag_list" id="tag-list">
                 {% for tag in tags %}
                     <option value="{{ loop.index }}" >
@@ -56,7 +56,7 @@
             </select>
         </p>
             <p>
-                Haetaan myös toisten käyttäjien hyllyistä: 
+                <label for="search-from-everyone-choice">Haetaan myös toisten käyttäjien hyllyistä: </label> 
                 <input type="checkbox" id="search-from-other-users-checkbox" name="search-from-everyone-choice" value="1"/>
                 
             </p>
