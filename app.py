@@ -581,7 +581,7 @@ def search(username, page=1):
     else:
         result = []
         search_message = "Haullasi ei löytynyt yhtäkään kirjaa"
-        
+
     return render_template(
         "search_view.html",
         name=name,

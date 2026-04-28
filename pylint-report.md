@@ -28,7 +28,7 @@ app.py:430:11: W0703: Catching too general exception Exception (broad-except)
 app.py:435:11: W0703: Catching too general exception Exception (broad-except)
 app.py:502:11: W0703: Catching too general exception Exception (broad-except)
 app.py:489:21: W0613: Unused argument 'username' (unused-argument)
-app.py:576:15: W0703: Catching too general exception Exception (broad-except)
+app.py:579:15: W0703: Catching too general exception Exception (broad-except)
 ************* Module book
 book.py:18:64: C0103: Argument name "ISBN" doesn't conform to snake_case naming style (invalid-name)
 book.py:18:0: R0913: Too many arguments (9/5) (too-many-arguments)
@@ -61,7 +61,7 @@ user.py:11:18: C0103: Argument name "f" doesn't conform to snake_case naming sty
 user.py:26:19: C0103: Argument name "f" doesn't conform to snake_case naming style (invalid-name)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.44/10 (previous run: 8.35/10, +0.10)
+Your code has been rated at 8.45/10 (previous run: 8.43/10, +0.02)
 
 ```
 
