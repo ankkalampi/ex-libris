@@ -62,9 +62,9 @@ python seed.py
 Tämän jälkeen tietokannassa on runsaasti kirjoja, hyllyjä ja käyttäjiä. Muokkaamalla seuraavia kohtia seed.py:ssä, voit vaikuttaa käyttäjien, käyttäjäkohtaisten hyllyjen sekä hyllykohtaisten kirjojen määrään:
 
 ```
-user_count = 200
-shelf_count_per_user = 20
-book_count_per_shelf = 500
+USER_COUNT = 200
+SHELF_COUNT_PER_USER = 20
+BOOK_COUNT_PER_USER = 500
 ```
 
 Jos haluat ajaa seed.py:n uudestaan muokatuilla arvoilla, aja sitä ennen uudestaan:
@@ -76,6 +76,8 @@ Testataksesi sovellusta käynnistä sovellus:
 ```
 python -m flask run
 ```
+
+Seed.py luo käyttäjiä, joiden käyttänimet ovat muotoa "user" + järjestysnumero, eli esim "user34". Kaikkien salasana on "password".
 
 Kutsuun mennyt aika näkyy konsolissa kutsun tietojen alla esimerkiksi näin:
 ```

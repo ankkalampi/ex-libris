@@ -40,7 +40,7 @@ for user_i in range(1, USER_COUNT + 1):
                    ["user" + str(user_i), password_hash])
         dbx.commit()
         user_id = db.lastrowid
-        print(f"user id: {user_id} ")
+        print(f"user id: {user_id}/{USER_COUNT} ")
     except Exception as e:
         print("something happened")
         print(e)
