@@ -154,7 +154,7 @@ def get_book(book_id):
     return g.db_query(sql, [book_id])[0]
 
 @db.query_db
-def get_books(shelf_name, user_id):
+def get_books(shelf_name, user_id, page, page_size):
     """
     Returns all books in a shelf belonging to a user
 
@@ -181,9 +181,40 @@ def get_books(shelf_name, user_id):
     JOIN tags t ON b.tag_id = t.id
     JOIN shelves s ON b.shelf_id = s.id
     WHERE s.name = ? AND b.user_id = ?
+    LIMIT ? OFFSET ?
     """
 
-    return g.db_query(sql, [shelf_name, user_id])
+    limit = page_size
+    offset = limit * (page-1)
+
+    return g.db_query(sql,
+                      [shelf_name,
+                       user_id,
+                       limit,
+                       offset])
+
+@db.query_db
+def get_number_of_shelf_books(user_id, shelf_name):
+    """
+    Returns number of books that a shelf has
+
+    Args:
+        user_id (int): Id of user
+
+    Returns:
+        int
+    """
+
+    sql = """
+    SELECT COUNT(*)
+    FROM books b
+    JOIN shelves s ON b.shelf_id = s.id
+    WHERE b.user_id = ? AND s.name = ?
+    """
+
+    result = g.db_query(sql, [user_id, shelf_name])[0][0]
+
+    return result
 
 @db.query_db
 def get_number_of_all_books(user_id):
@@ -208,9 +239,9 @@ def get_number_of_all_books(user_id):
     return result
 
 @db.query_db
-def search(name, author, year, isbn, public, user_id, tag_id):
+def get_search_length(name, author, year, isbn, public, user_id, tag_id):
     """
-    Constructs sql query for search and returns information on books searched.
+    Finds the length of a search query for paging
 
     Args:
         name (str): Name of the searched book
@@ -235,7 +266,7 @@ def search(name, author, year, isbn, public, user_id, tag_id):
     """
 
     sql_begin = """
-        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name, t.name
+        SELECT COUNT(b.id)
         FROM books b
         JOIN users u ON u.id = b.user_id
         JOIN shelves s ON b.shelf_id = s.id
@@ -271,5 +302,77 @@ def search(name, author, year, isbn, public, user_id, tag_id):
         params.append("%"+isbn+"%")
 
     sql = sql_begin + sql_middle + sql_end + " )"
+
+    return g.db_query(sql, params)[0][0]
+
+@db.query_db
+def search(name, author, year, isbn, public, user_id, tag_id, page, page_size):
+    """
+    Constructs sql query for search and returns information on books searched.
+
+    Args:
+        name (str): Name of the searched book
+        author (str): Author of the searched book
+        year (str): Publishing year of the searched book
+        isbn (str): ISBN of the searched book
+        public (int): Toggle search from all public shelves (can be 0 or 1)
+        user_id (int): Id of the current user sarching
+        tag_id (int): Id of the tag of the searched book
+
+    Returns:
+        List[Tuple(str, str, int, str, str, str, str, str, int)]:
+            List of book information tuples in the form of
+            (book name,
+            book author,
+            number of pages,
+            publishing year,
+            synopsis, ISBN,
+            owner username,
+            shelf name,
+            tag id)
+    """
+
+    limit = page_size
+    offset = limit * (page-1)
+
+    sql_begin = """
+        SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name, t.name
+        FROM books b
+        JOIN users u ON u.id = b.user_id
+        JOIN shelves s ON b.shelf_id = s.id
+        JOIN tags t ON b.tag_id = t.id
+        """
+    if public == 1:
+        sql_middle = """
+        WHERE (b.user_id = ? OR s.public = 1)
+        """
+    else:
+        sql_middle = """
+        WHERE b.user_id = ?
+        """
+
+    sql_end = """
+    AND (b.name LIKE ? AND b.author LIKE ? AND b.year LIKE ?
+    """
+
+    params = [
+        user_id,
+        "%"+name+"%",
+        "%"+author+"%",
+        "%"+year+"%"
+    ]
+
+    if tag_id:
+        sql_end = sql_end + " AND b.tag_id = ? "
+        params.append(tag_id)
+
+    if isbn:
+        sql_end = sql_end + " AND b.ISBN LIKE ? "
+        params.append("%"+isbn+"%")
+
+    params.append(int(limit))
+    params.append(int(offset))
+
+    sql = sql_begin + sql_middle + sql_end + " ) LIMIT ? OFFSET ? "
 
     return g.db_query(sql, params)

@@ -45,6 +45,12 @@ CREATE TABLE shelves (
 CREATE INDEX idx_books_user_id ON books(user_id);
 CREATE INDEX idx_books_shelf_id ON books(shelf_id);
 CREATE INDEX idx_books_tag_id ON books(tag_id);
-CREATE INDEX idx_shelves_user_id ON shelves(user_id);
+CREATE INDEX idx_books_name ON books(name);
+CREATE INDEX idx_books_author ON books(author);
+CREATE INDEX idx_books_year ON books(year);
+CREATE INDEX idx_books_ISBN ON books(ISBN);
+CREATE INDEX idx_user_shelf_books ON books(shelf_id, user_id);
 
+CREATE INDEX idx_shelves_user_id ON shelves(user_id);
 CREATE INDEX idx_shelves_public ON shelves(id) WHERE public = 1;
+

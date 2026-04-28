@@ -8,7 +8,7 @@
             Hae kirjaa:
         </p>
 
-        <form action="/{{username}}/haku" method="get">
+        <form action="/{{username}}/haku/1" method="get">
             <p>
                 Kirjan nimi: <br />
                 {% if name %}
@@ -67,6 +67,8 @@
         
         {% if result %}
         {% set  result = result %}
+        {% set page_count = page_count %}
+        {% set page = page %}
         {% include "book_search_list.html" %}
         {% endif %}
 

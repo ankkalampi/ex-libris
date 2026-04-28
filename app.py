@@ -103,7 +103,8 @@ def create_book(username, shelf_name):
         url_for(
             "shelf_view",
             username=username,
-            shelf_name=shelf_name))
+            shelf_name=shelf_name,
+            page=1))
 
 @user.login_required
 @user.csrf_required
@@ -198,11 +199,15 @@ def remove_book(book_id, username, shelf_name):
             url_for(
                 "shelf_view",
                 username=username,
-                shelf_name=shelf_name
+                shelf_name=shelf_name,
+                page=1
             )
         )
-
-    return redirect(url_for("shelf_view", username=username, shelf_name=shelf_name))
+    session["book_delete_message"] = "Kirja poistettiin!"
+    return redirect(url_for("shelf_view",
+                            username=username,
+                            shelf_name=shelf_name,
+                            page=1))
 
 def get_page_count(page_size):
     """"
@@ -241,6 +246,7 @@ def create_shelf():
     except Exception:
         return redirect(url_for("view.index"))
 
+    session["add_shelf_message"] = "Hylly luotu!"
     return redirect(url_for("shelves",
                             username=username,
                             page_count=page_count,
@@ -264,6 +270,7 @@ def remove_shelf(username, shelf_id):
     except Exception:
         return redirect(url_for("index"))
 
+    session["remove_shelf_message"] = "Hylly poistettiin!"
     return redirect(url_for("shelves",
                             username=username,
                             page_count=page_count,
@@ -298,8 +305,11 @@ def login():
 
     session["csrf_token"] = secrets.token_hex(16)
 
-    if user.login(username, password):
-        return redirect(url_for("profile", username=username))
+    try:
+        if user.login(username, password):
+            return redirect(url_for("profile", username=username))
+    except Exception as e:
+        print(e)
 
     return redirect(url_for("index"))
 
@@ -333,7 +343,8 @@ def profile(username):
     try:
         number_of_books = book.get_number_of_all_books(session["user_id"])
         number_of_shelves = shelf.get_number_of_all_shelves(session["user_id"])
-    except Exception:
+    except Exception as e:
+        print(e)
         return redirect(url_for("index"))
 
     return render_template("profile.html",
@@ -353,6 +364,9 @@ def shelves(username, page=1):
     page_count = math.ceil(shelf_count / page_size)
     page_count = max(page_count, 1)
 
+    add_shelf_message = session.pop('add_shelf_message', None)
+    remove_shelf_message = session.pop('remove_shelf_message', None)
+
     if page < 1:
         return redirect("/"+username+"/"+str(1))
     if page > page_count:
@@ -365,7 +379,9 @@ def shelves(username, page=1):
         return redirect(url_for("index"))
     return render_template("shelves.html",
                            shelves=user_shelves, page=page,
-                           page_count=page_count)
+                           page_count=page_count,
+                           remove_shelf_message=remove_shelf_message,
+                           add_shelf_message=add_shelf_message)
 
 @app.get("/<username>/uusi-hylly")
 @user.login_required
@@ -379,9 +395,9 @@ def new_shelf_view(username):
 
     return render_template("new_shelf_view.html")
 
-@app.get("/<username>/hyllyt/<shelf_name>")
+@app.get("/<username>/hyllyt/<shelf_name>/<int:page>")
 @user.login_required
-def shelf_view(username, shelf_name):
+def shelf_view(username, shelf_name, page=1):
     """
     Route for inside of a single shelf view
 
@@ -392,6 +408,12 @@ def shelf_view(username, shelf_name):
 
     user_id = session["user_id"]
     add_book_message = session.pop('add_book_message', None)
+    book_delete_message = session.pop('book_delete_message', None)
+
+    page_size = 10
+    book_count = book.get_number_of_shelf_books(user_id, shelf_name)
+    page_count = math.ceil(book_count / page_size)
+    page_count = max(page_count, 1)
 
     try:
         shelf_entry = shelf.get_shelf(shelf_name, user_id)
@@ -399,15 +421,38 @@ def shelf_view(username, shelf_name):
         return redirect(url_for("index"))
 
     try:
-        books = book.get_books(shelf_name, user_id)
+        books = book.get_books(shelf_name, user_id, page, page_size)
     except Exception:
         username = session["username"]
-        return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
+        return redirect(url_for("shelf_view",
+                                shelf_name=shelf_name,
+                                username=username,
+                                page=1))
+    
+    if page < 1:
+        return redirect(url_for('shelf_view',
+                                shelf=shelf_entry,
+                                books=books,
+                                add_book_message=add_book_message,
+                                book_delete_message=book_delete_message,
+                                page=1,
+                                page_count=page_count))
+    if page > page_count:
+        return redirect(url_for('shelf_view',
+                                shelf=shelf_entry,
+                                books=books,
+                                add_book_message=add_book_message,
+                                book_delete_message=book_delete_message,
+                                page=page_count,
+                                page_count=page_count))
 
     return render_template("shelf_view.html",
                            shelf=shelf_entry,
                            books=books,
-                           add_book_message=add_book_message)
+                           add_book_message=add_book_message,
+                           book_delete_message=book_delete_message,
+                           page=page,
+                           page_count=page_count)
 
 @app.get("/<username>/<shelf_name>/uusi-kirja")
 @user.login_required
@@ -454,15 +499,17 @@ def modify_book_view(username, shelf_name, book_id):
                            book_modification_message=book_modification_message,
                            shelf_name=shelf_name)
 
-@app.get("/<username>/haku")
+@app.get("/<username>/haku/<int:page>")
 @user.login_required
-def search(username):
+def search(username, page=1):
     """
     Route for searching books
 
     Args:
         username (str): username of the current user
     """
+    
+    page_count = 0
     tags = tag.get_all_tags()
     user_id = session["user_id"]
     name = request.args.get("name")
@@ -476,8 +523,46 @@ def search(username):
 
     public = 1 if request.args.get("search-from-everyone-choice") else 0
     if name or author or year or isbn:
+
+        page_size = 10
+        search_length = book.get_search_length(name, author, year, isbn, public, user_id, tag_id)
+        page_count = math.ceil(search_length / page_size)
+        page_count = max(page_count, 1)
+
         try:
-            result = book.search(name, author, year, isbn, public, user_id, tag_id)
+            
+
+            if page < 1:
+                return redirect(url_for('search',
+                                        name=name,
+                                        author=author,
+                                        year=year,
+                                        isbn=isbn,
+                                        username=username,
+                                        tag_id=tag_id,
+                                        page=1,
+                                        page_count=page_count))
+            
+            if page > page_count:
+                return redirect(url_for('search',
+                                        name=name,
+                                        author=author,
+                                        year=year,
+                                        isbn=isbn,
+                                        username=username,
+                                        tag_id=tag_id,
+                                        page=page_count,
+                                        page_count=page_count))
+            
+            result = book.search(name,
+                                 author,
+                                 year,
+                                 isbn,
+                                 public,
+                                 user_id,
+                                 tag_id,
+                                 page,
+                                 page_size)
         except Exception:
             return redirect(url_for("search"))
     else:
@@ -492,4 +577,6 @@ def search(username):
         result=result,
         username=username,
         tag_id=tag_id,
-        tags=tags)
+        tags=tags,
+        page=page,
+        page_count=page_count)

@@ -7,6 +7,15 @@
     </a>
 </div>
 
+<p>
+    {% if add_shelf_message %}
+        {{ add_shelf_message }}
+    {% endif %}
+    {% if remove_shelf_message %}
+        {{ remove_shelf_message }}
+    {% endif %}
+</p>
+
 <div class="shelf-list" id="shelf_list">
 
     {% for shelf in shelves %}
@@ -30,7 +39,7 @@
         </p>
         <p>
             <div class="normal-button">
-                <a href="/{{ session.username}}/hyllyt/{{ shelf[0] }}" title="avaa hylly" id="open-shelf-button">
+                <a href="/{{ session.username}}/hyllyt/{{ shelf[0] }}/1" title="avaa hylly" id="open-shelf-button">
                 Avaa hylly
             </a>
             </div>

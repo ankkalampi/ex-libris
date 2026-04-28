@@ -49,4 +49,17 @@
         
     </div>
     {%  endfor %}
+
+    <p>
+    {% if page_count > 1 %}
+        {% if page > 1 %}
+            <a href="{{ url_for('search', name=name, author=author, year=year, isbn=isbn, username=username, tag_id=tag_id, page=page-1)}}">&lt;&lt;</a>
+        {% endif %}
+        Sivu {{ page }}/{{ page_count }}
+        {% if page < page_count %}
+            <a href="{{ url_for('search', name=name, author=author, year=year, isbn=isbn, username=username, tag_id=tag_id, page=page+1)}}">&gt;&gt;</a>
+        {% endif %}
+    {% endif %}
+  </p>
+  <hr />
 </div>

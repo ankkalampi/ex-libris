@@ -61,4 +61,17 @@
         
     </div>
     {%  endfor %}
+
+    <p>
+    {% if page_count > 1 %}
+        {% if page > 1 %}
+            <a href="/{{ session.username }}/hyllyt/{{ shelf_name }}/{{ page - 1 }}">&lt;&lt;</a>
+        {% endif %}
+        Sivu {{ page }}/{{ page_count }}
+        {% if page < page_count %}
+            <a href="/{{ session.username }}/hyllyt/{{ shelf_name }}/{{ page + 1 }}">&gt;&gt;</a>
+        {% endif %}
+    {% endif %}
+  </p>
+  <hr />
 </div>

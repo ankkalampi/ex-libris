@@ -45,3 +45,32 @@ Käynnistä sovellus:
 ```
 python -m flask run
 ```
+
+## Sovelluksen testaaminen suurella tietomäärällä
+
+Suorita ensin sovelluksen käyttöönotossa kuvaillut vaiheet.
+
+Aja sitten seed.py:
+
+```
+python seed.py
+```
+
+Tämän jälkeen tietokannassa on runsaasti kirjoja, hyllyjä ja käyttäjiä. Muokkaamalla seuraavia kohtia seed.py:ssä, voit vaikuttaa käyttäjien, käyttäjäkohtaisten hyllyjen sekä hyllykohtaisten kirjojen määrään:
+
+```
+user_count = 200
+shelf_count_per_user = 20
+book_count_per_shelf = 500
+```
+
+Jos haluat ajaa seed.py:n uudestaan muokatuilla arvoilla, aja sitä ennen uudestaan:
+```
+python init_db.py
+```
+
+Kutsuun mennyt aika näkyy konsolissa kutsun tietojen alla esimerkiksi näin:
+```
+127.0.0.1 - - [28/Apr/2026 10:32:57] "GET /static/main.css HTTP/1.1" 304 -
+elapsed time  0.44  s
+```
