@@ -62,7 +62,7 @@ def create_book(username, shelf_name):
         session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
         return redirect(
             url_for(
-                "view.new_book_view",
+                "new_book_view",
                 username=username,
                 shelf_name=shelf_name))
 
@@ -83,14 +83,14 @@ def create_book(username, shelf_name):
         session["add_book_message"] = "VIRHE: Kirja on jo olemassa"
         return redirect(
             url_for(
-                "view.new_book_view",
+                "new_book_view",
                 username=username,
                 shelf_name=shelf_name))
 
     session["add_book_message"] = "Kirja lisätty!"
     return redirect(
         url_for(
-            "view.shelf_view",
+            "shelf_view",
             username=username,
             shelf_name=shelf_name))
 
@@ -140,7 +140,7 @@ def modify_book(book_id, username, shelf_name):
             tag_id)
     except book.BookModificationFieldsEmpty as e:
         session["book_modification_message"] = str(e)
-        return redirect(url_for("view.modify_book_view",
+        return redirect(url_for("modify_book_view",
                                 username=username,
                                 book_id=book_id,
                                 shelf_name=shelf_name))
@@ -149,7 +149,7 @@ def modify_book(book_id, username, shelf_name):
         session["book_modification_message"] = "kirja näillä tiedoilla on jo olemassa"
         return redirect(
             url_for(
-                "view.modify_book_view",
+                "modify_book_view",
                 username=username,
                 book_id=book_id,
                 shelf_name=shelf_name
@@ -160,7 +160,7 @@ def modify_book(book_id, username, shelf_name):
 
     return redirect(
         url_for(
-            "view.modify_book_view",
+            "modify_book_view",
             username=username,
             shelf_name=shelf_name,
             book_id=book_id
@@ -185,13 +185,13 @@ def remove_book(book_id, username, shelf_name):
         session["book_delete_message"] = "VIRHE Kirjaa ei onnistuttu poistamaan"
         return redirect(
             url_for(
-                "view.shelf_view",
+                "shelf_view",
                 username=username,
                 shelf_name=shelf_name
             )
         )
 
-    return redirect(url_for("view.shelf_view", username=username, shelf_name=shelf_name))
+    return redirect(url_for("shelf_view", username=username, shelf_name=shelf_name))
 
 def get_page_count(page_size):
     """"
@@ -230,7 +230,7 @@ def create_shelf():
     except Exception:
         return redirect(url_for("view.index"))
 
-    return redirect(url_for("view.shelves",
+    return redirect(url_for("shelves",
                             username=username,
                             page_count=page_count,
                             page=1))
@@ -251,9 +251,9 @@ def remove_shelf(username, shelf_id):
     try:
         shelf.delete_shelf(shelf_id)
     except Exception:
-        return redirect(url_for("view.index"))
+        return redirect(url_for("index"))
 
-    return redirect(url_for("view.shelves",
+    return redirect(url_for("shelves",
                             username=username,
                             page_count=page_count,
                             page=1))
@@ -268,15 +268,15 @@ def create():
 
     if password1 != password2:
         session["register_message"] = "VIRHE! salasanat eivät ole samat"
-        return redirect(url_for("view.register"))
+        return redirect(url_for("register"))
 
     try:
         user.create_user(username, password1)
     except Exception:
-        return redirect(url_for("view.register"))
+        return redirect(url_for("register"))
 
     session["login_message"] = "Käyttäjä luotu!"
-    return redirect(url_for("view.index"))
+    return redirect(url_for("index"))
 
 @app.post("/login")
 def login():
@@ -288,9 +288,9 @@ def login():
     session["csrf_token"] = secrets.token_hex(16)
 
     if user.login(username, password):
-        return redirect(url_for("view.profile", username=username))
+        return redirect(url_for("profile", username=username))
 
-    return redirect(url_for("view.index"))
+    return redirect(url_for("index"))
 
 @app.get("/logout")
 @user.login_required
@@ -298,21 +298,21 @@ def logout():
     """Route for logging out user"""
 
     del session["username"]
-    return redirect(url_for("view.index"))
+    return redirect(url_for("index"))
 
 @app.get("/")
 def index():
     """Route for front page view"""
 
     login_message = session.pop('login_message', None)
-    return render_template("index_view/index.html", login_message=login_message)
+    return render_template("index.html", login_message=login_message)
 
 @app.get("/register")
 def register():
     """Route for register view"""
 
     register_message = session.pop('register_message', None)
-    return render_template("index_view/register.html", register_message=register_message)
+    return render_template("register.html", register_message=register_message)
 
 @app.get("/<username>")
 @user.login_required
@@ -325,7 +325,7 @@ def profile(username):
     except Exception:
         return redirect(url_for("index"))
 
-    return render_template("profile_view/profile.html",
+    return render_template("profile.html",
                            username=username,
                            number_of_books=number_of_books,
                            number_of_shelves=number_of_shelves)
@@ -352,7 +352,7 @@ def shelves(username, page=1):
         user_shelves = shelf.get_shelves(user_id, page, page_size)
     except Exception:
         return redirect(url_for("index"))
-    return render_template("shelves_view/shelves.html",
+    return render_template("shelves.html",
                            shelves=user_shelves, page=page,
                            page_count=page_count)
 
@@ -366,7 +366,7 @@ def new_shelf_view(username):
         username (str): username of the current user
     """
 
-    return render_template("shelves_view/new_shelf_view.html")
+    return render_template("new_shelf_view.html")
 
 @app.get("/<username>/hyllyt/<shelf_name>")
 @user.login_required
@@ -393,7 +393,7 @@ def shelf_view(username, shelf_name):
         username = session["username"]
         return redirect(url_for("shelf_view", shelf_name=shelf_name, username=username))
 
-    return render_template("shelf_view/shelf_view.html",
+    return render_template("shelf_view.html",
                            shelf=shelf_entry,
                            books=books,
                            add_book_message=add_book_message)
@@ -412,7 +412,7 @@ def new_book_view(username, shelf_name):
     add_book_message = session.pop("add_book_message", None)
     tags = tag.get_all_tags()
     return render_template(
-        "shelf_view/new_book_view.html",
+        "new_book_view.html",
         username=username,
         shelf_name=shelf_name,
         tags = tags,
@@ -437,7 +437,7 @@ def modify_book_view(username, shelf_name, book_id):
         session["book_modification_message"] = "kirjan tietojen hakemisessa tapahtui virhe"
 
     book_modification_message = session.pop("book_modification_message", None)
-    return render_template("modify_book_view/modify_book_view.html",
+    return render_template("modify_book_view.html",
                            tags = tags,
                            book=book_entry,
                            book_modification_message=book_modification_message,
@@ -473,7 +473,7 @@ def search(username):
         result = []
 
     return render_template(
-        "search_view/search_view.html",
+        "search_view.html",
         name=name,
         author=author,
         year=year,
