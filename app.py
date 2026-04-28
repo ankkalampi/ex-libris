@@ -519,6 +519,7 @@ def search(username, page=1):
         username (str): username of the current user
     """
 
+    search_message = None
     page_count = 0
     tags = tag.get_all_tags()
     user_id = session["user_id"]
@@ -532,7 +533,7 @@ def search(username, page=1):
         tag_id = None
 
     public = 1 if request.args.get("search-from-everyone-choice") else 0
-    if name or author or year or isbn:
+    if name or author or year or isbn or tag_id:
 
         page_size = 10
         search_length = book.get_search_length(name, author, year, isbn, public, user_id, tag_id)
@@ -551,7 +552,8 @@ def search(username, page=1):
                                         username=username,
                                         tag_id=tag_id,
                                         page=1,
-                                        page_count=page_count))
+                                        page_count=page_count,
+                                        search_message=search_message))
 
             if page > page_count:
                 return redirect(url_for('search',
@@ -562,7 +564,8 @@ def search(username, page=1):
                                         username=username,
                                         tag_id=tag_id,
                                         page=page_count,
-                                        page_count=page_count))
+                                        page_count=page_count,
+                                        search_message=search_message))
 
             result = book.search(name,
                                  author,
@@ -577,7 +580,8 @@ def search(username, page=1):
             return redirect(url_for("search"))
     else:
         result = []
-
+        search_message = "Haullasi ei löytynyt yhtäkään kirjaa"
+        
     return render_template(
         "search_view.html",
         name=name,
@@ -589,4 +593,5 @@ def search(username, page=1):
         tag_id=tag_id,
         tags=tags,
         page=page,
-        page_count=page_count)
+        page_count=page_count,
+        search_message=search_message)

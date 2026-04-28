@@ -64,6 +64,10 @@
 
         </form>
         </div>
+
+        {% if search_message %}
+            {{ search_message }}
+        {% endif %}
         
         {% if result %}
         {% set  result = result %}
