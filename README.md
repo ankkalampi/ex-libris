@@ -6,9 +6,9 @@
 - Käyttäjä pystyy lisäämään uuden kirjahyllyn. Kirjahyllyn voi määritellä julkiseksi tai yksityiseksi, ja sille voi määritellä sekä nimen että lyhyen kuvauksen.
 - Käyttäjä voi tarkastella kirjahyllyjään listana ja valita listalta hyllyn tarkasteltavaksi.
 	
-- Käyttäjä pystyy lisäämään uuden kirjan tiedot (nimi, kirjoittaja, sivumäärä, ISBN(vapaahetoinen), julkaisuvuosi(vapaaehtoinen), genretägi(t)(vapaaehtoinen))
-- Käyttäjä voi tarkastella kirjahyllyään listana 
-- Käyttäjä pystyy valitsemaan kirjan hyllynäkymästä ja siirtyä kirjanäkymään
+- Käyttäjä pystyy lisäämään uuden kirjan tiedot (nimi, kirjoittaja, sivumäärä, ISBN(vapaahetoinen), julkaisuvuosi(vapaaehtoinen), genretägi(t)(vapaaehtoinen)).
+- Käyttäjä voi tarkastella kirjahyllyään listana.
+- Käyttäjä pystyy valitsemaan kirjan hyllynäkymästä ja siirtymään kirjanäkymään.
 - Kirjanäkymässä käyttäjä voi muokata kirjan tietoja tai poistaa kirjan.
 - Käyttäjä voi etsiä kirjaa nimen, kirjailijan, ISBN:n, julkaisuvuoden tai genretägien perusteella. Haussa käyttäjä voi määrittää, etsitäänkö kirjaa vain omista hyllyistä, vai myös muiden käyttäjien julkisista hyllyistä.
 
