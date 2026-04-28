@@ -17,11 +17,10 @@ def get_shelves(user_id, page, page_size):
     """
 
     sql = """
-    SELECT s.name, COUNT(sb.book_id), s.description, s.id
+    SELECT s.name, COUNT(b.id), s.description, s.id
     FROM shelves s
-    JOIN users u ON u.id = s.user_id
-    LEFT JOIN shelf_books sb ON s.id = sb.shelf_id
-    WHERE u.id = ?
+    LEFT JOIN books b ON s.id = b.shelf_id
+    WHERE s.user_id = ?
     GROUP BY s.name, s.description, s.id
     LIMIT ? OFFSET ?
     """
@@ -42,11 +41,10 @@ def get_shelf(shelf_name, user_id):
     """
 
     sql = """
-    SELECT s.name, COUNT (sb.book_id), s.description, s.id
+    SELECT s.name, COUNT (b.id), s.description, s.id
     FROM shelves s
-    JOIN users u ON u.id = s.user_id
-    LEFT JOIN shelf_books sb ON s.id = sb.shelf_id
-    WHERE s.name = ? AND u.id = ?
+    JOIN books b ON b.shelf_id = s.id
+    WHERE s.name = ? AND s.user_id = ?
     """
 
     return g.db_query(sql, [shelf_name, user_id])

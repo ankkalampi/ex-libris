@@ -42,28 +42,9 @@ CREATE TABLE shelves (
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
-CREATE TABLE user_books (
-	user_id INTEGER NOT NULL,
-	book_id INTEGER NOT NULL,
-	PRIMARY KEY (user_id, book_id),
-	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE shelf_books (
-	shelf_id INTEGER NOT NULL,
-	book_id INTEGER NOT NULL,
-	PRIMARY KEY (shelf_id, book_id),
-	FOREIGN KEY (shelf_id) REFERENCES shelves(id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (book_id) REFERENCES books(id)
-);
-
 CREATE INDEX idx_books_user_id ON books(user_id);
 CREATE INDEX idx_books_shelf_id ON books(shelf_id);
 CREATE INDEX idx_books_tag_id ON books(tag_id);
 CREATE INDEX idx_shelves_user_id ON shelves(user_id);
 
-CREATE INDEX idx_user_books_book_id ON user_books(user_id);
-CREATE INDEX idx_shelf_books_shelf_id ON shelf_books(shelf_id);
 CREATE INDEX idx_shelves_public ON shelves(id) WHERE public = 1;

@@ -50,30 +50,6 @@ def create_book(user_id, shelf_name, name, author, pages, year, ISBN, synopsis, 
 
     g.db_execute(sql_insert_to_books, params_insert_to_books)
 
-    book_id = g.last_insert_id
-
-    sql_insert_to_user_books = """
-    INSERT INTO user_books (user_id, book_id)
-    VALUES ((SELECT id FROM users WHERE id = ? ), ?);
-    """
-    params_insert_to_user_books = [
-        user_id,
-        book_id
-    ]
-
-    g.db_execute(sql_insert_to_user_books, params_insert_to_user_books)
-
-    sql_insert_to_shelf_books = """
-    INSERT INTO shelf_books (shelf_id, book_id)
-    VALUES ((SELECT id FROM shelves WHERE name = ? ), ?);
-    """
-    params_insert_to_shelf_books = [
-        shelf_name,
-        book_id
-    ]
-
-    g.db_execute(sql_insert_to_shelf_books, params_insert_to_shelf_books)
-
 @db.modify_db
 def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
     """
@@ -146,17 +122,7 @@ def remove_book(book_id):
     DELETE FROM books WHERE id = ?
     """
 
-    sql_delete_from_user_books = """
-    DELETE FROM user_books WHERE book_id = ?
-    """
-
-    sql_delete_from_shelf_books = """
-    DELETE FROM shelf_books WHERE book_id = ?
-    """
-
     book_id = int(book_id)
-    g.db_execute(sql_delete_from_shelf_books, [book_id])
-    g.db_execute(sql_delete_from_user_books, [book_id])
     g.db_execute(sql_delete_from_books, [book_id])
 
 @db.query_db
@@ -212,11 +178,9 @@ def get_books(shelf_name, user_id):
     sql = """
     SELECT b.id, b.name, b.author, b.year, b.ISBN, b.pages, b.synopsis, t.name
     FROM books b
-    JOIN shelf_books sb ON b.id = sb.book_id
     JOIN tags t ON b.tag_id = t.id
-    JOIN shelves s ON sb.shelf_id = s.id
-    JOIN users u ON s.user_id = u.id
-    WHERE s.name = ? AND u.id = ?
+    JOIN shelves s ON b.shelf_id = s.id
+    WHERE s.name = ? AND b.user_id = ?
     """
 
     return g.db_query(sql, [shelf_name, user_id])
@@ -273,20 +237,18 @@ def search(name, author, year, isbn, public, user_id, tag_id):
     sql_begin = """
         SELECT b.name, b.author, b.pages, b.year, b.synopsis, b.ISBN, u.username, s.name, t.name
         FROM books b
-        JOIN user_books ub ON b.id = ub.book_id
-        JOIN users u ON ub.user_id = u.id
-        JOIN shelf_books sb ON b.id = sb.book_id
-        JOIN shelves s ON sb.shelf_id = s.id
+        JOIN users u ON u.id = b.user_id
+        JOIN shelves s ON b.shelf_id = s.id
         JOIN tags t ON b.tag_id = t.id
         """
 
     if public == 1:
         sql_middle = """
-        WHERE (u.id = ? OR s.public = 1)
+        WHERE (b.user_id = ? OR s.public = 1)
         """
     else:
         sql_middle = """
-        WHERE u.id = ?
+        WHERE b.user_id = ?
         """
 
     sql_end = """
