@@ -48,7 +48,10 @@ python -m flask run
 
 ## Sovelluksen testaaminen suurella tietomäärällä
 
-Suorita ensin sovelluksen käyttöönotossa kuvaillut vaiheet.
+Suorita ensin sovelluksen käyttöönotossa kuvaillut vaiheet jos et ole suorittanut niitä. Jos olet jo ottanut sovelluksen käyttöön, riittää suorittaa:
+```
+python init_db.py
+```
 
 Aja sitten seed.py:
 
@@ -67,6 +70,11 @@ book_count_per_shelf = 500
 Jos haluat ajaa seed.py:n uudestaan muokatuilla arvoilla, aja sitä ennen uudestaan:
 ```
 python init_db.py
+```
+
+Testataksesi sovellusta käynnistä sovellus:
+```
+python -m flask run
 ```
 
 Kutsuun mennyt aika näkyy konsolissa kutsun tietojen alla esimerkiksi näin:
