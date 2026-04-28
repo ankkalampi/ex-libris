@@ -48,7 +48,7 @@ python -m flask run
 
 ## Sovelluksen testaaminen suurella tietomäärällä
 
-Suorita ensin sovelluksen käyttöönotossa kuvaillut vaiheet jos et ole suorittanut niitä. Jos olet jo ottanut sovelluksen käyttöön, riittää suorittaa:
+Suorita ensin sovelluksen käyttöönotossa kuvaillut vaiheet, jos et ole suorittanut niitä. Jos olet jo ottanut sovelluksen käyttöön, riittää suorittaa:
 ```
 python init_db.py
 ```
