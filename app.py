@@ -1,6 +1,7 @@
 import sys
 import math
 import secrets
+import time
 from pathlib import Path
 from flask import Flask
 from flask import session, g, url_for, redirect, request, render_template
@@ -27,6 +28,16 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = username
+
+@app.before_request
+def start_timing():
+    g.start_time = time.time()
+
+@app.after_request
+def report_timing(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time ", elapsed_time, " s")
+    return response
 
 @app.post("/create_book/<username>/<shelf_name>")
 @user.login_required
