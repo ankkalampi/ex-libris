@@ -1,3 +1,7 @@
+"""
+This module handles all routing in the application
+"""
+
 import sys
 import math
 import secrets
@@ -16,7 +20,7 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 
 app = Flask(__name__)
-app.secret_key = config.secret_key
+app.secret_key = config.SECRET_KEY
 
 @app.before_request
 def load_logged_in_user():
@@ -31,10 +35,16 @@ def load_logged_in_user():
 
 @app.before_request
 def start_timing():
+    """
+    Starts timer for request timing
+    """
     g.start_time = time.time()
 
 @app.after_request
 def report_timing(response):
+    """
+    Prints request timing
+    """
     elapsed_time = round(time.time() - g.start_time, 2)
     print("elapsed time ", elapsed_time, " s")
     return response
@@ -428,7 +438,7 @@ def shelf_view(username, shelf_name, page=1):
                                 shelf_name=shelf_name,
                                 username=username,
                                 page=1))
-    
+
     if page < 1:
         return redirect(url_for('shelf_view',
                                 shelf=shelf_entry,
@@ -508,7 +518,7 @@ def search(username, page=1):
     Args:
         username (str): username of the current user
     """
-    
+
     page_count = 0
     tags = tag.get_all_tags()
     user_id = session["user_id"]
@@ -530,7 +540,7 @@ def search(username, page=1):
         page_count = max(page_count, 1)
 
         try:
-            
+
 
             if page < 1:
                 return redirect(url_for('search',
@@ -542,7 +552,7 @@ def search(username, page=1):
                                         tag_id=tag_id,
                                         page=1,
                                         page_count=page_count))
-            
+
             if page > page_count:
                 return redirect(url_for('search',
                                         name=name,
@@ -553,7 +563,7 @@ def search(username, page=1):
                                         tag_id=tag_id,
                                         page=page_count,
                                         page_count=page_count))
-            
+
             result = book.search(name,
                                  author,
                                  year,

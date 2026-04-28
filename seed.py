@@ -1,3 +1,8 @@
+"""
+Thos module creates test data for the application.
+Remember to reset database using init_db.py before using this.
+"""
+
 import random
 import sqlite3
 from werkzeug.security import generate_password_hash
@@ -21,15 +26,15 @@ db.execute("DROP INDEX idx_shelves_user_id")
 db.execute("DROP INDEX idx_shelves_public")
 dbx.commit()
 
-user_count = 200
-shelf_count_per_user = 20
-book_count_per_shelf = 500
+USER_COUNT = 200
+SHELF_COUNT_PER_USER = 20
+BOOK_COUNT_BY_SHELF = 500
 
 password_hash = generate_password_hash("password")
 
 shelf_id = 0
 book_id = 0
-for user_i in range(1, user_count + 1):
+for user_i in range(1, USER_COUNT + 1):
     try:
         db.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)",
                    ["user" + str(user_i), password_hash])
@@ -39,17 +44,20 @@ for user_i in range(1, user_count + 1):
     except Exception as e:
         print("something happened")
         print(e)
-    for shelf_i in range(1, shelf_count_per_user + 1):
+    for shelf_i in range(1, SHELF_COUNT_PER_USER + 1):
         db.execute("INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)",
                 [user_id, "shelf" + str(shelf_id), "", 1])
         dbx.commit()
         shelf_id = db.lastrowid
 
-        for book_i in range(1, book_count_per_shelf + 1):
+        for book_i in range(1, BOOK_COUNT_BY_SHELF + 1):
             db.execute("""INSERT INTO books (name, author, year, user_id, shelf_id, tag_id)
                         VALUES (?,?,?,?, ?,?)""",
-                    ["book"+str(book_id), "author"+str(book_id), random.randint(1, 5000), user_id, shelf_id, 5])
-            
+                    ["book"+str(book_id),
+                     "author"+str(book_id),
+                     random.randint(1, 5000),
+                     user_id, shelf_id, 5])
+
             book_id += 1
 dbx.commit()
 

@@ -1,3 +1,7 @@
+"""
+This module initializes database for the application
+"""
+
 import sqlite3
 
 FILE = "database.db"
@@ -8,9 +12,9 @@ try:
 except Exception as e:
     print(e)
 
-with open('schema.sql') as schema:
+with open('schema.sql', encoding='utf-8') as schema:
     schema_sql = schema.read()
-    
+
 cursor.executescript(schema_sql)
 
 connection.commit()
