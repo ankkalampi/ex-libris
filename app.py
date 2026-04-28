@@ -24,7 +24,7 @@ def load_logged_in_user():
     """
     username = session.get("username")
     if username is None:
-        g.user
+        g.user = None
     else:
         g.user = username
 
