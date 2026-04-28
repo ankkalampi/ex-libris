@@ -43,8 +43,9 @@ def get_shelf(shelf_name, user_id):
     sql = """
     SELECT s.name, COUNT (b.id), s.description, s.id
     FROM shelves s
-    JOIN books b ON b.shelf_id = s.id
+    LEFT JOIN books b ON b.shelf_id = s.id
     WHERE s.name = ? AND s.user_id = ?
+    GROUP BY s.id
     """
 
     return g.db_query(sql, [shelf_name, user_id,])
