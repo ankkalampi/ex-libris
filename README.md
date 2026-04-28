@@ -9,8 +9,7 @@
 	
 - Käyttäjä pystyy lisäämään uuden kirjan tiedot (nimi, kirjoittaja, sivumäärä, ISBN(vapaahetoinen), julkaisuvuosi(vapaaehtoinen), genretägi(t)(vapaaehtoinen))
 - Käyttäjä voi tarkastella kirjahyllyään listana 
-- Käyttäjä voi tarkastella kirjahyllyään hyllynäkymässä
-- Käyttäjä pystyy valitsemaan kirjan lista- tai hyllynäkymästä ja siirtyä kirjanäkymään
+- Käyttäjä pystyy valitsemaan kirjan hyllynäkymästä ja siirtyä kirjanäkymään
 - Kirjanäkymässä käyttäjä voi muokata kirjan tietoja tai poistaa kirjan, mikäli kirja on käyttäjän omassa hyllyssä.
 - Käyttäjä voi etsiä kirjaa nimen, kirjailijan, ISBN:n, julkaisuvuoden tai genretägien perusteella. Haussa käyttäjä voi määrittää mistä kirjahyllyistä kirjaa etsitään (oma tietty hylly, kaikki omat hyllyt, kaikki julkiset hyllyt)
 
