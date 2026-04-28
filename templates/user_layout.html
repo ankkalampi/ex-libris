@@ -1,9 +1,9 @@
-{% extends "layout/layout.html" %}
+{% extends "layout.html" %}
 
 
 {% block main_content %}
     {% with username = session.username %}
-        {% include "layout/user_menu.html" %}
+        {% include "user_menu.html" %}
     {% endwith %}
 
     {% block user_content %}

@@ -1,4 +1,4 @@
-{% extends "layout/user_layout.html" %}
+{% extends "user_layout.html" %}
 
 
 
@@ -9,9 +9,9 @@
         {% set number_of_books = shelf[0][1] %}
         {% set description = shelf[0][2] %}
         {% set username = session.username %}
-        {% include "shelf_view/shelf_info.html" %}
+        {% include "shelf_info.html" %}
         {% set books = books %}
-        {% include "shelf_view/book_list.html" %}
+        {% include "book_list.html" %}
 
    
 

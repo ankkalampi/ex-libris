@@ -6,7 +6,7 @@ import sqlite3
 from functools import wraps
 from flask import redirect, session, url_for, g, request, abort
 from werkzeug.security import generate_password_hash, check_password_hash
-from src.services import db
+import db
 
 def csrf_required(f):
     """Decorator function to check for CSRF token"""

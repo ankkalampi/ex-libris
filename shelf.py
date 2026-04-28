@@ -3,7 +3,7 @@ This module handles database operations for shelves.
 """
 
 from flask import g
-from src.services import db
+import db
 
 @db.query_db
 def get_shelves(user_id, page, page_size):

@@ -3,7 +3,7 @@ This module handles database operations for books.
 """
 
 from flask import g
-from src.services import db
+import db
 
 class BookModificationFieldsEmpty(Exception):
     """Exception class for empty book modification fields"""

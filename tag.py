@@ -3,7 +3,7 @@ This module handles database operations for tags.
 """
 
 from flask import g
-from src.services import db
+import db
 
 @db.query_db
 def get_tag(tag_id):
