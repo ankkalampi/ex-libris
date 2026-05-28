@@ -28,7 +28,21 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for('index', next=request.url))
+            abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+def correct_user_required(f):
+    """Decorator function to check for correct logged in user"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        request_username = kwargs.get("username")
+        current_username = session.get("username")
+
+        if current_username != request_username:
+            abort(403)
+
         return f(*args, **kwargs)
     return decorated_function
 

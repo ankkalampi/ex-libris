@@ -52,6 +52,7 @@ def report_timing(response):
 @app.post("/create_book/<username>/<shelf_name>")
 @user.login_required
 @user.csrf_required
+@user.correct_user_required
 def create_book(username, shelf_name):
     """
     Route for creating a new book
@@ -126,6 +127,7 @@ def create_book(username, shelf_name):
 
 @user.login_required
 @user.csrf_required
+@user.correct_user_required
 @app.post("/modify_book/<username>/<shelf_name>/<book_id>")
 def modify_book(book_id, username, shelf_name):
     """
@@ -137,13 +139,21 @@ def modify_book(book_id, username, shelf_name):
         shelf_name (str): name of the shelf
     """
 
-    name = request.form["name"]
-    author = request.form["author"]
-    ISBN = request.form["isbn"]
-    year = request.form["year"]
-    synopsis = request.form["synopsis"]
-    pages = request.form["pages"]
-    tag_id  = request.form["tag_list"]
+    name = request.form.get("name")
+    author = request.form.get("author")
+    ISBN = request.form.get("isbn")
+    year = request.form.get("year")
+    synopsis = request.form.get("synopsis")
+    pages = request.form.get("pages")
+    tag_id  = request.form.get("tag_list")
+
+    if not tag_id:
+        session["book_modification_message"] = "VIRHE: Tägitietoa ei ole. Palvelinta ei ole asennettu oikein."
+        return redirect(
+            url_for(
+                "modify_book_view",
+                username=username,
+                shelf_name=shelf_name))
 
     if name == "":
         name = None
@@ -198,6 +208,7 @@ def modify_book(book_id, username, shelf_name):
 
 @user.login_required
 @user.csrf_required
+@user.correct_user_required
 @app.post("/remove_book/<username>/<shelf_name>/<book_id>")
 def remove_book(book_id, username, shelf_name):
     """
@@ -272,6 +283,7 @@ def create_shelf():
 
 @app.get("/remove_shelf/<username>/<shelf_id>")
 @user.login_required
+@user.correct_user_required
 def remove_shelf(username, shelf_id):
     """
     Route for removing a bookshelf
@@ -355,6 +367,7 @@ def register():
 
 @app.get("/<username>")
 @user.login_required
+@user.correct_user_required
 def profile(username):
     """Route for user profile view"""
 
@@ -372,6 +385,7 @@ def profile(username):
 
 @app.get("/<username>/hyllyt/<int:page>")
 @user.login_required
+@user.correct_user_required
 def shelves(username, page=1):
     """Route for user bookshelves view"""
 
@@ -403,6 +417,7 @@ def shelves(username, page=1):
 
 @app.get("/<username>/uusi-hylly")
 @user.login_required
+@user.correct_user_required
 def new_shelf_view(username):
     """
     Route for new shelf creation view
@@ -415,6 +430,7 @@ def new_shelf_view(username):
 
 @app.get("/<username>/hyllyt/<shelf_name>/<int:page>")
 @user.login_required
+@user.correct_user_required
 def shelf_view(username, shelf_name, page=1):
     """
     Route for inside of a single shelf view
@@ -474,6 +490,7 @@ def shelf_view(username, shelf_name, page=1):
 
 @app.get("/<username>/<shelf_name>/uusi-kirja")
 @user.login_required
+@user.correct_user_required
 def new_book_view(username, shelf_name):
     """
     Route for creating a new book view
@@ -493,6 +510,7 @@ def new_book_view(username, shelf_name):
         add_book_message=add_book_message)
 
 @user.login_required
+@user.correct_user_required
 @app.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 def modify_book_view(username, shelf_name, book_id):
     """
@@ -519,6 +537,7 @@ def modify_book_view(username, shelf_name, book_id):
 
 @app.get("/<username>/haku/<int:page>")
 @user.login_required
+@user.correct_user_required
 def search(username, page=1):
     """
     Route for searching books
