@@ -26,11 +26,22 @@ Siirry kansioon, jonne kloonasit repositorion:
 cd ex-libris
 ``` 
 
+
 Asenna flask, jos se ei ole asennettuna:
 
 ```
 pip install flask
 ```
+
+Mikäli flaskin asentaminen ei toimi suoraan tällä tavalla, asenna virtuaaliympäristö, ja asenna flask siihen:
+
+```
+python -m venv venv
+source venv/bin/activate
+pip install flask
+```
+
+Mikäli komento python ei toimi, kannattaa kokeilla sen sijasta komentoa python3.
 
 Alusta tietokanta:
 
