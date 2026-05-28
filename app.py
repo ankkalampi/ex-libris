@@ -61,15 +61,23 @@ def create_book(username, shelf_name):
             shelf_name (str): shelf name
     """
 
-    name = request.form["name"]
-    author = request.form["author"]
-    pages = request.form["pages"]
-    synopsis = request.form["synopsis"]
-    isbn = request.form["isbn"]
-    year = request.form["year"]
-    tag_id = request.form["tag_list"]
+    name = request.form.get("name")
+    author = request.form.get("author")
+    pages = request.form.get("pages")
+    synopsis = request.form.get("synopsis")
+    isbn = request.form.get("isbn")
+    year = request.form.get("year")
     user_id = session["user_id"]
+    tag_id = request.form.get("tag_list")
 
+    if not tag_id:
+        session["add_book_message"] = "VIRHE: Tägitietoa ei ole. Palvelinta ei ole asennettu oikein."
+        return redirect(
+            url_for(
+                "new_book_view",
+                username=username,
+                shelf_name=shelf_name))
+        
     if pages == "":
         pages = 0
 
