@@ -4,6 +4,7 @@ This module handles database operations for shelves.
 
 from flask import g
 import db
+import sqlite3
 
 @db.query_db
 def get_shelves(user_id, page, page_size):
@@ -84,9 +85,12 @@ def create_shelf(user_id, name, description, public):
         public (int): indicates if the shelf is public. Must be either 1 or 0
 
     """
-
-    sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
-    g.db_execute(sql, [user_id, name, description, public])
+    
+    try:
+        sql = "INSERT INTO shelves (user_id, name, description, public) VALUES (?, ?, ?, ?)"
+        g.db_execute(sql, [user_id, name, description, public])
+    except sqlite3.IntegrityError:
+        raise sqlite3.IntegrityError
 
 @db.modify_db
 def delete_shelf(shelf_id):

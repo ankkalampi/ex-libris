@@ -14,6 +14,7 @@ import user
 import book
 import shelf
 import tag
+import sqlite3
 
 
 sys.path.append(str(Path(__file__).parent / "src"))
@@ -279,6 +280,12 @@ def create_shelf():
 
     try:
         shelf.create_shelf(user_id, name, description, public)
+    except sqlite3.IntegrityError:
+        session["add_shelf_message"] = "hylly tällä nimellä on jo olemassa"
+        return redirect(url_for("shelves",
+                            username=username,
+                            page_count=page_count,
+                            page=1))
     except Exception:
         return redirect(url_for("view.index"))
 
