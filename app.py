@@ -619,8 +619,6 @@ def search(username, page=1):
         result = []
         search_message = "Haullasi ei löytynyt yhtäkään kirjaa"
 
-    print(f"search message: {search_message}")
-
     return render_template(
         "search_view.html",
         name=name,
