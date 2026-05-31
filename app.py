@@ -125,10 +125,10 @@ def create_book(username, shelf_name):
             shelf_name=shelf_name,
             page=1))
 
+@app.post("/modify_book/<username>/<shelf_name>/<book_id>")
 @user.login_required
 @user.csrf_required
 @user.correct_user_required
-@app.post("/modify_book/<username>/<shelf_name>/<book_id>")
 def modify_book(book_id, username, shelf_name):
     """
     Route for modifying book
@@ -516,9 +516,9 @@ def new_book_view(username, shelf_name):
         tags = tags,
         add_book_message=add_book_message)
 
+@app.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 @user.login_required
 @user.correct_user_required
-@app.get("/<username>/<shelf_name>/muokkaa_kirjaa/<book_id>")
 def modify_book_view(username, shelf_name, book_id):
     """
     Route for modifying a book view
