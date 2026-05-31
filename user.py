@@ -86,6 +86,10 @@ def create_user(username, password):
 
     password_hash = generate_password_hash(password)
 
+    if username == "" or password == "":
+        session["register_message"] = "VIRHE: käyttäjätunnus tai salasana vaaditaan"
+        raise
+
     try:
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
         g.db_execute(sql, [username, password_hash])
