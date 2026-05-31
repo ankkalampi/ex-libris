@@ -213,10 +213,10 @@ def modify_book(book_id, username, shelf_name):
             book_id=book_id
         ))
 
+@app.post("/remove_book/<username>/<shelf_name>/<book_id>")
 @user.login_required
 @user.csrf_required
 @user.correct_user_required
-@app.post("/remove_book/<username>/<shelf_name>/<book_id>")
 def remove_book(book_id, username, shelf_name):
     """
     Route for removing a book
