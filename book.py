@@ -87,11 +87,11 @@ def modify_book(book_id, name, author, year, synopsis, ISBN, pages, tag_id):
         sql_final += "synopsis = ?, "
         number_of_args += 1
         arg_list.append(synopsis)
-    if ISBN:
+    if ISBN or not ISBN:
         sql_final += "ISBN = ?, "
         number_of_args += 1
         arg_list.append(ISBN)
-    if pages:
+    if pages or not pages:
         sql_final += "pages = ?, "
         number_of_args += 1
         arg_list.append(pages)

@@ -86,7 +86,7 @@ def create_book(username, shelf_name):
         isbn = None
 
     if year == "":
-        year = 'tuntematon'
+        year = 0
 
     if name == "" or author == "":
         session["add_book_message"] = "Kirjan nimi sekä kirjoittajan nimi vaaditaan!"
@@ -574,6 +574,9 @@ def search(username, page=1):
         page_count = math.ceil(search_length / page_size)
         page_count = max(page_count, 1)
 
+        if search_length == 0:
+            search_message = "Haullasi ei löytynyt yhtäkään kirjaa"
+
         try:
 
 
@@ -615,6 +618,8 @@ def search(username, page=1):
     else:
         result = []
         search_message = "Haullasi ei löytynyt yhtäkään kirjaa"
+
+    print(f"search message: {search_message}")
 
     return render_template(
         "search_view.html",
