@@ -168,6 +168,13 @@ def modify_book(book_id, username, shelf_name):
     if pages == "":
         pages = None
 
+    if not name or not author:
+        session["book_modification_message"] = "kirjan nimi ja kirjoittaja vaaditaan"
+        return redirect(url_for("modify_book_view",
+                                username=username,
+                                book_id=book_id,
+                                shelf_name=shelf_name))
+
     try:
         book.modify_book(
             book_id,
